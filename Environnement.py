@@ -1,5 +1,7 @@
-import msvcrt 
+import getch 
 import numpy as np
+import Exceptions
+
 
 class Environnement:
     def __init__(self, width, height): 
@@ -23,7 +25,7 @@ class Environnement:
         print("\n")
         nb_obstacles = int(input("Combien ya t-il d'obstacles dans la pièces ? "))
         if (nb_obstacles > (self.width-2)*(self.height-2)-1):
-            raise InvalidMoveException("Le nombre d'obstacles est trop important")
+            raise TooMuchObstacleException("Le nombre d'obstacles est trop important")
         print("\n")
         i = 0
         while (i < nb_obstacles):

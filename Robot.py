@@ -1,13 +1,14 @@
 from Environnement import Environnement
 import numpy as np
-
+import getch 
+from Exceptions import *
 
 
 class Robot:
     def __init__(self, environnement): 
-        # coordonnées x et y aléatoires dans [1, width-2] et [1, height-2]
-        self.x = np.random.randint(1, environnement.width - 2)
-        self.y = np.random.randint(1, environnement.height - 2)
+        # coordonnées x et y aléatoires dans [1, width-1[ et [1, height-1[
+        self.x = np.random.randint(1, environnement.width - 1)
+        self.y = np.random.randint(1, environnement.height - 1)
         self.environnement = environnement
         self.direction = "haut" # Le robot est dirigé vers le haut par défaut 
         self.environnement.grid[self.x][self.y] = "R"
@@ -28,23 +29,25 @@ class Robot:
     def tourner(self,cote):
         # permet au robot de tourner sur soi-même de 90 degrés vers la droite ou la gauche
         if cote == "droite":
-                if self.direction == "haut":
-                        self.direction = "droite"
-                elif self.direction == "droite":
-                        self.direction = "bas"
-                elif self.direction == "bas":
-                        self.direction = "gauche"
-                elif self.direction == "gauche":
-                        self.direction = "haut"
+            if self.direction == "haut":
+                    self.direction = "droite"
+            elif self.direction == "droite":
+                    self.direction = "bas"
+            elif self.direction == "bas":
+                    self.direction = "gauche"
+            elif self.direction == "gauche":
+                    self.direction = "haut"
         elif cote == "gauche":
-                if self.direction == "haut":
-                        self.direction = "gauche"
-                elif self.direction == "gauche":
-                        self.direction = "bas"
-                elif self.direction == "bas":
-                        self.direction = "droite"
-                elif self.direction == "droite":
-                        self.direction = "haut"
+            if self.direction == "haut":
+                    self.direction = "gauche"
+            elif self.direction == "gauche":
+                    self.direction = "bas"
+            elif self.direction == "bas":
+                    self.direction = "droite"
+            elif self.direction == "droite":
+                    self.direction = "haut"
+        else:
+            print("Direction non valide")
 
     def reculer(self):
         # permet au robot de reculer d'une case en fonction du dernier deplacement
@@ -106,7 +109,7 @@ class Robot:
     def auto_move(self):
         # fonction de déplacement en continue du robot 
         while True:
-            direction = bytes.decode(msvcrt.getch())
+            direction = getch.getch()
             try:
                 if direction == "z":
                     self.haut()

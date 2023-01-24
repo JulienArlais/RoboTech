@@ -1,7 +1,6 @@
 from Robot import Robot
 from Environnement import Environnement
-import msvcrt 
-import numpy as np
+
 
 environment = Environnement(20, 20) 
 robot=Robot(environment)
