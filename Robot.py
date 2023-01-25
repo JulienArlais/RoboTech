@@ -53,12 +53,16 @@ class Robot:
         # permet au robot de reculer d'une case en fonction du dernier deplacement
         if self.direction == "haut":
             self.bas()
+            self.direction = "haut"
         elif self.direction == "bas":
             self.haut()
+            self.direction = "bas"
         elif self.direction == "gauche":
             self.droite()
+            self.direction = "gauche"
         elif self.direction == "droite":
             self.gauche()
+            self.direction = "droite"
         else:
             print("Direction non valide")  
     
@@ -121,7 +125,7 @@ class Robot:
                     self.droite()
                 elif direction=="r":
                     self.reculer()
-                elif direction=="c":
+                elif direction=="p":
                     break
                 else:
                     print("Direction non valide, veuillez réessayer")
