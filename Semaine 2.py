@@ -2,6 +2,31 @@
 import math
 import numpy as np
 
+
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        
+    def add(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def sub(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def rotate(self, angle):
+        """Applique une rotation au vecteur d'un angle donnée en paramètre"""
+        x = self.x * math.cos(angle) - self.y * math.sin(angle)
+        y = self.x * math.sin(angle) + self.y * math.cos(angle)
+        return Vector(x, y)
+
+class Object:
+    def __init__(self, height, speed):
+        self.height = height
+        self.speed = speed
+
+
+
 class Robot:
 	def __init__(self, x, y, direction, vitesse, rayon):
 		# x et y des coordonnées en mètre, direction un angle par rapport à l'abscisse en float et la vitesse max du robot en m/s
