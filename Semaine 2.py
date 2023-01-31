@@ -28,7 +28,7 @@ class Object:
 
 class Robot:
 	def __init__(self, x, y, theta, vitesse, rayon):
-		# x et y des coordonnées en mètre, direction un angle par rapport à l'abscisse en float et la vitesse max du robot en m/s
+		#x et y des coordonnées en mètre, direction un angle par rapport à l'abscisse en float et la vitesse max du robot en m/s
 		# on suppose que le robot est un cercle, pour faciliter les collisions
 		self.x = x
 		self.y = y
@@ -37,7 +37,7 @@ class Robot:
 		self.rayon = rayon
 
 	def avancer(self):
-		#fait avancer le robot pendant 1 seconde
+		""" fait avancer le robot pendant 1 seconde """
 		self.x += self.vitesse*np.cos(robot.theta)
 		self.y += self.vitesse*np.sin(robot.theta)
 		
@@ -51,7 +51,7 @@ class Robot:
 		#print("La nouvelle direction du robot est de", self.theta, "degrés par rapport à l'axe des abscisses")
 
 	def reculer(self):
-		#fait avancer le robot pendant 1 seconde
+		""" fait reculer le robot pendant 1 seconde """
 		self.x -= self.vitesse*np.cos(robot.theta)
 		self.y -= self.vitesse*np.sin(robot.theta)
 
