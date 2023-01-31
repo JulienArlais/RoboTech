@@ -1,6 +1,6 @@
 ﻿import getch
 import numpy as np
-
+import math
 
 class Vector:
     def __init__(self, x, y):
@@ -15,8 +15,8 @@ class Vector:
 
     def rotate(self, angle):
         """Applique une rotation au vecteur d'un angle donnée en paramètre"""
-        x = self.x * math.cos(angle) - self.y * math.sin(angle)
-        y = self.x * math.sin(angle) + self.y * math.cos(angle)
+        x = self.x * np.cos(angle) - self.y * np.sin(angle)
+        y = self.x * np.sin(angle) + self.y * np.cos(angle)
         return Vector(x, y)
 
 class Object:
@@ -32,7 +32,7 @@ class Robot:
 		# on suppose que le robot est un cercle, pour faciliter les collisions
 		self.x = x
 		self.y = y
-		self.theta = theta
+		self.theta = math.radians(theta)
 		self.vitesse = vitesse
 		self.rayon = rayon
 
@@ -44,10 +44,7 @@ class Robot:
 
 	def tourner(self, angle):
 		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
-		self.theta += angle
-		while (self.theta < 0):
-			self.theta = self.theta + 360
-		self.theta = self.theta % 360
+		self.theta += math.radians(angle)
 		#print("La nouvelle direction du robot est de", self.theta, "degrés par rapport à l'axe des abscisses")
 
 	def reculer(self):
@@ -116,7 +113,7 @@ class Simulation:
 
 
 
-
+print(math.radians(0),math.radians(90))
 environnement = Environnement(20, 10, 1)
 print("L'environnement fait",environnement.width,"case de large et",environnement.height,"de long, et chaque case fait",environnement.scale,"mètres de côté\n")
 
@@ -127,8 +124,12 @@ Simulation.placer_robot_env(environnement,robot)
 Simulation.afficher_env(environnement)
 for _ in range(3):
 	Simulation.avancer_robot_env(environnement, robot)
+	Simulation.afficher_env(environnement)
+
+robot.tourner(90)
 
 for _ in range(3):
 	Simulation.reculer_robot_env(environnement, robot)
-Simulation.afficher_env(environnement)
+	Simulation.afficher_env(environnement)
+
 Simulation.distance(robot.x, robot.y, 0, 0)
