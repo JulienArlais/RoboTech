@@ -1,6 +1,10 @@
 import numpy as np
 import time 
 
+
+def format(nb):
+	return "{:.2f}".format(nb)
+
 class Objet:
 	def __init__(self, x, y, theta, vitesse, rayon):
 		"""Constructeur pour objet
@@ -45,8 +49,8 @@ class Robot:
 		Args:
 			dt (int): durée en seconde
 		"""
-		#self.vitesse += self.acceleration * dt
-		#self.vitesse = min(self.vitesse, self.vitesse)  # pour s'assurer que la vitesse ne dépasse pas la vitesse maximale
+		#vitesse += self.acceleration * dt
+		#self.vitesse = min(self.vitesse, vitesse)  # pour s'assurer que la vitesse ne dépasse pas la vitesse maximale
 		self.x += self.vitesse * np.cos(robot.theta) * dt
 		self.y += self.vitesse * np.sin(robot.theta) * dt
 
@@ -128,12 +132,13 @@ class Environnement:
 		y = robot.y / self.scale
 		self.grid[(int)(y)][(int)(x)] = '.'
 		robot.avancer(1)
-		print(robot.x,self.width*self.scale)
 		if robot.x > self.width*self.scale or robot.x < 0 or robot.y > self.height*self.scale or robot.y < 0:
 			return
 		if (self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] != 'X'):
 			self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] = 'R'
-			print("Le robot en (", x, ",", y, ") a avancé et s'est déplacé en (",robot.x,",",robot.y,")")
+			x = x * self.scale
+			y = y * self.scale
+			print("Le robot en (", format(x), ",", format(y), ") a avancé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
 		else:
 			print("collision à venir")
 			return
@@ -148,10 +153,11 @@ class Environnement:
 		y = robot.y / self.scale
 		self.grid[(int)(y)][(int)(x)] = '.'
 		robot.reculer(1)#Le pas dt est égale à 1
-		print("x =",int(robot.y / self.scale), " y =",int(robot.x / self.scale))
 		if (self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] != 'X'):
 			self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] = 'R'
-			print("Le robot en (", x, ",", y, ") a reculé et s'est déplacé en (",robot.x,",",robot.y,")")
+			x = x * self.scale
+			y = y * self.scale
+			print("Le robot en (", format(x), ",", format(y), ") a reculé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
 		else:
 			print("Collision à venir")
 			exit()
@@ -169,7 +175,7 @@ class Environnement:
 			float: distance
 		"""
 		dist = np.sqrt(np.square(x2 - x1)+np.square(y2 - y1))
-		print("Distance entre (", "{:.2f}".format(x1), ",", "{:.2f}".format(y1), ") et (", "{:.2f}".format(x2), ",", "{:.2f}".format(y2), ") :", "{:.2f}".format(dist))
+		print("Distance entre (", format(x1), ",", format(y1), ") et (", format(x2), ",", format(y2), ") :", format(dist))
 		return dist
 		
 	def collision(self, robot, objet):
@@ -245,6 +251,7 @@ s.afficher_env()
 
 # Mise à jour de la simulation
 s.update(objet)
+
 
 s.environnement.reculer_robot_env(s.robot)
 s.environnement.reculer_robot_env(s.robot)
