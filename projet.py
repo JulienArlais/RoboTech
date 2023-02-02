@@ -34,7 +34,7 @@ class Simulation:
 			objet (Objet): objet de la simulation
 		"""
 		while True:
-			self.environnement.avancer_robot_env(self.robot)
+			self.environnement.avancer_robot_env(self.robot,1)
 			if self.robot.x > self.environnement.width*self.environnement.scale or self.robot.x < 0 or self.robot.y > self.environnement.height*self.environnement.scale or self.robot.y < 0:
 				print("Collision avec les limites de l'environnement")
 				break
@@ -59,9 +59,11 @@ s.afficher_env()
 # Mise à jour de la simulation
 s.run(objet)
 
+# On fait reculer le robot
+for _ in range (2):
+	s.environnement.avancer_robot_env(s.robot,-1)
+	s.afficher_env()
+	time.sleep(1)
 
-s.environnement.reculer_robot_env(s.robot)
-s.environnement.reculer_robot_env(s.robot)
-s.afficher_env()
 s.robot.tourner(225)
 s.run(objet)
