@@ -79,7 +79,7 @@ class Environnement:
 		if (self.grid[y][x] == ' ' or self.grid[y][x] == '.'):
 			self.grid[y][x] = 'R'
 
-	def placer_objet_env(self, objet):
+	def placer_objet_env(self, objet): # à mettre private car pas automatiquement dans liste de generer ?
 		"""place l'objet dans l'environnement si possible, sinon ne fait rien
 		Args:
 			objet (Objet): objet à placer
@@ -89,6 +89,34 @@ class Environnement:
 		if (self.grid[y][x] == ' ' or self.grid[y][x] == '.'):
 			self.grid[y][x] = 'O'
 			
+	def generer_obstacles(self, nb):
+		'''Génère nb objets et les place aléatoirement
+		Args:
+			nb (int): nombre d'objets à créer
+		Returns:
+			List[Objet]: liste des objets générés
+		'''
+		i = 0
+		libre = True
+		liste = []
+		while i < nb :
+			x = np.random.uniform(0,self.width)
+			y = np.random.uniform(0,self.height)
+			rayon = np.random.uniform(0.5,1) # Rayon initialisé entre 0.5 et 1, à modifier plus tard
+			for obj in liste:
+				if (self.collision_entre_objets(x,y,rayon,obj)):
+					print("NON")
+					libre = False
+					break
+			if (libre):
+				o = Objet(x, y, 0, 0, rayon)
+				self.placer_objet_env(o)
+				liste.append(o)
+				i+=1
+				print("OUI")
+			libre = True
+			
+		return liste
 
 	def avancer_robot_env(self, robot, dt):
 		"""fait avancer pendant une durée dt le robot dans l'environnement
@@ -113,7 +141,7 @@ class Environnement:
 			return
 			
 
-	def collision(self, robot, objet):
+	def collision_robot_objet(self, robot, objet):
 		"""Teste s'il y a eu collision entre le robot et l'objet
 		Args:
 			robot (Robot): robot à tester
@@ -122,5 +150,17 @@ class Environnement:
 			boolean: collision ou non entre le robot et l'objet
 		"""
 		if mo.distance(robot.x, robot.y, objet.x, objet.y) < max(robot.rayon, objet.rayon):
+			return True
+		return False
+		
+	def collision_entre_objets(self, x, y, ray, obj):
+		"""Teste s'il y a eu collision entre deux objets
+		Args:
+			obj1 (Objet): objet à tester
+			obj2 (Objet): objet à tester
+		Returns:
+			boolean: collision ou non entre les deux objets
+		"""
+		if (mo.distance(x, y, obj.x, obj.y) < max(ray, obj.rayon)):
 			return True
 		return False
