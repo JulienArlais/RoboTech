@@ -45,6 +45,15 @@ class Robot:
 		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
 		self.theta += np.radians(angle)
 
+class Roue:
+    def _init_(self, vitesse_angulaire):
+        """Constructeur pour Roue
+        Args:
+            vitesse_angulaire (float): vitesse angulaire initiale
+            accélération (float): accélération de la roue
+        """
+        self.vitesse_angulaire = vitesse_angulaire
+        self.accélération =0
 
 class Environnement:
 	def __init__(self, width, height, scale): 
