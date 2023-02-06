@@ -3,7 +3,7 @@ from module_projet import Objet, Robot, Environnement
 import module_outils as mo
 
 class Simulation:
-	def __init__(self,env,robot):
+	def __init__(self,env,robot, objets):
 		"""Constructeur de simulation
 		Args:
 			env (Environnement): environnement dans la simulation
@@ -11,6 +11,7 @@ class Simulation:
 		"""
 		self.environnement=env
 		self.robot=robot
+		self.objets=objets
 
 	def afficher_env(self):
 		"""affichage de l'environnement de la simulation
@@ -28,10 +29,8 @@ class Simulation:
 		print()
 		print()
 
-	def run(self, liste):
+	def run(self):
 		"""mise à jour de l'environnement
-		Args:
-			liste (List[Objet]): liste des objets de la simulation
 		"""
 		while True:
 			self.environnement.avancer_robot_env(self.robot,1)
@@ -39,25 +38,25 @@ class Simulation:
 				print("Collision avec les limites de l'environnement")
 				break
 			self.afficher_env()
-			for objet in liste:
+			for objet in self.objets:
 				if self.environnement.collision_robot_objet(self.robot, objet)==True:
 					print("Collision entre robot et un objet")
 					return
 			time.sleep(1)
 
 
-# Création d'un environnement, d'un robot et d'une simulation
+# Création d'un environnement et d'un robot
 environnement = Environnement(20, 20, 1)
 robot = Robot(9.9, 5.7, 0, 1, 1.6)
-s = Simulation(environnement, robot)
 
-# Ajout du robot et des objets dans l'environnement et affichage de l'environnement
+# Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
 environnement.placer_robot_env(robot)
 liste_objets = environnement.generer_obstacles(30)
+s = Simulation(environnement, robot, liste_objets)
 s.afficher_env()
 
 # Mise à jour de la simulation
-s.run(liste_objets)
+s.run()
 
 # On fait reculer le robot
 for _ in range (2):
@@ -66,4 +65,4 @@ for _ in range (2):
 	time.sleep(1)
 
 s.robot.tourner(225)
-s.run(liste_objets)
+s.run()
