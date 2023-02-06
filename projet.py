@@ -2,6 +2,10 @@ import time
 from module_projet import Objet, Robot, Environnement
 import module_outils as mo
 
+class CollisionException(BaseException):
+	def __init__(self, message):
+		self.message = message
+
 class Simulation:
 	def __init__(self,env,robot, objets):
 		"""Constructeur de simulation
@@ -29,19 +33,31 @@ class Simulation:
 		print()
 		print()
 
+	def update(self):
+		"""fait une itération de la simulation
+
+		Raises:
+			CollisionException: collision avec les limites de l'environnement
+			CollisionException: collision entre robot et un objet
+		"""
+		self.environnement.avancer_robot_env(self.robot,1)
+		if (self.robot.rayon+self.robot.x > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.x < 0) or (self.robot.y+self.robot.y > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.y < 0):
+			raise CollisionException("Collision avec les limites de l'environnement")
+			return
+		for objet in self.objets:
+			if self.environnement.collision_robot_objet(self.robot, objet)==True:
+				raise CollisionException("Collision entre robot et un objet")
+
 	def run(self):
 		"""mise à jour de l'environnement
 		"""
 		while True:
-			self.environnement.avancer_robot_env(self.robot,1)
-			if self.robot.x > self.environnement.width*self.environnement.scale or self.robot.x < 0 or self.robot.y > self.environnement.height*self.environnement.scale or self.robot.y < 0:
-				print("Collision avec les limites de l'environnement")
+			try:
+				self.update()
+			except CollisionException as e:
+				print(e)
 				break
 			self.afficher_env()
-			for objet in self.objets:
-				if self.environnement.collision_robot_objet(self.robot, objet)==True:
-					print("Collision entre robot et un objet")
-					return
 			time.sleep(1)
 
 
