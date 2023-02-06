@@ -158,18 +158,22 @@ class Environnement:
 		Returns:
 			boolean: collision ou non entre le robot et l'objet
 		"""
-		if mo.distance(robot.x, robot.y, objet.x, objet.y) < max(robot.rayon, objet.rayon):
+		if mo.distance(robot.x, robot.y, objet.x, objet.y) <= robot.rayon + objet.rayon:
 			return True
 		return False
 		
 	def collision_entre_objets(self, x, y, ray, obj):
-		"""Teste s'il y a eu collision entre deux objets
+		"""Teste s'il y aura collision avec obj aux coordonnées (x, y)
+
 		Args:
-			obj1 (Objet): objet à tester
-			obj2 (Objet): objet à tester
+			x (float): coordonnées x réelle
+			y (float): coordonnées y réelle
+			ray (float): rayon
+			obj (Objet): objet à tester
+
 		Returns:
-			boolean: collision ou non entre les deux objets
+			boolean: collision ou non avec obj aux coordonnées (x, y)
 		"""
-		if (mo.distance(x, y, obj.x, obj.y) < max(ray, obj.rayon)):
+		if mo.distance(x, y, obj.x, obj.y) <= ray + obj.rayon:
 			return True
 		return False
