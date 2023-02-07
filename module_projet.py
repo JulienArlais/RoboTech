@@ -53,7 +53,7 @@ class Roue:
             accélération (float): accélération de la roue
         """
         self.vitesse_angulaire = vitesse_angulaire
-        self.accélération =0
+        self.accélération = 0
 		self.rayon = rayon
 
 class Environnement:
