@@ -67,7 +67,7 @@ class Environnement:
 		self.width = width
 		self.height = height
 		self.scale = scale
-		self.grid = [[' ' for _ in range(width)] for _ in range(height)]
+		#self.grid = [[' ' for _ in range(width)] for _ in range(height)]
 		
 	def retirer_robot_env(self,robot):
 		"""retire le robot de l'environnement
