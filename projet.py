@@ -39,7 +39,8 @@ class Simulation:
 		self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
 		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
-			raise CollisionException("Collision avec les limites de l'environnement")
+			#raise CollisionException("Collision avec les limites de l'environnement")
+			self.robot.tourner(np.random.uniform(90,270)) 
 		for objet in self.objets:
 			if self.environnement.collision_robot_objet(self.robot, objet)==True:
 				print("Collision entre robot et un objet")
@@ -56,12 +57,12 @@ class Simulation:
 
 
 # Création d'un environnement et d'un robot
-environnement = Environnement(160, 90, 1)
-robot = Robot(50, 55.7, 0, 1, 1.6)
+environnement = Environnement(80, 80, 1)
+robot = Robot(40, 55.7, 0, 1, 1.6)
 
 # Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
 environnement.placer_robot_env(robot)
-liste_objets = environnement.generer_obstacles(20)
+liste_objets = environnement.generer_obstacles(5)
 s = Simulation(environnement, robot, liste_objets)
 
 # Mise à jour de la simulation
