@@ -46,7 +46,7 @@ class Robot:
 		self.theta += np.radians(angle)
 
 class Roue:
-    def _init_(self, vitesse_angulaire):
+    def _init_(self, vitesse_angulaire, rayon):
         """Constructeur pour Roue
         Args:
             vitesse_angulaire (float): vitesse angulaire initiale
@@ -54,6 +54,7 @@ class Roue:
         """
         self.vitesse_angulaire = vitesse_angulaire
         self.accélération =0
+		self.rayon = rayon
 
 class Environnement:
 	def __init__(self, width, height, scale): 
