@@ -14,7 +14,6 @@ class CollisionException(Exception):
 
 class Simulation:
 	def __init__(self, env, robot, objets): 
-		# pas ouf :/
 		self.environnement = env
 		self.robot = robot
 		self.objets = objets
@@ -36,6 +35,8 @@ class Simulation:
 		"""
 		self.environnement.avancer_robot(self.robot, 1)
 		rdroite = self.robot.rdroite
+		if (np.random.rand() < 0.02):
+			self.robot.tourner(np.random.uniform(0,360))
 		#self.robot.tourner(1) 
 		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult) #taille de la flèche : 4
 		self.canvas.move(self.r, rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
@@ -43,7 +44,7 @@ class Simulation:
 			print("Collision avec les limites de l'environnement")
 			#raise CollisionException("Collision avec les limites de l'environnement")
 			self.environnement.avancer_robot(self.robot, -1)
-			self.canvas.move(self.r, rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
+			self.canvas.move(self.r, -rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, -rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
 			self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.sin(self.robot.theta)*mult)
 			print(self.robot.x,self.robot.y)
 			self.robot.tourner(np.random.uniform(90,270)) 
