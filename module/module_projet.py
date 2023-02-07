@@ -1,5 +1,5 @@
 import numpy as np
-import module_outils as mo
+from .module_outils import format, distance, create_circle
 
 
 class Objet:
@@ -162,7 +162,7 @@ class Environnement:
 		Returns:
 			boolean: collision ou non entre le robot et l'objet
 		"""
-		if mo.distance(robot.x, robot.y, objet.x, objet.y) <= robot.rayon + objet.rayon:
+		if distance(robot.x, robot.y, objet.x, objet.y) <= robot.rayon + objet.rayon:
 			return True
 		return False
 		
@@ -178,6 +178,6 @@ class Environnement:
 		Returns:
 			boolean: collision ou non avec obj aux coordonnées (x, y)
 		"""
-		if mo.distance(x, y, obj.x, obj.y) <= ray + obj.rayon:
+		if distance(x, y, obj.x, obj.y) <= ray + obj.rayon:
 			return True
 		return False

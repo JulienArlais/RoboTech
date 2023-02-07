@@ -1,7 +1,7 @@
 import numpy as np
 import tkinter as tk
-from module_projet import Objet, Robot, Environnement, Roue
-from module_outils import format, distance, create_circle
+from module.module_outils import format, distance, create_circle
+from module.module_projet import Objet, Robot, Environnement, Roue
 
 mult = 10
 
