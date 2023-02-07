@@ -45,10 +45,7 @@ class Robot:
 		angle (int): un angle en degré
 		"""
 		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
-		self.rgauche.vitesse_angulaire *= -1
-		while (self.theta != self.theta + np.radians(angle)):
-			self.theta += np.radians(1)
-		self.rgauche.vitesse_angulaire *= -1
+		self.theta += np.radians(angle)
 
 class Roue:
 	def __init__(self, vitesse_angulaire, rayon):
@@ -72,37 +69,6 @@ class Environnement:
 		self.width = width
 		self.height = height
 		self.scale = scale
-		#self.grid = [[' ' for _ in range(width)] for _ in range(height)]
-		
-	#def retirer_robot_env(self,robot):
-	#	"""retire le robot de l'environnement
-	#	Args:
-	#		robot (Robot): robot à retirer
-	#	"""
-	#	x = int(robot.x / self.scale)
-	#	y = int(robot.y / self.scale)
-	#	if (self.grid[y][x] == 'R'):
-	#		self.grid[y][x] = '.'
-	
-	#def placer_robot_env(self, robot):
-	#	"""place le robot dans l'environnement si possible, sinon ne fait rien
-	#	Args:
-	#		robot (Robot): robot à placer
-	#	"""
-	#	x = int(robot.x / self.scale)
-	#	y = int(robot.y / self.scale)
-	#	if (self.grid[y][x] == ' ' or self.grid[y][x] == '.'):
-	#		self.grid[y][x] = 'R'
-
-	#def placer_objet_env(self, objet): # à mettre private car pas automatiquement dans liste de generer ?
-	#	"""place l'objet dans l'environnement si possible, sinon ne fait rien
-	#	Args:
-	#		objet (Objet): objet à placer
-	#	"""
-	#	x = int(objet.x / self.scale)
-	#	y = int(objet.y / self.scale)
-	#	if (self.grid[y][x] == ' ' or self.grid[y][x] == '.'):
-	#		self.grid[y][x] = 'O'
 			
 	def generer_obstacles(self, nb):
 		'''Génère nb objets et les place aléatoirement
@@ -124,7 +90,6 @@ class Environnement:
 					break
 			if (libre):
 				o = Objet(x, y, 0, 0, rayon)
-				#self.placer_objet_env(o)
 				liste.append(o)
 				i+=1
 			libre = True
@@ -139,21 +104,14 @@ class Environnement:
 		"""
 		x = robot.x
 		y = robot.y
-		#self.grid[(int)(y)][(int)(x)] = '.'
 		rdroite = robot.rdroite
 		robot.x += rdroite.vitesse_angulaire * rdroite.rayon * np.cos(robot.theta) * dt
 		robot.y += rdroite.vitesse_angulaire * rdroite.rayon * np.sin(robot.theta) * dt
 		if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
 			return
-		#if (self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] != 'X'):
-		#	self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] = 'R'
-		#	x = x * self.scale
-		#	y = y * self.scale
+
 		print("Le robot en (", format(x), ",", format(y), ") a avancé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
-		#else:
-		#	print("Collision à venir")
-		#	return
-			
+
 
 	def collision_robot_objet(self, robot, objet):
 		"""Teste s'il y a eu collision entre le robot et l'objet

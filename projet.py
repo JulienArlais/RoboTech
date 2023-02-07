@@ -59,7 +59,7 @@ class Simulation:
 			self.update()
 		except CollisionException as e:
 			return
-		self.canvas.after(20, self.run) #vitesse simulation, argument en millisecondes
+		self.canvas.after(35, self.run) #vitesse simulation, argument en millisecondes
 
 
 # Création d'un environnement et d'un robot
