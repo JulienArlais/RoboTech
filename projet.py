@@ -35,12 +35,15 @@ class Simulation:
 		"""
 		self.environnement.avancer_robot_env(self.robot, 1)
 		#self.robot.tourner(1) 
-		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.y*mult+self.robot.vitesse*np.sin(self.robot.theta)*mult)
+		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*self.robot.vitesse*np.sin(self.robot.theta)*mult) #taille de la flèche : 4
 		self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
 		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			#raise CollisionException("Collision avec les limites de l'environnement")
 			self.environnement.avancer_robot_env(self.robot, -1)
+			self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
+			self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-self.robot.vitesse)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-self.robot.vitesse)*np.sin(self.robot.theta)*mult)
+			print(self.robot.x,self.robot.y)
 			self.robot.tourner(np.random.uniform(90,270)) 
 		for objet in self.objets:
 			if self.environnement.collision_robot_objet(self.robot, objet)==True:
@@ -54,7 +57,7 @@ class Simulation:
 			self.update()
 		except CollisionException as e:
 			return
-		self.canvas.after(17, self.run)
+		self.canvas.after(20, self.run) #vitesse simulation, argument en millisecondes
 
 
 # Création d'un environnement et d'un robot
@@ -63,7 +66,7 @@ robot = Robot(40, 55.7, 0, 1, 1.6)
 
 # Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
 environnement.placer_robot_env(robot)
-liste_objets = environnement.generer_obstacles(5)
+liste_objets = environnement.generer_obstacles(0)
 s = Simulation(environnement, robot, liste_objets)
 
 # Mise à jour de la simulation
