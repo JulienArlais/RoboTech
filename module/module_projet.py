@@ -45,7 +45,10 @@ class Robot:
 		angle (int): un angle en degré
 		"""
 		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
-		self.theta += np.radians(angle)
+		self.rgauche.vitesse_angulaire *= -1
+		while (self.theta != self.theta + np.radians(angle)):
+			self.theta += np.radians(1)
+		self.rgauche.vitesse_angulaire *= -1
 
 class Roue:
 	def __init__(self, vitesse_angulaire, rayon):
@@ -148,7 +151,7 @@ class Environnement:
 		#	y = y * self.scale
 		print("Le robot en (", format(x), ",", format(y), ") a avancé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
 		#else:
-		#	print("collision à venir")
+		#	print("Collision à venir")
 		#	return
 			
 
