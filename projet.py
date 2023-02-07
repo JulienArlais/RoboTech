@@ -1,7 +1,7 @@
 import numpy as np
 import tkinter as tk
-from module.module_projet import Objet, Robot, Environnement
-from module.module_outils import format, distance, create_circle
+from module_projet import Objet, Robot, Environnement, Roue
+from module_outils import format, distance, create_circle
 
 mult = 10
 
@@ -22,7 +22,8 @@ class Simulation:
 		tk.Label(text="Interface Graphique")
 		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult, height=self.environnement.height*mult)
 		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
-		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.vitesse*np.cos(robot.theta)*mult, self.robot.y*mult+self.robot.vitesse*np.sin(robot.theta)*mult, arrow=tk.LAST)
+		rdroite = self.robot.rdroite
+		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+rdroite.vitesse_angulaire*rdroite.rayon*np.cos(robot.theta)*mult, self.robot.y*mult+rdroite.vitesse_angulaire*rdroite.rayon*np.sin(robot.theta)*mult, arrow=tk.LAST)
 		for objet in self.objets:
 			create_circle(objet.x*mult, objet.y*mult, objet.rayon*mult, self.canvas, "black")
 		self.canvas.pack()
@@ -33,16 +34,17 @@ class Simulation:
 		Args:
 			objet (Objet): objet de la simulation
 		"""
-		self.environnement.avancer_robot_env(self.robot, 1)
+		self.environnement.avancer_robot(self.robot, 1)
+		rdroite = self.robot.rdroite
 		#self.robot.tourner(1) 
-		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*self.robot.vitesse*np.sin(self.robot.theta)*mult) #taille de la flèche : 4
-		self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
+		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult) #taille de la flèche : 4
+		self.canvas.move(self.r, rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
 		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			#raise CollisionException("Collision avec les limites de l'environnement")
-			#self.environnement.avancer_robot_env(self.robot, -1)
-			#self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
-			#self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-self.robot.vitesse)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-self.robot.vitesse)*np.sin(self.robot.theta)*mult)
+			self.environnement.avancer_robot(self.robot, -1)
+			self.canvas.move(self.r, rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
+			self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.sin(self.robot.theta)*mult)
 			print(self.robot.x,self.robot.y)
 			self.robot.tourner(np.random.uniform(90,270)) 
 		for objet in self.objets:
@@ -62,11 +64,13 @@ class Simulation:
 
 # Création d'un environnement et d'un robot
 environnement = Environnement(80, 80, 1)
-robot = Robot(40, 55.7, 0, 1, 1.6)
+r_gauche = Roue(90,1)
+r_droite = Roue(90,1)
+robot = Robot(40, 55.7, 0, 1.6, r_gauche, r_droite)
 
 # Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
-environnement.placer_robot_env(robot)
-liste_objets = environnement.generer_obstacles(0)
+#environnement.placer_robot_env(robot)
+liste_objets = environnement.generer_obstacles(5)
 s = Simulation(environnement, robot, liste_objets)
 
 # Mise à jour de la simulation
