@@ -35,9 +35,6 @@ class Simulation:
 		"""
 		self.environnement.avancer_robot(self.robot, 1)
 		rdroite = self.robot.rdroite
-		if (np.random.rand() < 0.02):
-			self.robot.tourner(np.random.uniform(0,360))
-		#self.robot.tourner(1) 
 		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult) #taille de la flèche : 4
 		self.canvas.move(self.r, rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
 		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
@@ -47,14 +44,16 @@ class Simulation:
 			self.canvas.move(self.r, -rdroite.vitesse_angulaire*rdroite.rayon*np.cos(self.robot.theta)*mult, -rdroite.vitesse_angulaire*rdroite.rayon*np.sin(self.robot.theta)*mult)
 			self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-rdroite.vitesse_angulaire*rdroite.rayon)*np.sin(self.robot.theta)*mult)
 			print(self.robot.x,self.robot.y)
-			self.robot.tourner(np.random.uniform(90,270)) 
+			self.robot.tourner(np.random.uniform(90,270))
 		for objet in self.objets:
 			if self.environnement.collision_robot_objet(self.robot, objet)==True:
 				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
+		if (np.random.rand() < 0.02):
+			self.robot.tourner(np.random.uniform(0,360))
 		
 	def run(self):
-		"""excéution de la simulation
+		"""Exécution de la simulation
 		"""
 		try:
 			self.update()

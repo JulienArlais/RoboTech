@@ -114,10 +114,9 @@ class Environnement:
 		while i < nb :
 			x = np.random.uniform(0,self.width)
 			y = np.random.uniform(0,self.height)
-			rayon = np.random.uniform(0.5,1) # Rayon initialisé entre 0.5 et 1, à modifier plus tard
+			rayon = np.random.uniform(0.5,1) # Rayon initialisé entre 0.5 et 1
 			for obj in liste:
 				if (self.collision_entre_objets(x,y,rayon,obj)):
-					print("NON")
 					libre = False
 					break
 			if (libre):
@@ -125,7 +124,6 @@ class Environnement:
 				#self.placer_objet_env(o)
 				liste.append(o)
 				i+=1
-				print("OUI")
 			libre = True
 			
 		return liste
@@ -142,7 +140,7 @@ class Environnement:
 		rdroite = robot.rdroite
 		robot.x += rdroite.vitesse_angulaire * rdroite.rayon * np.cos(robot.theta) * dt
 		robot.y += rdroite.vitesse_angulaire * rdroite.rayon * np.sin(robot.theta) * dt
-		if robot.x > self.width*self.scale or robot.x < 0 or robot.y > self.height*self.scale or robot.y < 0:
+		if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
 			return
 		#if (self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] != 'X'):
 		#	self.grid[int(robot.y / self.scale)][int(robot.x / self.scale)] = 'R'
