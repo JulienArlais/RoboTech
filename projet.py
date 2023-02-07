@@ -1,84 +1,69 @@
-import time
-from module_projet import Objet, Robot, Environnement
-import module_outils as mo
+import numpy as np
+import tkinter as tk
+from module.module_projet import Objet, Robot, Environnement
+from module.module_outils import format, distance, create_circle
 
-class CollisionException(BaseException):
+mult = 10
+
+class CollisionException(Exception):
 	def __init__(self, message):
+		"""Prend en paramètre le message à afficher lors de la collisions
+		   :param message: message à afficher
+		"""
 		self.message = message
 
 class Simulation:
-	def __init__(self,env,robot, objets):
-		"""Constructeur de simulation
-		Args:
-			env (Environnement): environnement dans la simulation
-			robot (Robot): robot dans la simulation
-		"""
-		self.environnement=env
-		self.robot=robot
-		self.objets=objets
-
-	def afficher_env(self):
-		"""affichage de l'environnement de la simulation
-		"""
-		for _ in range(self.environnement.width+2):
-			print('X', end=' ')
-		print()
-		for i in range(self.environnement.height):
-			print('X', end=' ')
-			for j in range(self.environnement.width):
-				print(self.environnement.grid[i][j], end=' ')
-			print('X')
-		for _ in range(self.environnement.width+2):
-			print('X', end=' ')	
-		print()
-		print()
+	def __init__(self, env, robot, objets): 
+		# pas ouf :/
+		self.environnement = env
+		self.robot = robot
+		self.objets = objets
+		self.window = tk.Tk()
+		tk.Label(text="Interface Graphique")
+		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult, height=self.environnement.height*mult)
+		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
+		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.vitesse*np.cos(robot.theta)*mult, self.robot.y*mult+self.robot.vitesse*np.sin(robot.theta)*mult, arrow=tk.LAST)
+		for objet in self.objets:
+			create_circle(objet.x*mult, objet.y*mult, objet.rayon*mult, self.canvas, "black")
+		self.canvas.pack()
 
 	def update(self):
-		"""fait une itération de la simulation
+		"""mise à jour de l'environnement
 
-		Raises:
-			CollisionException: collision avec les limites de l'environnement
-			CollisionException: collision entre robot et un objet
+		Args:
+			objet (Objet): objet de la simulation
 		"""
-		self.environnement.avancer_robot_env(self.robot,1)
-		if (self.robot.rayon+self.robot.x > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.x < 0) or (self.robot.y+self.robot.y > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.y < 0):
+		self.environnement.avancer_robot_env(self.robot, 1)
+		self.robot.tourner(1) 
+		self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.y*mult+self.robot.vitesse*np.sin(self.robot.theta)*mult)
+		self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
+		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
+			print("Collision avec les limites de l'environnement")
 			raise CollisionException("Collision avec les limites de l'environnement")
-			return
 		for objet in self.objets:
 			if self.environnement.collision_robot_objet(self.robot, objet)==True:
+				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
-
+		
 	def run(self):
-		"""mise à jour de l'environnement
+		"""excéution de la simulation
 		"""
-		while True:
-			try:
-				self.update()
-			except CollisionException as e:
-				print(e)
-				break
-			self.afficher_env()
-			time.sleep(1)
+		try:
+			self.update()
+		except CollisionException as e:
+			return
+		self.canvas.after(17, self.run)
 
 
 # Création d'un environnement et d'un robot
-environnement = Environnement(20, 20, 1)
-robot = Robot(9.9, 5.7, 0, 1, 1.6)
+environnement = Environnement(160, 90, 1)
+robot = Robot(50, 55.7, 0, 1, 1.6)
 
 # Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
 environnement.placer_robot_env(robot)
-liste_objets = environnement.generer_obstacles(30)
+liste_objets = environnement.generer_obstacles(20)
 s = Simulation(environnement, robot, liste_objets)
-s.afficher_env()
 
 # Mise à jour de la simulation
 s.run()
-
-# On fait reculer le robot
-for _ in range (2):
-	s.environnement.avancer_robot_env(s.robot,-1)
-	s.afficher_env()
-	time.sleep(1)
-
-s.robot.tourner(225)
-s.run()
+s.window.mainloop()
