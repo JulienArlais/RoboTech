@@ -40,9 +40,9 @@ class Simulation:
 		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			#raise CollisionException("Collision avec les limites de l'environnement")
-			self.environnement.avancer_robot_env(self.robot, -1)
-			self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
-			self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-self.robot.vitesse)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-self.robot.vitesse)*np.sin(self.robot.theta)*mult)
+			#self.environnement.avancer_robot_env(self.robot, -1)
+			#self.canvas.move(self.r, self.robot.vitesse*np.cos(self.robot.theta)*mult, self.robot.vitesse*np.sin(self.robot.theta)*mult)
+			#self.canvas.coords(self.d, self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+4*(-self.robot.vitesse)*np.cos(self.robot.theta)*mult, self.robot.y*mult+4*(-self.robot.vitesse)*np.sin(self.robot.theta)*mult)
 			print(self.robot.x,self.robot.y)
 			self.robot.tourner(np.random.uniform(90,270)) 
 		for objet in self.objets:
