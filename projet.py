@@ -27,7 +27,7 @@ class Simulation:
 		self.robot = robot
 		self.objets = objets
 		self.window = tk.Tk()
-		tk.Label(text="Interface Graphique")
+		self.window.title("Interface Graphique")
 		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult, height=self.environnement.height*mult)
 		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
 		rdroite = self.robot.rdroite
@@ -68,7 +68,7 @@ class Simulation:
 			self.update()
 		except CollisionException as e:
 			return
-		self.canvas.after(35, self.run) #vitesse simulation, argument en millisecondes
+		self.canvas.after(50, self.run) #vitesse de rafraichissement, argument en millisecondes
 
 
 # Création d'un environnement et d'un robot
