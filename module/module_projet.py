@@ -80,7 +80,7 @@ class Environnement:
 
 		Args:
 			nb (int): nombre d'objets à créer
-			
+
 		Returns:
 			List[Objet]: liste des objets générés
 		"""
@@ -88,9 +88,10 @@ class Environnement:
 		libre = True
 		liste = []
 		while i < nb :
-			x = np.random.uniform(0,self.width)
-			y = np.random.uniform(0,self.height)
-			rayon = np.random.uniform(0.5,1) # Rayon initialisé entre 0.5 et 1
+			rayon = np.random.uniform(0.5,1)
+			x = np.random.uniform(rayon, self.width-rayon)
+			y = np.random.uniform(rayon, self.height-rayon)
+			 # Rayon initialisé entre 0.5 et 1
 			for obj in liste:
 				if (self.collision_entre_objets(x,y,rayon,obj)):
 					libre = False
