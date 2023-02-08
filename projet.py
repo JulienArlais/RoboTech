@@ -7,13 +7,22 @@ mult = 10
 
 class CollisionException(Exception):
 	def __init__(self, message):
-		"""Prend en paramètre le message à afficher lors de la collisions
-		   :param message: message à afficher
+		"""constructeur de l'exception
+
+		Args:
+			message (string): message de l'exception
 		"""
 		self.message = message
 
 class Simulation:
-	def __init__(self, env, robot, objets): 
+	def __init__(self, env, robot, objets):
+		"""constructeur de la simulation
+
+		Args:
+			env (Environnement): environnemment de la simulation
+			robot (Robot): robot de la simulation
+			objets (List[Objet]): liste des objets
+		"""
 		self.environnement = env
 		self.robot = robot
 		self.objets = objets
@@ -28,10 +37,10 @@ class Simulation:
 		self.canvas.pack()
 
 	def update(self):
-		"""mise à jour de l'environnement
+		"""mise à jour de la simulation
 
-		Args:
-			objet (Objet): objet de la simulation
+		Raises:
+			CollisionException: collision
 		"""
 		self.environnement.avancer_robot(self.robot, 1)
 		rdroite = self.robot.rdroite

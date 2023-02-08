@@ -20,13 +20,15 @@ class Objet:
 
 class Robot:
 	def __init__(self, x, y, theta, rayon, rd, rg):
-		"""Constructeur du robot
+		"""constructeur de robot
+
 		Args:
 			x (float): coordonnée x réel
 			y (float): coordonnée y réel
 			theta (int): angle
-			vitesse (float): vitesse
 			rayon (float): rayon
+			rd (Roue): roue droite
+			rg (Roue): roue gauche
 		"""
 		# x et y des coordonnées en mètre, direction un angle par rapport à l'abscisse en float et la vitesse max du robot en m/s
 		# on suppose que le robot est un cercle, pour faciliter les collisions
@@ -41,18 +43,20 @@ class Robot:
 
 	def tourner(self, angle):
 		"""fait tourner le robot d'un certain angle
+
 		Args:
-		angle (int): un angle en degré
+			angle (int): angle en degré
 		"""
 		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
 		self.theta += np.radians(angle)
 
 class Roue:
 	def __init__(self, vitesse_angulaire, rayon):
-		"""Constructeur pour Roue
+		"""constructeur pour Roue
+
 		Args:
 			vitesse_angulaire (float): vitesse angulaire initiale en rad/s
-			rayon (float): rayon en m de la roue
+			rayon (float): rayon de la roue
 		"""
 		self.vitesse_angulaire = np.radians(vitesse_angulaire)
 		self.acceleration = 0
@@ -60,7 +64,8 @@ class Roue:
 
 class Environnement:
 	def __init__(self, width, height, scale): 
-		"""Constructeur pour l'environnement
+		"""constructeur pour l'environnement
+
 		Args:
 			width (int): largeur 
 			height (int): hauteur
@@ -71,12 +76,14 @@ class Environnement:
 		self.scale = scale
 			
 	def generer_obstacles(self, nb):
-		'''Génère nb objets et les place aléatoirement
+		"""génère nb objets et les place aléatoirement
+
 		Args:
 			nb (int): nombre d'objets à créer
+			
 		Returns:
 			List[Objet]: liste des objets générés
-		'''
+		"""
 		i = 0
 		libre = True
 		liste = []
@@ -98,6 +105,7 @@ class Environnement:
 
 	def avancer_robot(self, robot, dt):
 		"""fait avancer pendant une durée dt le robot dans l'environnement
+
 		Args:
 			robot (Robot): robot à faire avancer
 			dt (int): durée en seconde
@@ -114,10 +122,12 @@ class Environnement:
 
 
 	def collision_robot_objet(self, robot, objet):
-		"""Teste s'il y a eu collision entre le robot et l'objet
+		"""teste s'il y a eu collision entre le robot et l'objet
+
 		Args:
 			robot (Robot): robot à tester
 			objet (Objet): objet à tester
+
 		Returns:
 			boolean: collision ou non entre le robot et l'objet
 		"""
