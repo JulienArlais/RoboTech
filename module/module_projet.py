@@ -75,7 +75,7 @@ class Environnement:
 		self.height = height
 		self.scale = scale
 			
-	def generer_obstacles(self, nb):
+	def generer_obstacles(self, robot, nb):
 		"""génère nb objets et les place aléatoirement
 
 		Args:
@@ -93,10 +93,11 @@ class Environnement:
 			y = np.random.uniform(rayon, self.height-rayon)
 			 # Rayon initialisé entre 0.5 et 1
 			for obj in liste:
-				if (self.collision_entre_objets(x,y,rayon,obj)):
+				if ((self.collision_entre_objets(x,y,rayon,obj)) or  (self.collision_robot_objet(robot,obj))):
 					libre = False
 					break
 			if (libre):
+				print("a",x,y)
 				o = Objet(x, y, 0, 0, rayon)
 				liste.append(o)
 				i+=1

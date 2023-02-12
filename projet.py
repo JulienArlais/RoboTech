@@ -80,7 +80,7 @@ robot = Robot(40, 55.7, 0, 1.6, r_gauche, r_droite)
 
 # Création d'une simulation et ajout du robot et des objets dans l'environnement et affichage de l'environnement
 #environnement.placer_robot_env(robot)
-liste_objets = environnement.generer_obstacles(5)
+liste_objets = environnement.generer_obstacles(robot,20)
 s = Simulation(environnement, robot, liste_objets)
 
 # Mise à jour de la simulation
