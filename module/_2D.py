@@ -21,7 +21,6 @@ class GUI():
 		self.window.title("Interface Graphique")
 		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult, height=self.environnement.height*mult)
 		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
-		rdroite = self.robot.rdroite
 		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*mult, self.robot.y*mult+self.robot.getYstep(dt)*mult, arrow=tk.LAST)
 		for objet in self.objets:
 			create_circle(objet.x*mult, objet.y*mult, objet.rayon*mult, self.canvas, "black")

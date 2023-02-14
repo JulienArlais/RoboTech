@@ -3,7 +3,7 @@ import tkinter as tk
 import time
 from module._2D import GUI
 from threading import Thread
-from module.element_simulation import Objet, Robot, Environnement, Roue
+from module.element_simulation import Objet, Robot, Environnement
 
 
 dt = 0.05 # pas de temps
@@ -71,8 +71,7 @@ if __name__ == "__main__":
 
 	# Création d'un environnement et d'un robot
 	environnement = Environnement(80, 80, 1)
-	roue = Roue(720,1)
-	robot = Robot(40, 55.7, 0, 1.6, roue, roue)
+	robot = Robot(40, 55.7, 0, 1.6, 720, 720, 1)
 
 	# Création d'une simulation, d'une interface graphique
 	liste_objets = environnement.generer_obstacles(robot, 5)

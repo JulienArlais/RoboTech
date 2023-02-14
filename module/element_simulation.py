@@ -19,7 +19,7 @@ class Objet:
 		self.rayon = rayon
 
 class Robot:
-	def __init__(self, x, y, theta, rayon, rd, rg):
+	def __init__(self, x, y, theta, rayon, vitesse_angulaire_d, vitesse_angulaire_g, rayr):
 		"""constructeur de robot
 
 		Args:
@@ -27,15 +27,25 @@ class Robot:
 			y (float): coordonnée y réel
 			theta (int): angle
 			rayon (float): rayon
-			rd (Roue): roue droite
-			rg (Roue): roue gauche
+			vad (Roue): vitesse angulaire roue droite
+			vag (Roue): vitesse angulaire roue gauche
+			rayr: rayon des roues
 		"""
 		self.x = x
 		self.y = y
 		self.theta = np.radians(theta)
 		self.rayon = rayon
-		self.rdroite = rd
-		self.rgauche = rg
+		self.vad = np.radians(vitesse_angulaire_d)
+		self.vag = np.radians(vitesse_angulaire_g)
+		self.rayr = rayr
+
+	def set_vad(self,vitesse_angulaire):
+		''' setter de vad '''
+		self.vad = vitesse_angulaire
+		
+	def set_vag(self,vitesse_angulaire):
+		''' setter de vag '''
+		self.vag = vitesse_angulaire
 
 	def tourner(self, angle):
 		"""fait tourner le robot d'un certain angle
@@ -54,7 +64,7 @@ class Robot:
 		Returns:
 			float: déplacement en x
 		"""
-		return self.rdroite.vitesse_angulaire * self.rdroite.rayon * np.cos(self.theta) * dt
+		return self.vad * self.rayr * np.cos(self.theta) * dt
 
 	def getYstep(self, dt):
 		"""donne le déplacement en y en un pas de temps dt
@@ -65,20 +75,8 @@ class Robot:
 		Returns:
 			float: déplacement en y
 		"""
-		return self.rdroite.vitesse_angulaire * self.rdroite.rayon * np.sin(self.theta) * dt
+		return self.vad * self.rayr * np.sin(self.theta) * dt
 
-
-class Roue:
-	def __init__(self, vitesse_angulaire, rayon):
-		"""constructeur pour Roue
-
-		Args:
-			vitesse_angulaire (float): vitesse angulaire initiale en rad/s
-			rayon (float): rayon de la roue
-		"""
-		self.vitesse_angulaire = np.radians(vitesse_angulaire)
-		self.acceleration = 0
-		self.rayon = rayon
 
 class Environnement:
 	def __init__(self, width, height, scale): 
@@ -119,7 +117,7 @@ class Environnement:
 		return [self.generer_un_obstacle(robot) for _ in range(nb)]
 
 
-	def avancer_robot(self, robot, dt):
+	def avancer_robot(self, robot, dt): # changer les avancer en mvt
 		"""fait avancer pendant une durée dt le robot dans l'environnement
 
 		Args:
@@ -128,11 +126,15 @@ class Environnement:
 		"""
 		x = robot.x
 		y = robot.y
-		rdroite = robot.rdroite
-		robot.x += rdroite.vitesse_angulaire * rdroite.rayon * np.cos(robot.theta) * dt
-		robot.y += rdroite.vitesse_angulaire * rdroite.rayon * np.sin(robot.theta) * dt
-		if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
-			return
+		if (robot.vad == robot.vag):
+			robot.x += robot.vad * robot.rayr * np.cos(robot.theta) * dt
+			robot.y += robot.vad * robot.rayr * np.sin(robot.theta) * dt
+		elif (robot.vad == -robot.vag and robot.vad > 0):
+			robot.theta += np.radians(robot.vad * dt)
+		elif (robot.vad == -robot.vag and robot.vag > 0):
+			robot.theta += np.radians(robot.vad * dt)
+		#if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
+		#	return
 
 		print("Le robot en (", format(x), ",", format(y), ") a avancé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
 
