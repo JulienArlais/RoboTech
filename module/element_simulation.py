@@ -102,7 +102,7 @@ class Environnement:
 		while True:
 			x = np.random.uniform(rayon, self.width - rayon)
 			y = np.random.uniform(rayon, self.height - rayon)
-			if all(not self.collision_entre_objets(x, y, rayon, obj) and not self.collision_robot_objet(robot, obj) for obj in self.objets):
+			if all(not self.collision(x, y, rayon, obj) and not self.collision(robot, obj) for obj in self.objets):
 				return Objet(x, y, 0, 0, rayon)
 
 	def generer_obstacles(self, robot, nb):
@@ -138,21 +138,7 @@ class Environnement:
 		print(format(robot.x),",",format(robot.y),")")
 
 
-	def collision_robot_objet(self, robot, objet):
-		"""teste s'il y a eu collision entre le robot et l'objet
-
-		Args:
-			robot (Robot): robot à tester
-			objet (Objet): objet à tester
-
-		Returns:
-			boolean: collision ou non entre le robot et l'objet
-		"""
-		if distance(robot.x, robot.y, objet.x, objet.y) <= robot.rayon + objet.rayon:
-			return True
-		return False
-		
-	def collision_entre_objets(self, x, y, ray, obj):
+	def collision(self, x, y, ray, obj):
 		"""Teste s'il y aura collision avec obj aux coordonnées (x, y)
 
 		Args:

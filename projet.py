@@ -63,7 +63,7 @@ class Simulation:
 			#self.robot.set_vad(self.robot.vag)
 			self.robot.tourner(np.random.uniform(90,270))
 		for objet in self.objets:
-			if self.environnement.collision_robot_objet(self.robot, objet)==True:
+			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon, objet)==True:
 				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
 		#if (np.random.rand() < 0.02):
