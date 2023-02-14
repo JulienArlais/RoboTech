@@ -69,6 +69,22 @@ class Robot:
 		"""
 		return self.vad * self.rayr * np.sin(self.theta) * dt
 
+	def capteur(self, env):
+		"""donne la distance par rapport au premier obstacle/mur dans la direction du robot
+
+		Args:
+			env (Environnement): environnement
+
+		Returns:
+			float: distance
+		"""
+		x = self.x
+		y = self.y
+		while not((x+self.rayon > env.width*env.scale) or (x-self.rayon < 0) or (y+self.rayon > env.height*env.scale) or (y-self.rayon < 0)):
+			x += self.vad * self.rayr * np.cos(self.theta) * 0.01
+			y += self.vag * self.rayr * np.sin(self.theta) * 0.01
+		return distance(self.x, self.y, x, y)
+
 
 class Environnement:
 	def __init__(self, width, height, scale): 

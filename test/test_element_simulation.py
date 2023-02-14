@@ -13,6 +13,7 @@ class TestRobot(unittest.TestCase):
 
 	def setUp(self):
 		self.rob = Robot(5, 6, 0, 3, 90, 90, 1)
+		self.env = Environnement(20, 20, 1)
 	
 	def test_set_vag(self):
 		self.rob.set_vag(78)
@@ -27,6 +28,9 @@ class TestRobot(unittest.TestCase):
 
 	def test_getYstep(self):
 		self.assertAlmostEqual(self.rob.getYstep(1), 0)
+
+	def test_capteur(self):
+		self.assertAlmostEqual(self.rob.capteur(self.env), 12.0008839)
 
 class TestEnvironnement(unittest.TestCase):
 		
@@ -48,7 +52,6 @@ class TestEnvironnement(unittest.TestCase):
 
 	def test_collision(self):
 		self.assertTrue(self.env.collision(0, 0, 3, self.obj))
-
 
 if __name__ == '__main__':
 	unittest.main()
