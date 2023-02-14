@@ -30,13 +30,9 @@ class Robot:
 			rd (Roue): roue droite
 			rg (Roue): roue gauche
 		"""
-		# x et y des coordonnées en mètre, direction un angle par rapport à l'abscisse en float et la vitesse max du robot en m/s
-		# on suppose que le robot est un cercle, pour faciliter les collisions
 		self.x = x
 		self.y = y
 		self.theta = np.radians(theta)
-		#self.vitesse = vitesse
-		#self.acceleration = 0
 		self.rayon = rayon
 		self.rdroite = rd
 		self.rgauche = rg
@@ -47,8 +43,30 @@ class Robot:
 		Args:
 			angle (int): angle en degré
 		"""
-		# angle est la valeur d'angle que l'on va ajouter à notre angle. Elle peut être positive ou négative
 		self.theta += np.radians(angle)
+
+	def getXstep(self, dt):
+		"""donne le déplacement en x en un pas de temps dt
+
+		Args:
+			dt (float): pas de temps
+
+		Returns:
+			float: déplacement en x
+		"""
+		return self.rdroite.vitesse_angulaire * self.rdroite.rayon * np.cos(self.theta) * dt
+
+	def getYstep(self, dt):
+		"""donne le déplacement en y en un pas de temps dt
+
+		Args:
+			dt (float): pas de temps
+
+		Returns:
+			float: déplacement en y
+		"""
+		return self.rdroite.vitesse_angulaire * self.rdroite.rayon * np.sin(self.theta) * dt
+
 
 class Roue:
 	def __init__(self, vitesse_angulaire, rayon):
