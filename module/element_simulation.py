@@ -47,14 +47,6 @@ class Robot:
 		''' setter de vag '''
 		self.vag = vitesse_angulaire
 
-	def tourner(self, angle):
-		"""fait tourner le robot d'un certain angle
-
-		Args:
-			angle (int): angle en degré
-		"""
-		self.theta += np.radians(angle)
-
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
 
@@ -129,9 +121,9 @@ class Environnement:
 			robot.x += robot.vad * robot.rayr * np.cos(robot.theta) * dt
 			robot.y += robot.vad * robot.rayr * np.sin(robot.theta) * dt
 		elif (robot.vad == -robot.vag and robot.vad > 0):
-			robot.theta += np.radians(robot.vad * dt)
+			robot.theta += robot.vad * dt
 		elif (robot.vad == -robot.vag and robot.vag > 0):
-			robot.theta += np.radians(robot.vad * dt)
+			robot.theta += robot.vad * dt
 		#if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
 		#	return
 

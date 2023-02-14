@@ -58,10 +58,9 @@ class Simulation:
 			print("Collision avec les limites de l'environnement")
 			self.environnement.avancer_robot(self.robot, -dt)
 			print(self.robot.x,self.robot.y)
-			#self.robot.set_vad(-self.robot.vag)
-			#self.environnement.avancer_robot(self.robot, dt) #np.random.uniform(90,270))
-			#self.robot.set_vad(self.robot.vag)
-			self.robot.tourner(np.random.uniform(90,270))
+			self.robot.set_vad(-self.robot.vag)
+			self.environnement.avancer_robot(self.robot, dt) #np.random.uniform(90,270))
+			self.robot.set_vad(self.robot.vag)
 		for objet in self.objets:
 			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon, objet)==True:
 				print("Collision entre robot et un objet")
