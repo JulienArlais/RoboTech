@@ -92,9 +92,23 @@ class Environnement:
 		self.width = width
 		self.height = height
 		self.scale = scale
+		self.objets = []
 			
+	def generer_un_obstacle(self, robot):
+		"""génère un objet et le place aléatoirement dans l'environnement sans collision avec le robot
+
+		Returns:
+			Objet: l'objet généré
+		"""
+		rayon = np.random.uniform(0.5, 1)
+		while True:
+			x = np.random.uniform(rayon, self.width - rayon)
+			y = np.random.uniform(rayon, self.height - rayon)
+			if all(not self.collision_entre_objets(x, y, rayon, obj) and not self.collision_robot_objet(robot, obj) for obj in self.objets):
+				return Objet(x, y, 0, 0, rayon)
+
 	def generer_obstacles(self, robot, nb):
-		"""génère nb objets et les place aléatoirement
+		"""génère nb objets et les place aléatoirement dans l'environnement sans collision avec le robot
 
 		Args:
 			nb (int): nombre d'objets à créer
@@ -102,26 +116,8 @@ class Environnement:
 		Returns:
 			List[Objet]: liste des objets générés
 		"""
-		i = 0
-		libre = True
-		liste = []
-		while i < nb :
-			rayon = np.random.uniform(0.5,1)
-			x = np.random.uniform(rayon, self.width-rayon)
-			y = np.random.uniform(rayon, self.height-rayon)
-			 # Rayon initialisé entre 0.5 et 1
-			for obj in liste:
-				if ((self.collision_entre_objets(x,y,rayon,obj)) or  (self.collision_robot_objet(robot,obj))):
-					libre = False
-					break
-			if (libre):
-				print("a",x,y)
-				o = Objet(x, y, 0, 0, rayon)
-				liste.append(o)
-				i+=1
-			libre = True
-			
-		return liste
+		return [self.generer_un_obstacle(robot) for _ in range(nb)]
+
 
 	def avancer_robot(self, robot, dt):
 		"""fait avancer pendant une durée dt le robot dans l'environnement

@@ -1,5 +1,8 @@
 import unittest
-from module.module_outils import format, distance
+import sys
+sys.path.append('$pwd')
+from module.toolbox import format, distance
+
 
 class TestOutils(unittest.TestCase):
 
