@@ -124,8 +124,7 @@ class Environnement:
 			robot (Robot): robot à faire avancer
 			dt (int): durée en seconde
 		"""
-		x = robot.x
-		y = robot.y
+		print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
 		if (robot.vad == robot.vag):
 			robot.x += robot.vad * robot.rayr * np.cos(robot.theta) * dt
 			robot.y += robot.vad * robot.rayr * np.sin(robot.theta) * dt
@@ -136,7 +135,7 @@ class Environnement:
 		#if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
 		#	return
 
-		print("Le robot en (", format(x), ",", format(y), ") a avancé et s'est déplacé en (",format(robot.x),",",format(robot.y),")")
+		print(format(robot.x),",",format(robot.y),")")
 
 
 	def collision_robot_objet(self, robot, objet):
