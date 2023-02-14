@@ -1,6 +1,4 @@
 import unittest
-import sys
-sys.path.append('$pwd')
 from module.toolbox import format, distance
 
 

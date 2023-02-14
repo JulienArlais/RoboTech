@@ -1,14 +1,7 @@
 import unittest
 import numpy as np
-import sys
-sys.path.append('$pwd')
-from module.element_simulation import Roue, Objet, Robot, Environnement
+from module.element_simulation import Objet, Robot, Environnement
 
-class TestRoue(unittest.TestCase):
-
-	def setUp(self):
-		self.r1 = Roue(90, 1)
-		self.r2 = Roue(90, 1)
 
 class TestObjet(unittest.TestCase):
 
@@ -19,17 +12,27 @@ class TestObjet(unittest.TestCase):
 class TestRobot(unittest.TestCase):
 
 	def setUp(self):
-		self.rob = Robot(5, 6, 0, 3, Roue(90, 1), Roue(90, 1))
+		self.rob = Robot(5, 6, 0, 3, 90, 90, 1)
 	
-	def test_tourner(self):
-		self.rob.tourner(47)
-		self.assertEqual(self.rob.theta, np.radians(47))
+	def test_set_vag(self):
+		self.rob.set_vag(78)
+		self.assertEqual(self.rob.vag, 78)
+
+	def test_set_vad(self):
+		self.rob.set_vad(34)
+		self.assertEqual(self.rob.vad, 34)
+
+	def test_getXstep(self):
+		self.assertAlmostEqual(self.rob.getXstep(1), np.radians(90))
+
+	def test_getYstep(self):
+		self.assertAlmostEqual(self.rob.getYstep(1), 0)
 
 class TestEnvironnement(unittest.TestCase):
 		
 	def setUp(self):
 		self.env = Environnement(20, 20, 1)
-		self.rob = Robot(0, 0, 0, 3, Roue(90, 1), Roue(90, 1))
+		self.rob = Robot(0, 0, 0, 3, 90, 90, 1)
 		self.obj = Objet(4, 2, 0, 0, 2)
 	
 	def test_generer_obstacles(self):
@@ -45,6 +48,7 @@ class TestEnvironnement(unittest.TestCase):
 
 	def test_collision(self):
 		self.assertTrue(self.env.collision(0, 0, 3, self.obj))
+
 
 if __name__ == '__main__':
 	unittest.main()
