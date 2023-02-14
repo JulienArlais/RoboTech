@@ -31,7 +31,12 @@ class TestEnvironnement(unittest.TestCase):
 		self.env = Environnement(20, 20, 1)
 		self.rob = Robot(0, 0, 0, 3, Roue(90, 1), Roue(90, 1))
 		self.obj = Objet(4, 2, 0, 0, 2)
-
+	
+	def test_generer_obstacles(self):
+		self.lo = self.env.generer_obstacles(self.rob,3)
+		self.assertEqual(len(self.lo), 3)
+		for i in range(0, len(self.lo)):
+			self.assertIsInstance(self.lo[i], Objet)
 
 	def test_avancer_robot(self):
 		self.env.avancer_robot(self.rob, 1)
