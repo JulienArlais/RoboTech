@@ -43,11 +43,8 @@ class TestEnvironnement(unittest.TestCase):
 		self.assertAlmostEqual(self.rob.x, np.radians(90))
 		self.assertAlmostEqual(self.rob.y, 0)
 
-	def test_collision_robot_objet(self):
-		self.assertTrue(self.env.collision_robot_objet(self.rob, self.obj))
-
-	def test_collision_entre_objets(self):
-		self.assertTrue(self.env.collision_entre_objets(0, 0, 3, self.obj))
+	def test_collision(self):
+		self.assertTrue(self.env.collision(0, 0, 3, self.obj))
 
 if __name__ == '__main__':
 	unittest.main()
