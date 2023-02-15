@@ -44,7 +44,6 @@ class FakeIA():
 
 	def update(self):
 		if(self.robot.capteur(self.env) < 2*self.robot.rayon):
-			self.env.avancer_robot(self.robot, -dt)
 			self.robot.set_vad(-self.robot.vag) 
 			self.env.avancer_robot(self.robot, dt)
 			self.robot.set_vad(self.robot.vag)

@@ -3,7 +3,7 @@ from .toolbox import format, distance, create_circle
 
 
 mult = 10 # multiplieur pour l'affichage graphique
-dt = 0.05 
+dt = 0.01
 
 class GUI():
 	def __init__(self, env, robot, objets):
@@ -30,5 +30,5 @@ class GUI():
 		self.canvas.delete(self.r)
 		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
 		self.canvas.delete(self.d)
-		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*mult, self.robot.y*mult+self.robot.getYstep(dt)*mult, arrow=tk.LAST)
+		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*35*mult, self.robot.y*mult+self.robot.getYstep(dt)*35*mult, arrow=tk.LAST)
 		
