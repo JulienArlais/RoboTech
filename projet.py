@@ -84,7 +84,7 @@ if __name__ == "__main__":
 	robot = Robot(40, 55.7, 0, 1.6, 720, 720, 1)
 
 	# Création d'une simulation, d'une interface graphique
-	liste_objets = environnement.generer_obstacles(robot, 0)
+	liste_objets = environnement.generer_obstacles(robot, 15)
 	s = Simulation(environnement, robot, liste_objets)
 	gui = GUI(environnement, robot, liste_objets)
 	ia = FakeIA(environnement, robot, liste_objets)

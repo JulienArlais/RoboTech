@@ -27,7 +27,8 @@ class GUI():
 		self.canvas.pack()
 
 	def update(self):
-		self.canvas.coords(self.d, self.robot.x*mult-self.robot.getXstep(dt)*mult, self.robot.y*mult-self.robot.getYstep(dt)*mult, 1.0*self.robot.x*mult, self.robot.y*mult)
-		self.canvas.move(self.r, self.robot.getXstep(dt)*mult, self.robot.getYstep(dt)*mult)
-
-
+		self.canvas.delete(self.r)
+		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
+		self.canvas.delete(self.d)
+		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*mult, self.robot.y*mult+self.robot.getYstep(dt)*mult, arrow=tk.LAST)
+		
