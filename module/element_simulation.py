@@ -70,7 +70,7 @@ class Robot:
 		return self.vad * self.rayr * np.sin(self.theta) * dt
 
 	def capteur(self, env):
-		"""donne la distance par rapport au premier obstacle/mur dans la direction du robot
+		"""donne la distance par rapport au mur dans la direction du robot
 
 		Args:
 			env (Environnement): environnement

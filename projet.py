@@ -18,7 +18,7 @@ class CollisionException(Exception):
 		self.message = message
 
 		
-def run(simulation, gui):
+def run(simulation, gui, ia):
 	"""exécution de la simulation
 
 	Args:
@@ -27,12 +27,30 @@ def run(simulation, gui):
 	"""
 	while True:
 		try:
+			ia.update()
 			simulation.update()
 			if gui is not None:
 				gui.update()
 			time.sleep(dt)
 		except CollisionException as e:
 			break
+
+
+class FakeIA():
+	def __init__(self, env, robot, objets):
+		self.env = env
+		self.robot = robot
+		self.objets = objets
+
+	def update(self):
+		if(self.robot.capteur(self.env) < 2*self.robot.rayon):
+			self.env.avancer_robot(self.robot, -dt)
+			self.robot.set_vad(-self.robot.vag) 
+			self.env.avancer_robot(self.robot, dt)
+			self.robot.set_vad(self.robot.vag)
+		else:
+			self.env.avancer_robot(self.robot, dt)
+
 
 class Simulation:
 	def __init__(self, env, robot, objets):
@@ -53,20 +71,11 @@ class Simulation:
 		Raises:
 			CollisionException: collision
 		"""
-		self.environnement.avancer_robot(self.robot, dt)
-		if (self.robot.x+self.robot.rayon > self.environnement.width*self.environnement.scale) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height*self.environnement.scale) or (self.robot.y-self.robot.rayon < 0):
-			print("Collision avec les limites de l'environnement")
-			self.environnement.avancer_robot(self.robot, -dt)
-			print(self.robot.x,self.robot.y)
-			self.robot.set_vad(-self.robot.vag)
-			self.environnement.avancer_robot(self.robot, dt) #np.random.uniform(90,270))
-			self.robot.set_vad(self.robot.vag)
 		for objet in self.objets:
 			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon, objet)==True:
 				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
-		#if (np.random.rand() < 0.02):
-		#	self.robot.tourner(np.random.uniform(0,360))
+
 
 if __name__ == "__main__":
 
@@ -75,10 +84,11 @@ if __name__ == "__main__":
 	robot = Robot(40, 55.7, 0, 1.6, 720, 720, 1)
 
 	# Création d'une simulation, d'une interface graphique
-	liste_objets = environnement.generer_obstacles(robot, 5)
+	liste_objets = environnement.generer_obstacles(robot, 0)
 	s = Simulation(environnement, robot, liste_objets)
 	gui = GUI(environnement, robot, liste_objets)
-	threadrun = Thread(target=run, args=(s, gui)) # remplacer gui par None si on veut pas d'interface graphique
+	ia = FakeIA(environnement, robot, liste_objets)
+	threadrun = Thread(target=run, args=(s, gui, ia)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique
