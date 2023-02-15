@@ -6,7 +6,7 @@ from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement
 
 
-dt = 0.05 # pas de temps
+dt = 0.01 # pas de temps
 
 class CollisionException(Exception):
 	def __init__(self, message):
