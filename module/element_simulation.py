@@ -2,6 +2,16 @@ import numpy as np
 from .toolbox import format, distance, create_circle
 
 
+class CollisionException(Exception):
+	def __init__(self, message):
+		"""constructeur de l'exception
+
+		Args:
+			message (string): message de l'exception
+		"""
+		self.message = message
+
+
 class Objet:
 	def __init__(self, x, y, theta, vitesse, rayon):
 		"""Constructeur pour objet

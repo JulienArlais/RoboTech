@@ -3,19 +3,10 @@ import tkinter as tk
 import time
 from module._2D import GUI
 from threading import Thread
-from module.element_simulation import Objet, Robot, Environnement
+from module.element_simulation import Objet, Robot, Environnement, CollisionException
 
 
 dt = 0.01 # pas de temps
-
-class CollisionException(Exception):
-	def __init__(self, message):
-		"""constructeur de l'exception
-
-		Args:
-			message (string): message de l'exception
-		"""
-		self.message = message
 
 		
 def run(simulation, gui, ia):
@@ -34,21 +25,6 @@ def run(simulation, gui, ia):
 			time.sleep(dt)
 		except CollisionException as e:
 			break
-
-
-class FakeIA():
-	def __init__(self, env, robot, objets):
-		self.env = env
-		self.robot = robot
-		self.objets = objets
-
-	def update(self):
-		if(self.robot.capteur(self.env) < 2*self.robot.rayon):
-			self.robot.set_vad(-self.robot.vag) 
-			self.env.avancer_robot(self.robot, dt)
-			self.robot.set_vad(self.robot.vag)
-		else:
-			self.env.avancer_robot(self.robot, dt)
 
 
 class Simulation:
