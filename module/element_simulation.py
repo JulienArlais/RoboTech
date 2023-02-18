@@ -79,7 +79,7 @@ class Robot:
 		"""
 		return self.vad * self.rayr * np.sin(self.theta) * dt
 
-	def capteur(self, env):
+	def capteur(self, env, distmax):
 		"""donne la distance par rapport au mur dans la direction du robot
 
 		Args:
@@ -93,6 +93,8 @@ class Robot:
 		while not((x+self.rayon > env.width*env.scale) or (x-self.rayon < 0) or (y+self.rayon > env.height*env.scale) or (y-self.rayon < 0)):
 			x += self.vad * self.rayr * np.cos(self.theta) * 0.01
 			y += self.vag * self.rayr * np.sin(self.theta) * 0.01
+			if distance(self.x, self.y, x, y) > distmax:
+				return distmax
 		return distance(self.x, self.y, x, y)
 
 

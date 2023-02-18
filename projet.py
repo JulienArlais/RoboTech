@@ -4,6 +4,7 @@ import time
 from module._2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException
+from module.controleur import FakeIA
 
 
 dt = 0.01 # pas de temps
