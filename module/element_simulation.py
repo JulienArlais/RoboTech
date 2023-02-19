@@ -37,8 +37,8 @@ class Robot:
 			y (float): coordonnée y réel
 			theta (int): angle
 			rayon (float): rayon
-			vad (Roue): vitesse angulaire roue droite
-			vag (Roue): vitesse angulaire roue gauche
+			vitAngD (Roue): vitesse angulaire roue droite
+			vitAngG (Roue): vitesse angulaire roue gauche
 			rayr: rayon des roues
 		"""
 		self.x = x
@@ -46,16 +46,16 @@ class Robot:
 		self.theta = np.radians(theta)
 		self.rayon = rayon
 		self.distroue = distroue
-		self.vad = np.radians(vitesse_angulaire_d)
-		self.vag = np.radians(vitesse_angulaire_g)
+		self.vitAngD = np.radians(vitesse_angulaire_d)
+		self.vitAngG = np.radians(vitesse_angulaire_g)
 		self.rayr = rayr
 
 	def tourner(self, dps):
 		delta = (self.distroue * np.radians(dps))/self.rayr
 		if dps > 0:
-			self.set_vitesse(self.vad, self.vag+delta)
+			self.set_vitesse(self.vitAngD, self.vitAngG+delta)
 		else:
-			self.set_vitesse(self.vad+delta, self.vag)
+			self.set_vitesse(self.vitAngD+delta, self.vitAngG)
 
 	def set_vitesse(self, dps1, dps2):
 		"""setter de vitesse pour les roues
@@ -64,8 +64,8 @@ class Robot:
 			dps1 (float): vitesse angulaire roue droite
 			dps2 (float): vitesse angulaire roue gauche
 		"""
-		self.vad = dps1
-		self.vag = dps2
+		self.vitAngD = dps1
+		self.vitAngG = dps2
 
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
@@ -76,7 +76,7 @@ class Robot:
 		Returns:
 			float: déplacement en x
 		"""
-		return self.vad * self.rayr * np.cos(self.theta) * dt
+		return self.vitAngD * self.rayr * np.cos(self.theta) * dt
 
 	def getYstep(self, dt):
 		"""donne le déplacement en y en un pas de temps dt
@@ -87,7 +87,7 @@ class Robot:
 		Returns:
 			float: déplacement en y
 		"""
-		return self.vad * self.rayr * np.sin(self.theta) * dt
+		return self.vitAngD * self.rayr * np.sin(self.theta) * dt
 
 	def capteur(self, env, distmax):
 		"""donne la distance par rapport au mur dans la direction du robot
@@ -101,8 +101,8 @@ class Robot:
 		x = self.x
 		y = self.y
 		while not((x+self.rayon > env.width*env.scale) or (x-self.rayon < 0) or (y+self.rayon > env.height*env.scale) or (y-self.rayon < 0)):
-			x += self.vad * self.rayr * np.cos(self.theta) * 0.01
-			y += self.vag * self.rayr * np.sin(self.theta) * 0.01
+			x += self.vitAngD * self.rayr * np.cos(self.theta) * 0.01
+			y += self.vitAngG * self.rayr * np.sin(self.theta) * 0.01
 			if distance(self.x, self.y, x, y) > distmax:
 				return distmax
 		return distance(self.x, self.y, x, y)
@@ -155,15 +155,15 @@ class Environnement:
 			dt (int): durée en seconde
 		"""
 		print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
-		if (robot.vad == robot.vag):
-			robot.x += robot.vad * robot.rayr * np.cos(robot.theta) * dt
-			robot.y += robot.vad * robot.rayr * np.sin(robot.theta) * dt
-		elif (robot.vad == -robot.vag and robot.vad > 0):
-			robot.theta += robot.vad * dt
-		elif (robot.vad == -robot.vag and robot.vag > 0):
-			robot.theta += robot.vad * dt
+		if (robot.vitAngD == robot.vitAngG):
+			robot.x += robot.vitAngD * robot.rayr * np.cos(robot.theta) * dt
+			robot.y += robot.vitAngD * robot.rayr * np.sin(robot.theta) * dt
+		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngD > 0):
+			robot.theta += robot.vitAngD * dt
+		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngG > 0):
+			robot.theta += robot.vitAngD * dt
 		else:
-			robot.theta += (robot.vad - robot.vag) * robot.rayon/robot.distroue
+			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.distroue
 		print(format(robot.x),",",format(robot.y),")")
 
 

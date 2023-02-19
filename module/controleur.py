@@ -1,4 +1,4 @@
-dt = 0.01 # pas de temps
+dt = 0.01# pas de temps
 
 class FakeIA():
 	def __init__(self, env, robot):
@@ -9,4 +9,4 @@ class FakeIA():
 		if (self.robot.capteur(self.env, 5) < 2*self.robot.rayon):
 			self.robot.tourner(10)
 		else:
-			self.robot.set_vitesse(self.robot.vad, self.robot.vad)
+			self.robot.set_vitesse(self.robot.vitAngD, self.robot.vitAngD)

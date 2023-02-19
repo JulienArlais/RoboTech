@@ -15,13 +15,13 @@ class TestRobot(unittest.TestCase):
 		self.rob = Robot(5, 6, 0, 3, 90, 90, 1)
 		self.env = Environnement(20, 20, 1)
 	
-	def test_set_vag(self):
-		self.rob.set_vag(78)
-		self.assertEqual(self.rob.vag, 78)
+	def test_set_vitAngG(self):
+		self.rob.set_vitAngG(78)
+		self.assertEqual(self.rob.vitAngG, 78)
 
-	def test_set_vad(self):
-		self.rob.set_vad(34)
-		self.assertEqual(self.rob.vad, 34)
+	def test_set_vitAngG(self):
+		self.rob.set_vitAngG(34)
+		self.assertEqual(self.rob.vitAngG, 34)
 
 	def test_getXstep(self):
 		self.assertAlmostEqual(self.rob.getXstep(1), np.radians(90))
