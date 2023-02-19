@@ -29,7 +29,7 @@ class Objet:
 		self.rayon = rayon
 
 class Robot:
-	def __init__(self, x, y, theta, rayon, vitesse_angulaire_d, vitesse_angulaire_g, rayr):
+	def __init__(self, x, y, theta, rayon, distroue, vitesse_angulaire_d, vitesse_angulaire_g, rayr):
 		"""constructeur de robot
 
 		Args:
@@ -45,9 +45,17 @@ class Robot:
 		self.y = y
 		self.theta = np.radians(theta)
 		self.rayon = rayon
+		self.distroue = distroue
 		self.vad = np.radians(vitesse_angulaire_d)
 		self.vag = np.radians(vitesse_angulaire_g)
 		self.rayr = rayr
+
+	def tourner(self, dps):
+		delta = (self.distroue * np.radians(dps))/self.rayr
+		if dps > 0:
+			self.set_vitesse(self.vad, self.vag+delta)
+		else:
+			self.set_vitesse(self.vad+delta, self.vag)
 
 	def set_vitesse(self, dps1, dps2):
 		"""setter de vitesse pour les roues
@@ -154,9 +162,8 @@ class Environnement:
 			robot.theta += robot.vad * dt
 		elif (robot.vad == -robot.vag and robot.vag > 0):
 			robot.theta += robot.vad * dt
-		#if (robot.rayon + robot.x > self.width*self.scale) or (robot.x - robot.rayon < 0) or (robot.y + robot.rayon > self.height*self.scale) or (robot.y - robot.rayon < 0):
-		#	return
-
+		else:
+			robot.theta += (robot.vad - robot.vag) * robot.rayon/robot.distroue
 		print(format(robot.x),",",format(robot.y),")")
 
 
