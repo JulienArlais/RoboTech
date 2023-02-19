@@ -47,6 +47,7 @@ class Simulation:
 		Raises:
 			CollisionException: collision
 		"""
+		self.environnement.avancer_robot(self.robot, dt)
 		for objet in self.objets:
 			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon, objet)==True:
 				print("Collision entre robot et un objet")
@@ -63,7 +64,7 @@ if __name__ == "__main__":
 	liste_objets = environnement.generer_obstacles(robot, 15)
 	s = Simulation(environnement, robot, liste_objets)
 	gui = GUI(environnement, robot, liste_objets)
-	ia = FakeIA(environnement, robot, liste_objets)
+	ia = FakeIA(environnement, robot)
 	threadrun = Thread(target=run, args=(s, gui, ia)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()

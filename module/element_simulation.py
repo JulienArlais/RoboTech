@@ -49,13 +49,15 @@ class Robot:
 		self.vag = np.radians(vitesse_angulaire_g)
 		self.rayr = rayr
 
-	def set_vad(self,vitesse_angulaire):
-		''' setter de vad '''
-		self.vad = vitesse_angulaire
-		
-	def set_vag(self,vitesse_angulaire):
-		''' setter de vag '''
-		self.vag = vitesse_angulaire
+	def set_vitesse(self, dps1, dps2):
+		"""setter de vitesse pour les roues
+
+		Args:
+			dps1 (float): vitesse angulaire roue droite
+			dps2 (float): vitesse angulaire roue gauche
+		"""
+		self.vad = dps1
+		self.vag = dps2
 
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
