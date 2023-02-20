@@ -1,13 +1,10 @@
 import numpy as np
 import tkinter as tk
 import time
-from module._2D import GUI
+from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException
-from module.controleur import FakeIA
-
-
-dt = 0.01 # pas de temps
+from module.controleur import FakeIA, dt
 
 		
 def run(simulation, gui, ia):
