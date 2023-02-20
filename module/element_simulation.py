@@ -100,7 +100,7 @@ class Robot:
 		"""
 		x = self.x
 		y = self.y
-		while not((x+self.rayon > env.width*env.scale) or (x-self.rayon < 0) or (y+self.rayon > env.height*env.scale) or (y-self.rayon < 0)):
+		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
 			x += self.vitAngD * self.rayr * np.cos(self.theta) * 0.01
 			y += self.vitAngG * self.rayr * np.sin(self.theta) * 0.01
 			if distance(self.x, self.y, x, y) > distmax:
@@ -128,7 +128,7 @@ class Environnement:
 		Returns:
 			Objet: l'objet généré
 		"""
-		rayon = np.random.uniform(0.5, 1)
+		rayon = np.random.uniform(1, 20)
 		while True:
 			x = np.random.uniform(rayon, self.width - rayon)
 			y = np.random.uniform(rayon, self.height - rayon)

@@ -6,7 +6,7 @@ class FakeIA():
 		self.env = env
 
 	def update(self):
-		if (self.robot.capteur(self.env, 5) < 2*self.robot.rayon):
-			self.robot.tourner(10)
+		if (self.robot.capteur(self.env, 50) < 2*self.robot.rayon):
+			self.robot.tourner(1)
 		else:
 			self.robot.set_vitesse(self.robot.vitAngD, self.robot.vitAngD)

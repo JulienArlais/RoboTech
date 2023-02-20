@@ -15,20 +15,22 @@ class GUI():
 			objets (List[Objet]): liste des objets dans l'affichage
 		"""
 		self.environnement = env
+		scale = self.environnement.scale
 		self.robot = robot
 		self.objets = objets
 		self.window = tk.Tk()
 		self.window.title("Interface Graphique")
-		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult, height=self.environnement.height*mult)
-		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
-		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*mult, self.robot.y*mult+self.robot.getYstep(dt)*mult, arrow=tk.LAST)
+		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult*scale, height=self.environnement.height*mult*scale)
+		self.r = create_circle(self.robot.x*mult**scale, self.robot.y*mult**scale, self.robot.rayon*mult*env.scale, self.canvas, "red")
+		self.d = self.canvas.create_line(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.x*mult*scale+self.robot.getXstep(dt)*mult*scale, self.robot.y*mult*scale+self.robot.getYstep(dt)*mult*scale, arrow=tk.LAST)
 		for objet in self.objets:
-			create_circle(objet.x*mult, objet.y*mult, objet.rayon*mult, self.canvas, "black")
+			create_circle(objet.x*mult*scale, objet.y*mult*scale, objet.rayon*mult*scale, self.canvas, "black")
 		self.canvas.pack()
 
 	def update(self):
+		scale = self.environnement.scale
 		self.canvas.delete(self.r)
-		self.r = create_circle(self.robot.x*mult, self.robot.y*mult, self.robot.rayon*mult, self.canvas, "red")
+		self.r = create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.rayon*mult*scale, self.canvas, "red")
 		self.canvas.delete(self.d)
-		self.d = self.canvas.create_line(self.robot.x*mult, self.robot.y*mult, self.robot.x*mult+self.robot.getXstep(dt)*35*mult, self.robot.y*mult+self.robot.getYstep(dt)*35*mult, arrow=tk.LAST)
+		self.d = self.canvas.create_line(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.x*mult*scale+self.robot.getXstep(dt)*mult*scale, self.robot.y*mult*scale+self.robot.getYstep(dt)*mult*scale, arrow=tk.LAST)
 		

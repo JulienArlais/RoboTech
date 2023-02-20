@@ -6,7 +6,6 @@ from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException
 from module.controleur import FakeIA, dt
 
-		
 def run(simulation, gui, ia):
 	"""exécution de la simulation
 
@@ -54,7 +53,7 @@ class Simulation:
 if __name__ == "__main__":
 
 	# Création d'un environnement et d'un robot
-	environnement = Environnement(80, 80, 1)
+	environnement = Environnement(800, 800, 0.1)
 	robot = Robot(40, 55.7, 0, 15, 25, 720, 720, 4)
 
 	# Création d'une simulation, d'une interface graphique
