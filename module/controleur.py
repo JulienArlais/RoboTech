@@ -1,4 +1,4 @@
-dt = 0.01# pas de temps
+from .constante import dt
 
 class FakeIA():
 	def __init__(self, env, robot, objets):

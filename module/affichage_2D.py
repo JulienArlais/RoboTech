@@ -1,9 +1,9 @@
 import tkinter as tk
 from .toolbox import format, distance, create_circle
-from .controleur import dt
+from .constante import dt
+from .constante import mult 
 
 
-mult = 10 # multiplieur pour l'affichage graphique
 
 class GUI():
 	def __init__(self, env, robot, objets):
