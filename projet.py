@@ -54,13 +54,13 @@ if __name__ == "__main__":
 
 	# Création d'un environnement et d'un robot
 	environnement = Environnement(800, 800, 0.1)
-	robot = Robot(40, 55.7, 0, 15, 25, 720, 720, 4)
+	robot = Robot(400, 400, 0, 15, 25, 720, 720, 4)
 
 	# Création d'une simulation, d'une interface graphique
-	liste_objets = environnement.generer_obstacles(robot, 15)
+	liste_objets = environnement.generer_obstacles(robot, 50)
 	s = Simulation(environnement, robot, liste_objets)
 	gui = GUI(environnement, robot, liste_objets)
-	ia = FakeIA(environnement, robot)
+	ia = FakeIA(environnement, robot, liste_objets)
 	threadrun = Thread(target=run, args=(s, gui, ia)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()

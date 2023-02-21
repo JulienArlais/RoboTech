@@ -89,11 +89,13 @@ class Robot:
 		"""
 		return self.vitAngD * self.rayr * np.sin(self.theta) * dt
 
-	def capteur(self, env, distmax):
+	def capteur(self, env, distmax, obj):
 		"""donne la distance par rapport au mur dans la direction du robot
 
 		Args:
 			env (Environnement): environnement
+			distmax : la distance max à laquelle le capteur peut détecter des objets
+			obj : la liste des objets dans l'environnement
 
 		Returns:
 			float: distance
@@ -105,6 +107,9 @@ class Robot:
 			y += self.vitAngG * self.rayr * np.sin(self.theta) * 0.01
 			if distance(self.x, self.y, x, y) > distmax:
 				return distmax
+			for i in range(len(obj)):
+				if env.collision(x, y, self.rayon, obj[i]):
+					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
 
 
@@ -155,15 +160,14 @@ class Environnement:
 			dt (int): durée en seconde
 		"""
 		print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
-		if (robot.vitAngD == robot.vitAngG):
-			robot.x += robot.vitAngD * robot.rayr * np.cos(robot.theta) * dt
-			robot.y += robot.vitAngD * robot.rayr * np.sin(robot.theta) * dt
-		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngD > 0):
+		if (robot.vitAngD == -robot.vitAngG and robot.vitAngD > 0):
 			robot.theta += robot.vitAngD * dt
 		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngG > 0):
 			robot.theta += robot.vitAngD * dt
 		else:
 			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.distroue
+			robot.x += robot.vitAngD * robot.rayr * np.cos(robot.theta) * dt
+			robot.y += robot.vitAngD * robot.rayr * np.sin(robot.theta) * dt
 		print(format(robot.x),",",format(robot.y),")")
 
 
