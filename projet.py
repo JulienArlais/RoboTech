@@ -4,7 +4,7 @@ import time
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException
-from module.controleur import FakeIA, dt
+from module.controleur import FakeIA, Avancer_strategie, dt
 
 def run(simulation, gui, ia):
 	"""exécution de la simulation
@@ -57,10 +57,11 @@ if __name__ == "__main__":
 	robot = Robot(400, 400, 0, 15, 25, 720, 720, 4)
 
 	# Création d'une simulation, d'une interface graphique
-	liste_objets = environnement.generer_obstacles(robot, 50)
+	liste_objets = environnement.generer_obstacles(robot, 15)
 	s = Simulation(environnement, robot, liste_objets)
 	gui = GUI(environnement, robot, liste_objets)
-	ia = FakeIA(environnement, robot, liste_objets)
+	#ia = FakeIA(environnement, robot, liste_objets)
+	ia = Avancer_strategie(robot, 100)
 	threadrun = Thread(target=run, args=(s, gui, ia)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()
