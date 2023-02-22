@@ -4,7 +4,7 @@ import time
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException
-from module.controleur import StrategieAngle, StrategieAvance, StrategieCarre, dt
+from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieCarre, dt
 
 def run(simulation, gui, ia):
 	"""exécution de la simulation
@@ -15,8 +15,9 @@ def run(simulation, gui, ia):
 	"""
 	while True:
 		try:
-			if not ia.stop():
-				ia.update()
+			if ia.stop():
+				return
+			ia.update()
 			simulation.update()
 			if gui is not None:
 				gui.update()
@@ -45,7 +46,6 @@ class Simulation:
 			CollisionException: collision
 		"""
 		self.environnement.avancer_robot(self.robot, dt)
-		self.environnement.avancer_robot(self.robot, dt)
 		if (self.robot.x+self.robot.rayon > self.environnement.width) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			raise CollisionException("Collision avec les limites de l'environnement")		
@@ -68,8 +68,11 @@ if __name__ == "__main__":
 
 	# Stratégies
 	stavance = StrategieAvance(100, 36, robot)
-	stangle = StrategieAngle(90, 100, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
+	stangle = StrategieAngle(90, 180, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
 	stcarre = StrategieCarre(stavance, stangle)
+	
+	#IA
+	ia = FakeIA(environnement, robot, liste_objets)
 
 	threadrun = Thread(target=run, args=(s, gui, stcarre)) # remplacer gui par None si on veut pas d'interface graphique
 
