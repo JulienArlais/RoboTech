@@ -20,12 +20,23 @@ class FakeIA():
 
 class StrategieAngle():
 	def __init__(self, angle, dps, robot):
+		"""constructeur de la stratégie Angle
+
+		Args:
+			angle: l'ange qu'on souohaite touner
+			dps: indique au robot de combien de degré tourner par seconde pour obtenir l'angle souhaité
+			robot: le robot à qui on veut appliquer la stratégie
+		"""
 		self.angle = angle
 		self.dps = dps
 		self.robot = robot
 		self.angleapplique = 0
 
 	def update(self):
+		"""
+		fonction de mise à jour de la stratégie StrategieAngle
+		"""
+
 		if self.stop():
 			return
 		self.robot.tourner(self.dps)
@@ -43,6 +54,13 @@ class StrategieAngle():
 
 class StrategieAvance() :
 	def __init__(self, distance, vitesse, robot):
+		"""constructeur de la stratégie Avance
+
+		Args:
+			distance: distance qu'on souhaite parcourir
+			vitesse: pour mettre la vitesse des roues
+			robot: le robot à qui on veut appliquer la stratégie
+		"""
 		self.distance = distance
 		self.vitesse = vitesse
 		self.robot = robot
