@@ -13,23 +13,22 @@ class FakeIA():
 			#self.robot.set_vitesse((3*self.robot.vitAngD/4+self.robot.vitAngG/4), (3*self.robot.vitAngG/4+self.robot.vitAngD/4))
 			self.robot.set_vitesse(max(self.robot.vitAngD,self.robot.vitAngD), max(self.robot.vitAngD,self.robot.vitAngD))
 			
-class Avancer_strategie() :
-	def __init__(self, robot, distance):#, vitesse) :
-		self.robot = robot
+class StrategieAvance() :
+	def __init__(self, distance, vitesse, robot):
 		self.distance = distance
-		#self.vitesse = vitesse
-		parcouru = 0
-	
-	#def start(self) :
-	#	self.robot.vitesse = vitesse
+		self.vitesse = vitesse
+		self.robot = robot
+		self.parcouru = 0
 		
 	def update(self) :
 		if self.stop():
 			return
-		self.robot.set_vitesse(max(self.robot.vitAngD,self.robot.vitAngD), max(self.robot.vitAngD,self.robot.vitAngD))
-		parcouru += 10 # pas le pb dans l'immédiat
+       	self.robot.set_vitesse(self.vitesse, self.vitesse)
+        self.parcouru += distance(self.robot.x - self.robot.getXstep(dt), self.robot.y - self.robot.getYstep(dt), self.robot.x, self.robot.y)
 			
 	def stop(self) :
-		if (parcouru == distance):
+		if (self.parcouru >= self.distance):
+			self.set_vitesse(0, 0)
+			self.parcouru = 0
 			return True
 		return False
