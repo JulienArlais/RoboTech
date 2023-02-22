@@ -1,5 +1,6 @@
 from .constante import dt
 import numpy as np
+from .toolbox import distance
 
 class StrategieAngle():
 	def __init__(self, angle, dps, robot):
@@ -38,7 +39,30 @@ class StrategieAvance() :
 			
 	def stop(self) :
 		if (self.parcouru >= self.distance):
-			self.set_vitesse(0, 0)
+			self.robot.set_vitesse(0, 0)
 			self.parcouru = 0
 			return True
 		return False
+
+
+class StrategieCarre():
+	def __init__(self, stratavancer, starttourner):
+		self.list = [stratavancer, starttourner, stratavancer, starttourner, stratavancer, starttourner, stratavancer, starttourner]
+		self.indlist = 0
+
+	def update(self):
+		if self.list[self.indlist%2].stop():
+			self.indlist += 1
+			if self.stop():
+				return
+		self.list[self.indlist%2].update()
+
+	def stop(self):
+		if self.indlist >= 7:
+			return True
+		else:
+			return False
+
+	def run(self):
+		while not self.stop():
+			self.update()
