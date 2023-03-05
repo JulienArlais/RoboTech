@@ -2,7 +2,7 @@ import tkinter as tk
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieCarre, dt
+from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieForme, dt
 
 
 if __name__ == "__main__":
@@ -19,12 +19,13 @@ if __name__ == "__main__":
 	# Stratégies
 	stavance = StrategieAvance(100, 36, robot)
 	stangle = StrategieAngle(90, 180, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
-	stcarre = StrategieCarre(stavance, stangle)
+	listeCarre = [stavance, stangle, stavance, stangle, stavance, stangle, stavance] # +1 stangle ?
+	stforme = StrategieForme(listeCarre)
 	
 	#IA
 	ia = FakeIA(environnement, robot, liste_objets)
 
-	threadrun = Thread(target=run, args=(s, gui, stcarre)) # remplacer gui par None si on veut pas d'interface graphique
+	threadrun = Thread(target=run, args=(s, gui, stforme)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique

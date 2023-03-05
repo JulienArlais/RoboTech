@@ -43,7 +43,7 @@ class StrategieAngle():
 		self.angleapplique += (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.distroue
 
 	def stop(self):
-		print(self.angleapplique, self.angle)
+		print("angles :",self.angleapplique, self.angle)
 		if np.abs(self.angleapplique) >= self.angle :
 			self.robot.set_vitesse(0, 0)
 			self.angleapplique = 0
@@ -79,21 +79,20 @@ class StrategieAvance() :
 			return True
 		return False
 
-
-class StrategieCarre():
-	def __init__(self, stratavancer, starttourner):
-		self.list = [stratavancer, starttourner, stratavancer, starttourner, stratavancer, starttourner, stratavancer, starttourner]
+class StrategieForme():
+	def __init__(self, liste):
+		self.liste = liste
 		self.indlist = 0
-
+		
 	def update(self):
-		if self.list[self.indlist%2].stop():
+		if self.liste[self.indlist].stop():
 			self.indlist += 1
 			if self.stop():
 				return
-		self.list[self.indlist%2].update()
-
+		self.liste[self.indlist].update()
+		
 	def stop(self):
-		if self.indlist >= 7:
+		if self.indlist >= len(self.liste):
 			return True
 		else:
 			return False
@@ -101,3 +100,4 @@ class StrategieCarre():
 	def run(self):
 		while not self.stop():
 			self.update()
+

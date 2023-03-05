@@ -1,7 +1,7 @@
 import unittest
 import tkinter as tk
 from module.element_simulation import Objet, Robot, Environnement
-from module._2D import GUI
+from module.affichage_2D import GUI
 
 
 class TestGUI(unittest.TestCase):

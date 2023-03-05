@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from module.element_simulation import Objet, Robot, Environnement
+from module.element_simulation import Objet, Robot, Environnement, Simulation
 
 
 class TestObjet(unittest.TestCase):
@@ -12,16 +12,13 @@ class TestObjet(unittest.TestCase):
 class TestRobot(unittest.TestCase):
 
 	def setUp(self):
-		self.rob = Robot(5, 6, 0, 3, 90, 90, 1)
+		self.rob = Robot(5, 6, 0, 3, 5, 90, 90, 1)
 		self.env = Environnement(20, 20, 1)
 	
-	def test_set_vitAngG(self):
-		self.rob.set_vitAngG(78)
-		self.assertEqual(self.rob.vitAngG, 78)
-
-	def test_set_vitAngG(self):
-		self.rob.set_vitAngG(34)
-		self.assertEqual(self.rob.vitAngG, 34)
+	def test_set_vitesse(self):
+		self.rob.set_vitesse(78,79)
+		self.assertEqual(self.rob.vitAngD, 78)
+		self.assertEqual(self.rob.vitAngG, 79)
 
 	def test_getXstep(self):
 		self.assertAlmostEqual(self.rob.getXstep(1), np.radians(90))
@@ -30,13 +27,13 @@ class TestRobot(unittest.TestCase):
 		self.assertAlmostEqual(self.rob.getYstep(1), 0)
 
 	def test_capteur(self):
-		self.assertAlmostEqual(self.rob.capteur(self.env), 12.0008839)
+		self.assertAlmostEqual(self.rob.capteur(self.env,20,[]), 12.0008839)
 
 class TestEnvironnement(unittest.TestCase):
 		
 	def setUp(self):
 		self.env = Environnement(20, 20, 1)
-		self.rob = Robot(0, 0, 0, 3, 90, 90, 1)
+		self.rob = Robot(0, 0, 0, 3, 5, 90, 90, 1)
 		self.obj = Objet(4, 2, 0, 0, 2)
 	
 	def test_generer_obstacles(self):
@@ -52,6 +49,14 @@ class TestEnvironnement(unittest.TestCase):
 
 	def test_collision(self):
 		self.assertTrue(self.env.collision(0, 0, 3, self.obj))
+		
+class TestSimulation(unittest.TestCase):
+    
+    def setUp(self):
+        self.env = Environnement(80, 80, 1)
+        self.robot = Robot(40, 55.7, 0, 1.6, 3, 720, 720, 1)
+        self.objets = self.env.generer_obstacles(self.robot, 5)
+        self.simulation = Simulation(self.env, self.robot, self.objets)
 
 if __name__ == '__main__':
 	unittest.main()
