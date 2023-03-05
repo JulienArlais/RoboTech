@@ -105,6 +105,8 @@ class Robot:
 		x = self.x
 		y = self.y
 		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
+		#while (((x+self.rayon) < env.width) or (x-self.rayon > 0) or ((y+self.rayon) < env.height) or (y-self.rayon > 0)):
+			print("dans la boucle capteur")
 			x += self.vitAngD * self.rayr * np.cos(self.theta) * 0.01
 			y += self.vitAngG * self.rayr * np.sin(self.theta) * 0.01
 			if distance(self.x, self.y, x, y) > distmax:

@@ -81,6 +81,11 @@ class StrategieAvance() :
 
 class StrategieForme():
 	def __init__(self, liste):
+		"""Constructeur de la stratégie Forme
+
+		Args:
+			liste : liste de stratégies
+		"""
 		self.liste = liste
 		self.indlist = 0
 		
@@ -92,12 +97,30 @@ class StrategieForme():
 		self.liste[self.indlist].update()
 		
 	def stop(self):
-		if self.indlist >= len(self.liste):
-			return True
-		else:
-			return False
+		return self.indlist >= len(self.liste)
 
 	def run(self):
 		while not self.stop():
 			self.update()
+			
+class StrategieArretMur():
+	def __init__(self, robot, env, objets, vitesse):
+		self.robot = robot
+		self.env = env
+		self.obj = objets
+		self.stavance = StrategieAvance(self.env.width*2, vitesse, self.robot)
+		print(self.robot.x, self.robot.y)
+	
+	def stop(self):
+		print("stop robot ?",self.robot.x, self.robot.y)
+		return (self.robot.capteur(self.env, 10000, self.obj) < 5*self.robot.rayon)
+		#return False
 
+	def update(self):
+		if self.stop():
+			return
+		self.stavance.update()
+		
+	def run(self): # inutile ?
+		while not self.stop():
+			self.update()

@@ -2,8 +2,7 @@ import tkinter as tk
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieForme, dt
-
+from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieForme, StrategieArretMur, dt
 
 if __name__ == "__main__":
 
@@ -21,6 +20,8 @@ if __name__ == "__main__":
 	stangle = StrategieAngle(90, 180, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
 	listeCarre = [stavance, stangle, stavance, stangle, stavance, stangle, stavance] # +1 stangle ?
 	stforme = StrategieForme(listeCarre)
+	
+	stArretMur = StrategieArretMur(robot, environnement, liste_objets, 36)
 	
 	#IA
 	ia = FakeIA(environnement, robot, liste_objets)
