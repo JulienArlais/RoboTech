@@ -29,6 +29,7 @@ class GUI():
 
 	def update(self):
 		scale = self.environnement.scale
+		create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, 1, self.canvas, "black")
 		self.canvas.delete(self.r)
 		self.r = create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.rayon*mult*scale, self.canvas, "red")
 		self.canvas.delete(self.d)
