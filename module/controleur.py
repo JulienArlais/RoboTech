@@ -113,7 +113,7 @@ class StrategieArretMur():
 	
 	def stop(self):
 		print("stop robot ?",self.robot.x, self.robot.y)
-		return (self.robot.capteur(self.env, 10000, self.obj) < 5*self.robot.rayon)
+		return (self.robot.capteur(self.env, 10000, self.obj) < 2*self.robot.rayon)
 		#return False
 
 	def update(self):
