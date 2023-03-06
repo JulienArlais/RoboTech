@@ -2,7 +2,11 @@ import tkinter as tk
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import FakeIA, StrategieAngle, StrategieAvance, StrategieForme, StrategieArretMur, dt
+from controleur.StrategieAngle import StrategieAngle
+from controleur.StrategieAvance import StrategieAvance
+from controleur.StrategieArretMur import StrategieArretMur
+from controleur.StrategieForme import StrategieForme
+from module.controleur import FakeIA
 
 if __name__ == "__main__":
 
