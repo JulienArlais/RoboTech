@@ -15,23 +15,22 @@ class CollisionException(Exception):
 
 
 class Objet:
-	def __init__(self, x, y, theta, vitesse, rayon):
-		"""Constructeur pour objet
+	def __init__(self, x, y, theta, rayon):
+		"""constructeur pour objet
+
 		Args:
 			x (float): coordonnée x réel
 			y (float): coordonnée y réel
 			theta (int): angle
-			vitesse (float): vitesse
 			rayon (float): rayon
 		"""
 		self.x = x
 		self.y = y
 		self.theta = np.radians(theta)
-		self.vitesse = vitesse
 		self.rayon = rayon
 
 class Robot:
-	def __init__(self, x, y, theta, rayon, distroue, vitesse_angulaire_d, vitesse_angulaire_g, rayr):
+	def __init__(self, x, y, theta, rayon, dist_roue, rayon_roue):
 		"""constructeur de robot
 
 		Args:
@@ -39,21 +38,24 @@ class Robot:
 			y (float): coordonnée y réel
 			theta (int): angle
 			rayon (float): rayon
-			vitAngD (Roue): vitesse angulaire roue droite
-			vitAngG (Roue): vitesse angulaire roue gauche
-			rayr: rayon des roues
+			rayon_roue: rayon des roues
 		"""
 		self.x = x
 		self.y = y
 		self.theta = np.radians(theta)
 		self.rayon = rayon
-		self.distroue = distroue
-		self.vitAngD = np.radians(vitesse_angulaire_d)
-		self.vitAngG = np.radians(vitesse_angulaire_g)
-		self.rayr = rayr
+		self.dist_roue = dist_roue
+		self.vitAngD = 0
+		self.vitAngG = 0
+		self.rayon_roue = rayon_roue
 
 	def tourner(self, dps):
-		delta = (self.distroue * np.radians(dps))/self.rayr
+		"""fait tourner le robot d'un certain degré par seconde
+
+		Args:
+			dps (int): degré par seconde
+		"""
+		delta = (self.dist_roue * np.radians(dps))/self.rayon_roue
 		if dps > 0:
 			self.set_vitesse(self.vitAngD, self.vitAngG+delta)
 		else:
@@ -63,8 +65,8 @@ class Robot:
 		"""setter de vitesse pour les roues
 
 		Args:
-			rps1 (float): vitesse angulaire roue droite
-			rps2 (float): vitesse angulaire roue gauche
+			rps1 (float): vitesse angulaire roue droite en radian par seconde
+			rps2 (float): vitesse angulaire roue gauche en radian par seconde
 		"""
 		self.vitAngD = rps1
 		self.vitAngG = rps2
@@ -78,7 +80,7 @@ class Robot:
 		Returns:
 			float: déplacement en x
 		"""
-		return self.vitAngD * self.rayr * np.cos(self.theta) * dt
+		return self.vitAngD * self.rayon_roue * np.cos(self.theta) * dt
 
 	def getYstep(self, dt):
 		"""donne le déplacement en y en un pas de temps dt
@@ -89,7 +91,7 @@ class Robot:
 		Returns:
 			float: déplacement en y
 		"""
-		return self.vitAngD * self.rayr * np.sin(self.theta) * dt
+		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * dt
 
 	def capteur(self, env, distmax, obj):
 		"""donne la distance par rapport au mur dans la direction du robot
@@ -105,9 +107,8 @@ class Robot:
 		x = self.x
 		y = self.y
 		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
-			#print("dans la boucle capteur")
-			x += self.vitAngD * self.rayr * np.cos(self.theta) * 0.01
-			y += self.vitAngG * self.rayr * np.sin(self.theta) * 0.01
+			x += self.vitAngD * self.rayon_roue * np.cos(self.theta) * 0.01
+			y += self.vitAngG * self.rayon_roue * np.sin(self.theta) * 0.01
 			if distance(self.x, self.y, x, y) > distmax:
 				return distmax
 			for i in range(len(obj)):
@@ -133,8 +134,11 @@ class Environnement:
 	def generer_un_obstacle(self, robot):
 		"""génère un objet et le place aléatoirement dans l'environnement sans collision avec le robot
 
+		Args:
+			robot (Robot): robot
+
 		Returns:
-			Objet: l'objet généré
+			Objet: objet généré
 		"""
 		rayon = np.random.uniform(1, 20)
 		while True:
@@ -147,6 +151,7 @@ class Environnement:
 		"""génère nb objets et les place aléatoirement dans l'environnement sans collision avec le robot
 
 		Args:
+			robot (Robot): robot
 			nb (int): nombre d'objets à créer
 
 		Returns:
@@ -155,7 +160,7 @@ class Environnement:
 		return [self.generer_un_obstacle(robot) for _ in range(nb)]
 
 
-	def avancer_robot(self, robot, dt): # changer les avancer en mvt
+	def avancer_robot(self, robot, dt):
 		"""fait avancer pendant une durée dt le robot dans l'environnement
 
 		Args:
@@ -168,9 +173,9 @@ class Environnement:
 		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngG > 0):
 			robot.theta += robot.vitAngD * dt
 		else:
-			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.distroue * dt
-			robot.x += robot.vitAngD * robot.rayr * np.cos(robot.theta) * dt
-			robot.y += robot.vitAngD * robot.rayr * np.sin(robot.theta) * dt
+			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
+			robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
+			robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
 		print(format(robot.x),",",format(robot.y),")")
 
 
