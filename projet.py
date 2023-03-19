@@ -20,8 +20,8 @@ if __name__ == "__main__":
 	gui = GUI(environnement, robot, liste_objets)
 
 	# Stratégies
-	stavance = StrategieAvance(100, 720, robot)
-	stangle = StrategieAngle(90, 180, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
+	stavance = StrategieAvance(100, 45, robot)
+	stangle = StrategieAngle(90, 45, robot) # aucune idée de pourquoi 100, ça fonctionne c'est tout
 	listeCarre = [stavance, stangle, stavance, stangle, stavance, stangle, stavance] # +1 stangle ?
 	stforme = StrategieForme(listeCarre)
 	
@@ -30,7 +30,7 @@ if __name__ == "__main__":
 	#IA
 	ia = FakeIA(environnement, robot, liste_objets)
 
-	threadrun = Thread(target=run, args=(s, gui, stArretMur)) # remplacer gui par None si on veut pas d'interface graphique
+	threadrun = Thread(target=run, args=(s, gui, stforme)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique

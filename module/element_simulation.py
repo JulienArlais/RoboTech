@@ -59,15 +59,15 @@ class Robot:
 		else:
 			self.set_vitesse(self.vitAngD+delta, self.vitAngG)
 
-	def set_vitesse(self, dps1, dps2):
+	def set_vitesse(self, rps1, rps2):
 		"""setter de vitesse pour les roues
 
 		Args:
-			dps1 (float): vitesse angulaire roue droite
-			dps2 (float): vitesse angulaire roue gauche
+			rps1 (float): vitesse angulaire roue droite
+			rps2 (float): vitesse angulaire roue gauche
 		"""
-		self.vitAngD = np.radians(dps1)
-		self.vitAngG = np.radians(dps2)
+		self.vitAngD = rps1
+		self.vitAngG = rps2
 
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
@@ -168,7 +168,7 @@ class Environnement:
 		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngG > 0):
 			robot.theta += robot.vitAngD * dt
 		else:
-			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.distroue
+			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.distroue * dt
 			robot.x += robot.vitAngD * robot.rayr * np.cos(robot.theta) * dt
 			robot.y += robot.vitAngD * robot.rayr * np.sin(robot.theta) * dt
 		print(format(robot.x),",",format(robot.y),")")

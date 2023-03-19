@@ -23,8 +23,9 @@ class StrategieAngle():
 
 		if self.stop():
 			return
-		self.robot.tourner(self.dps)
-		self.angleapplique += (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.distroue
+		self.robot.tourner(self.dps * dt)
+		delta_angle = (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.distroue * dt * 180/np.pi
+		self.angleapplique += delta_angle
 
 	def stop(self):
 		print("angles :",self.angleapplique, self.angle)
