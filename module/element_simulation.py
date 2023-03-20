@@ -232,12 +232,15 @@ def run(simulation, gui, ia):
 	"""
 	while True:
 		try:
+			t0 = time.time()
 			if ia.stop():
 				return
 			ia.update()
 			simulation.update()
 			if gui is not None:
 				gui.update()
-			time.sleep(dt)
+			t1 = time.time()
+			if (t1-t0) < dt:
+				time.sleep(dt-(t1-t0))
 		except CollisionException as e:
 			break
