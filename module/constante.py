@@ -18,6 +18,6 @@ stav_dist = 100 #distance à avancer dans StrategieAvance
 stav_vit = 45 #vitesse à laquelle avancer
 
 stan_an = 90 #angle à tourner dans StrategieAngle
-stan_dps = 1 #angle tourné par seconde
+stan_dps = 45 #angle tourné par seconde
 
 stmur_vit = 720 #vitesse de déplacement de la StratégieMur 
