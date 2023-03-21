@@ -21,3 +21,5 @@ stan_an = -90 #angle à tourner dans StrategieAngle
 stan_dps = -45 #angle tourné par seconde
 
 stmur_vit = 720 #vitesse de déplacement de la StratégieMur 
+
+data = 'camera_test/test3.jpg'
