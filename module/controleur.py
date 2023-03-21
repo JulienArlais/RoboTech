@@ -66,7 +66,7 @@ class StrategieAngle():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		if np.abs(self.angleapplique) >= self.angle :
+		if np.abs(self.angleapplique) >= np.abs(self.angle):
 			self.robot.set_vitesse(0, 0)
 			self.angleapplique = 0
 			return True

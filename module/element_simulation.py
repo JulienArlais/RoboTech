@@ -55,7 +55,7 @@ class Robot:
 		Args:
 			dps (int): degré par seconde
 		"""
-		delta = (self.dist_roue * np.radians(dps))/self.rayon_roue
+		delta = (self.dist_roue * np.abs(np.radians(dps)))/self.rayon_roue
 		if dps > 0:
 			self.set_vitesse(self.vitAngD, self.vitAngG+delta)
 		else:
