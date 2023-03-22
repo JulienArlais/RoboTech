@@ -48,6 +48,7 @@ class Robot:
 		self.vitAngD = 0
 		self.vitAngG = 0
 		self.rayon_roue = rayon_roue
+		self.last_update = 0
 
 	def tourner(self, dps):
 		"""fait tourner le robot d'un certain degré par seconde
@@ -176,6 +177,8 @@ class Environnement:
 			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
 			robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
 			robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
+			
+		self.last_update = time.time()
 		print(format(robot.x),",",format(robot.y),")")
 
 

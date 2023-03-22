@@ -33,6 +33,7 @@ class StrategieAvance():
 			return
 		self.robot.set_vitesse(self.vitesse, self.vitesse)
 		self.parcouru += distance(self.robot.x - self.robot.getXstep(dt), self.robot.y - self.robot.getYstep(dt), self.robot.x, self.robot.y)
+		self.robot.last_update = time.time()
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -69,6 +70,7 @@ class StrategieAngle():
 		self.robot.tourner(self.dps * dt)
 		delta_angle = (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.dist_roue * dt * 180/np.pi
 		self.angleapplique += delta_angle
+		self.robot.last_update = time.time()
 
 	def stop(self):
 		"""condition d'arrêt
