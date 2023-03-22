@@ -33,7 +33,6 @@ class StrategieAvance():
 			return
 		self.robot.set_vitesse(self.vitesse, self.vitesse)
 		self.parcouru += distance(self.robot.x - self.robot.getXstep(dt), self.robot.y - self.robot.getYstep(dt), self.robot.x, self.robot.y)
-		self.robot.last_update = time.time()
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -70,7 +69,6 @@ class StrategieAngle():
 		self.robot.tourner(self.dps * dt)
 		delta_angle = (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.dist_roue * dt * 180/np.pi
 		self.angleapplique += delta_angle
-		self.robot.last_update = time.time()
 
 	def stop(self):
 		"""condition d'arrêt
@@ -188,6 +186,12 @@ def detect(data):
 			print(f"L'objet est à {dist_percent}% du centre de l'image.")
 			return dist_percent
 	raise BaliseException("Balise non trouvé")
+
+def capture():
+	cap = cv2.VideoCapture(1) # 1 si camera externe, 0 sinon 
+	ret, frame = cap.read()
+	cv2.imwrite('camera_test/photo.jpg', frame)
+	cap.release()
 
 class StrategieSuivreBalise():
 	def __init__(self, data, robot):
