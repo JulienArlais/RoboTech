@@ -79,18 +79,16 @@ class StrategieAngle():
 
 
 class StrategieArretMur():
-	def __init__(self, robot, env, objets, vitesse):
+	def __init__(self, robot, env, vitesse):
 		"""constructeur de la stratégie pour s'arrêter à un mur
 
 		Args:
 			robot (Robot): robot
 			env (Environnement): environnement
-			objets (Objet): objets
 			vitesse (int): vitesse des roues ( degré par seconde )
 		"""
 		self.robot = robot
 		self.env = env
-		self.obj = objets
 		self.stavance = StrategieAvance(self.env.width*2, vitesse, self.robot)
 	
 	def stop(self):
@@ -99,7 +97,7 @@ class StrategieArretMur():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		return (self.robot.capteur(self.env, 10000, self.obj) < 2*self.robot.rayon)
+		return (self.robot.capteur(self.env, 10000) < 2*self.robot.rayon)
 
 	def update(self):
 		"""itération de la stratégie

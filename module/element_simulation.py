@@ -15,18 +15,16 @@ class CollisionException(Exception):
 
 
 class Objet:
-	def __init__(self, x, y, theta, rayon):
+	def __init__(self, x, y, rayon):
 		"""constructeur pour objet
 
 		Args:
 			x (float): coordonnée x réel
 			y (float): coordonnée y réel
-			theta (int): angle
 			rayon (float): rayon
 		"""
 		self.x = x
 		self.y = y
-		self.theta = np.radians(theta)
 		self.rayon = rayon
 
 class Robot:
@@ -94,14 +92,12 @@ class Robot:
 		"""
 		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * dt
 
-	def capteur(self, env, distmax, obj):
+	def get_distance(self, env, max_dist, min_dist):
 		"""donne la distance par rapport au mur dans la direction du robot
 
 		Args:
 			env (Environnement): environnement
 			distmax : la distance max à laquelle le capteur peut détecter des objets
-			obj : la liste des objets dans l'environnement
-
 		Returns:
 			float: distance
 		"""
@@ -110,10 +106,12 @@ class Robot:
 		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
 			x += self.vitAngD * self.rayon_roue * np.cos(self.theta) * 0.01
 			y += self.vitAngG * self.rayon_roue * np.sin(self.theta) * 0.01
-			if distance(self.x, self.y, x, y) > distmax:
-				return distmax
-			for i in range(len(obj)):
-				if env.collision(x, y, self.rayon, obj[i]):
+			if distance(self.x, self.y, x, y) > max_dist:
+				return max_dist
+			if distance(self.x, self.y, x, y) < min_dist: 
+				return min_dist
+			for _ in range(len(obj)):
+				if env.collision(x, y, self.rayon):
 					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
 	
@@ -147,16 +145,14 @@ class Environnement:
 
 		Args:
 			robot (Robot): robot
-
-		Returns:
-			Objet: objet généré
 		"""
 		rayon = np.random.uniform(1, 20)
 		while True:
 			x = np.random.uniform(rayon, self.width - rayon)
 			y = np.random.uniform(rayon, self.height - rayon)
-			if all(not self.collision(x, y, rayon, obj) and not self.collision(robot, obj) for obj in self.objets):
-				return Objet(x, y, 0, 0, rayon)
+			if all(not self.collision(x, y, rayon) for obj in self.objets):
+				self.objets.append(Objet(x, y, rayon))
+				break
 
 	def generer_obstacles(self, robot, nb):
 		"""génère nb objets et les place aléatoirement dans l'environnement sans collision avec le robot
@@ -164,36 +160,28 @@ class Environnement:
 		Args:
 			robot (Robot): robot
 			nb (int): nombre d'objets à créer
-
-		Returns:
-			List[Objet]: liste des objets générés
 		"""
-		return [self.generer_un_obstacle(robot) for _ in range(nb)]
+		for _ in range(nb):
+			self.generer_un_obstacle(robot)
 
 
-	def avancer_robot(self, robot, dt):
-		"""fait avancer pendant une durée dt le robot dans l'environnement
+	def update(self, robot, dt):
+		"""mise à jour de l'environnement
 
 		Args:
 			robot (Robot): robot à faire avancer
 			dt (int): durée en seconde
 		"""
 		print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
-		if (robot.vitAngD == -robot.vitAngG and robot.vitAngD > 0):
-			robot.theta += robot.vitAngD * dt
-		elif (robot.vitAngD == -robot.vitAngG and robot.vitAngG > 0):
-			robot.theta += robot.vitAngD * dt
-		else:
-			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
-			robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
-			robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
-		
+		robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
+		robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
+		robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
 		robot.last_update = time.time()
 		print(format(robot.x),",",format(robot.y),")")
 
 
-	def collision(self, x, y, ray, obj):
-		"""Teste s'il y aura collision avec obj aux coordonnées (x, y)
+	def collision(self, x, y, ray):
+		"""Teste s'il y aura collision aux coordonnées (x, y)
 
 		Args:
 			x (float): coordonnées x réelle
@@ -204,22 +192,21 @@ class Environnement:
 		Returns:
 			boolean: collision ou non avec obj aux coordonnées (x, y)
 		"""
-		if distance(x, y, obj.x, obj.y) <= ray + obj.rayon:
-			return True
+		for objet in self.objets:
+			if distance(x, y, objet.x, objet.y) <= ray + objet.rayon:
+				return True
 		return False
 		
 class Simulation:
-	def __init__(self, env, robot, objets):
+	def __init__(self, env, robot):
 		"""constructeur de la simulation
 
 		Args:
 			env (Environnement): environnemment de la simulation
 			robot (Robot): robot de la simulation
-			objets (List[Objet]): liste des objets
 		"""
 		self.environnement = env
 		self.robot = robot
-		self.objets = objets
 
 	def update(self):
 		"""mise à jour de la simulation
@@ -227,12 +214,12 @@ class Simulation:
 		Raises:
 			CollisionException: collision
 		"""
-		self.environnement.avancer_robot(self.robot, dt)
+		self.environnement.update(self.robot, dt)
 		if (self.robot.x+self.robot.rayon > self.environnement.width) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			raise CollisionException("Collision avec les limites de l'environnement")		
-		for objet in self.objets:
-			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon, objet)==True:
+		for objet in self.environnement.objets:
+			if self.environnement.collision(self.robot.x, self.robot.y, self.robot.rayon)==True:
 				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
 				

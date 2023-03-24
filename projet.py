@@ -10,11 +10,11 @@ if __name__ == "__main__":
 	# Création d'un environnement et d'un robot
 	environnement = Environnement(cs.env_width, cs.env_height, cs.scale)
 	robot = Robot(cs.rob_x, cs.rob_y, cs.rob_thet, cs.rob_r, cs.rob_dist_roue, cs.rob_r_roue) # robot immobile, pour montrer ce que fait le controleur
+	environnement.generer_obstacles(robot, cs.nb_objet)
 
 	# Création d'une simulation, d'une interface graphique
-	liste_objets = environnement.generer_obstacles(robot, cs.nb_objet)
-	s = Simulation(environnement, robot, liste_objets)
-	gui = GUI(environnement, robot, liste_objets)
+	s = Simulation(environnement, robot)
+	gui = GUI(environnement, robot)
 
 	# Stratégies
 	stavance = StrategieAvance(cs.stav_dist, cs.stav_vit, robot)
@@ -22,10 +22,8 @@ if __name__ == "__main__":
 	listeCarre = [stavance, stangle, stavance, stangle, stavance, stangle, stavance] # +1 stangle ?
 	stseq = StrategieSeq(listeCarre)
 	stsb = StrategieSuivreBalise(cs.data, robot)
-	
-	stArretMur = StrategieArretMur(robot, environnement, liste_objets, cs.stmur_vit)
+	stArretMur = StrategieArretMur(robot, environnement, cs.stmur_vit)
 
 	threadrun = Thread(target=run, args=(s, gui, stseq)) # remplacer gui par None si on veut pas d'interface graphique
-
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique
