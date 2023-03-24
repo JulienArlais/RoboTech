@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq
 
 class BaliseException(Exception):
 	def __init__(self, message):
@@ -62,32 +61,3 @@ def capture():
 	cv2.imwrite('camera_test/photo.jpg', frame)
 	cap.release()
 
-class StrategieSuivreBalise():
-	def __init__(self, data, robot):
-		self.data = data
-		self.robot = robot
-		self.stangle1 = StrategieAngle(45, 45, self.robot)
-		self.stangle2 = StrategieAngle(-45, -45, self.robot)
-
-	def update(self):
-		if self.stop():
-			return
-
-		if (detect(self.data) <= -5 or detect(self.data) >= 5): # si la balise se situe plus de ±5% du centre
-			if detect(self.data) <= 0:
-				self.stangle1.update()
-				if self.stangle1.stop():
-					StrategieAvance(5, 45, self.robot).update()
-			else:
-				self.stangle2.update()		
-				if self.stangle2.stop():
-					StrategieAvance(5, 45, self.robot).update()	
-		else:
-			StrategieAvance(15, 45, self.robot).update()
-
-	def stop(self):
-		try:
-			detect(self.data)
-		except BaliseException as e:
-			return True
-		return False

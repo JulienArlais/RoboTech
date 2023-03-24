@@ -10,6 +10,9 @@ class simulation_proxy:
 	def avancer(self, vitesse):
 		self.robot.set_vitesse(vitesse, vitesse)
 		self.env.avancer_robot(robot, dt)
+		
+	def distance_parcourue(self) :
+		return self.robot.distance_parcourue()
     
 	def tournerD(self, vitesse):
 		self.robot.set_vitesse(vitesse, -vitesse)
@@ -32,6 +35,9 @@ class realite_proxy:
 
 	def avancer(self, vitesse):
 		self.robot.set_motor_dps(self, self.robot.MOTOR_LEFT + self.robot.MOTOR_RIGHT, vitesse)
+		
+	def distance_parcourue(self) :
+		return self.robot.get_motor_position()
 
 	def tournerD(self, vitesse):
 		self.robot.set_motor_dps(self, self.robot.MOTOR_RIGHT, vitesse)
@@ -42,7 +48,7 @@ class realite_proxy:
 		self.robot.set_motor_dps(self, self.robot.MOTOR_LEFT, vitesse)
 
 	def capter(self):
-		return self.robot.get_distance() # retour de get_distance ?
+		return self.robot.get_distance()
 
 	def stop(self):
 		self.robot.stop()

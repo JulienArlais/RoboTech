@@ -116,7 +116,17 @@ class Robot:
 				if env.collision(x, y, self.rayon, obj[i]):
 					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
+	
+	def distance_parcourue(self) :
+		"""renvoie la distance parcourue par le robot depuis sa dernière mise à jour
 
+		Returns:
+			float: distance
+		"""
+		print("dist_parcourue : ",self.rayon_roue*(time.time()-self.last_update)*self.vitAngD)
+		print("tps :", time.time()-self.last_update)
+		
+		return self.rayon_roue*(time.time()-self.last_update)*self.vitAngD
 
 class Environnement:
 	def __init__(self, width, height, scale): 
@@ -177,8 +187,8 @@ class Environnement:
 			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
 			robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
 			robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
-			
-		self.last_update = time.time()
+		
+		robot.last_update = time.time()
 		print(format(robot.x),",",format(robot.y),")")
 
 

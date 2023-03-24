@@ -2,8 +2,7 @@ import tkinter as tk
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq
-from module.camera import StrategieSuivreBalise
+from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise
 import module.constante as cs
 
 if __name__ == "__main__":
@@ -26,7 +25,7 @@ if __name__ == "__main__":
 	
 	stArretMur = StrategieArretMur(robot, environnement, liste_objets, cs.stmur_vit)
 
-	threadrun = Thread(target=run, args=(s, gui, stsb)) # remplacer gui par None si on veut pas d'interface graphique
+	threadrun = Thread(target=run, args=(s, gui, stseq)) # remplacer gui par None si on veut pas d'interface graphique
 
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique
