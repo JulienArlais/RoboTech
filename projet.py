@@ -2,7 +2,8 @@ import tkinter as tk
 from module.affichage_2D import GUI
 from threading import Thread
 from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise
+from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq
+from module.camera import StrategieSuivreBalise
 import module.constante as cs
 
 if __name__ == "__main__":
