@@ -1,15 +1,6 @@
-import time
 import math
-from easygopigo3 import EasyGoPiGo3,Servo,DistanceSensor,MotionSensor
-import picamera
-from io import BytesIO
-from di_sensors import distance_sensor as ds_sensor
-from di_sensors import  inertial_measurement_unit as imu
-import threading
-from collections import deque
-import numpy as np
 
-class Robot2IN013:
+class Robot_Mock_Up:
 	""" 
 	Classe d'encapsulation du robot et des senseurs.
 	Constantes disponibles : 
@@ -28,29 +19,8 @@ class Robot2IN013:
 		    Initialise le robot
 		    :resolution: resolution de la camera
 		"""
-
-		self._gpg= EasyGoPiGo3()
-		self.fps=fps
-		self._img_queue = None
-		self.nb_img = nb_img
-		self.resolution = resolution
-		self.servo = None
-		try:
-		    self.servo = Servo(servo_port,self._gpg)
-		except Exception as e:
-		       pass
-		try:
-		    self.distanceSensor = ds_sensor.DistanceSensor()
-		except Exception as e:
-		    print("Distance Sensor not found",e)
-		try:
-		    self.imu = imu.inertial_measurement_unit()
-		except Exception as e:
-		    print("IMU sensor not found",e)
-		self._gpg.set_motor_limits(self._gpg.MOTOR_LEFT+self._gpg.MOTOR_RIGHT,0)
-		self._recording = False
-		self._thread = None
-		self.start_recording()
+		self.MOTOR_LEFT = 0
+		self.MOTOR_RIGHT = 1
 
 
 	def stop(self):

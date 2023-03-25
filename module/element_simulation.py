@@ -27,6 +27,7 @@ class Objet:
 		self.y = y
 		self.rayon = rayon
 
+
 class Robot:
 	def __init__(self, x, y, theta, rayon, dist_roue, rayon_roue):
 		"""constructeur de robot
@@ -56,9 +57,15 @@ class Robot:
 		"""
 		delta = (self.dist_roue * np.abs(np.radians(dps)))/self.rayon_roue
 		if dps > 0:
-			self.set_vitesse(self.vitAngD, self.vitAngG+delta)
+			self.set_vitesse(self.vitAngG+delta, self.vitAngD)
 		else:
-			self.set_vitesse(self.vitAngD+delta, self.vitAngG)
+			self.set_vitesse(self.vitAngG, self.vitAngD+delta)
+
+	def set_vitesseD(self, rps):
+		self.vitAngD = rps
+
+	def set_vitesseG(self, rps):
+		self.vitAngG = rps
 
 	def set_vitesse(self, rps1, rps2):
 		"""setter de vitesse pour les roues
@@ -67,8 +74,8 @@ class Robot:
 			rps1 (float): vitesse angulaire roue droite en radian par seconde
 			rps2 (float): vitesse angulaire roue gauche en radian par seconde
 		"""
-		self.vitAngD = rps1
-		self.vitAngG = rps2
+		self.set_vitesseG(rps1)
+		self.set_vitesseD(rps2)
 
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
@@ -164,7 +171,6 @@ class Environnement:
 		for _ in range(nb):
 			self.generer_un_obstacle(robot)
 
-
 	def update(self, robot, dt):
 		"""mise à jour de l'environnement
 
@@ -178,7 +184,6 @@ class Environnement:
 		robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
 		robot.last_update = time.time()
 		print(format(robot.x),",",format(robot.y),")")
-
 
 	def collision(self, x, y, ray):
 		"""Teste s'il y aura collision aux coordonnées (x, y)
@@ -197,6 +202,7 @@ class Environnement:
 				return True
 		return False
 		
+
 class Simulation:
 	def __init__(self, env, robot):
 		"""constructeur de la simulation
