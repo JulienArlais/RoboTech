@@ -76,6 +76,9 @@ class Robot:
 		"""
 		self.set_vitesseG(rps1)
 		self.set_vitesseD(rps2)
+	
+	def get_vitAng(self):
+		return (self.vitAngG, self.vitAngD)
 
 	def getXstep(self, dt):
 		"""donne le déplacement en x en un pas de temps dt
@@ -133,6 +136,10 @@ class Robot:
 		
 		return self.rayon_roue*(time.time()-self.last_update)*self.vitAngD
 
+	def update(self):
+		self.last_update = time.time()
+
+
 class Environnement:
 	def __init__(self, width, height, scale): 
 		"""constructeur pour l'environnement
@@ -182,7 +189,6 @@ class Environnement:
 		robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
 		robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
 		robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
-		robot.last_update = time.time()
 		print(format(robot.x),",",format(robot.y),")")
 
 	def collision(self, x, y, ray):
@@ -215,12 +221,13 @@ class Simulation:
 		self.robot = robot
 
 	def update(self):
-		"""mise à jour de la simulation
+		"""mise à jour de la simulation (mise à jour du robot, de l'environnement et règles de la simulation)
 
 		Raises:
 			CollisionException: collision
 		"""
-		self.environnement.update(self.robot, dt)
+		self.robot.update() # mise à jour du robot
+		self.environnement.update(self.robot, dt) # mise à jour de l'environnement
 		if (self.robot.x+self.robot.rayon > self.environnement.width) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			raise CollisionException("Collision avec les limites de l'environnement")		
