@@ -57,25 +57,19 @@ class Robot:
 		"""
 		delta = (self.dist_roue * np.abs(np.radians(dps)))/self.rayon_roue
 		if dps > 0:
-			self.set_vitesse(self.vitAngG+delta, self.vitAngD)
+			self.set_vitesse(np.degrees(self.vitAngG+delta), np.degrees(self.vitAngD))
 		else:
-			self.set_vitesse(self.vitAngG, self.vitAngD+delta)
+			self.set_vitesse(np.degrees(self.vitAngG), np.degrees(self.vitAngD+delta))
 
-	def set_vitesseD(self, rps):
-		self.vitAngD = rps
-
-	def set_vitesseG(self, rps):
-		self.vitAngG = rps
-
-	def set_vitesse(self, rps1, rps2):
+	def set_vitesse(self, dps1, dps2):
 		"""setter de vitesse pour les roues
 
 		Args:
 			rps1 (float): vitesse angulaire roue droite en radian par seconde
 			rps2 (float): vitesse angulaire roue gauche en radian par seconde
 		"""
-		self.set_vitesseG(rps1)
-		self.set_vitesseD(rps2)
+		self.vitAngG = np.radians(dps1)
+		self.vitAngD = np.radians(dps2)
 	
 	def get_vitAng(self):
 		return (self.vitAngG, self.vitAngD)
@@ -131,8 +125,8 @@ class Robot:
 		Returns:
 			float: distance
 		"""
-		print("dist_parcourue : ",self.rayon_roue*(time.time()-self.last_update)*self.vitAngD)
-		print("tps :", time.time()-self.last_update)
+		print("dist_parcourue : ", round(self.rayon_roue*(time.time()-self.last_update)*self.vitAngD, 3))
+		print("tps :", round(time.time()-self.last_update, 3))
 		
 		return self.rayon_roue*(time.time()-self.last_update)*(self.vitAngD+self.vitAngG)/2
 

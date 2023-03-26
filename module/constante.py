@@ -15,7 +15,7 @@ rob_r_roue = 4 #rayon des roues
 nb_objet = 10 #nombre d'objets dans la simulation
 
 stav_dist = 100 #distance à avancer dans StrategieAvance
-stav_vit = 45 #vitesse à laquelle avancer
+stav_vit = 360 #vitesse à laquelle avancer
 
 stan_an = -90 #angle à tourner dans StrategieAngle
 stan_dps = -45 #angle tourné par seconde

@@ -46,7 +46,7 @@ class Robot_Mock_Up:
 		Lit les etats des moteurs en degre.
 		:return: couple du  degre de rotation des moteurs
 		"""
-		pass
+		return (720, 360)
 
 	def offset_motor_encoder(self, port, offset):
 		"""
@@ -66,7 +66,7 @@ class Robot_Mock_Up:
 		    1. L'intervalle est de **5-8,000** millimeters.
 		    2. Lorsque la valeur est en dehors de l'intervalle, le retour est **8190**.
 		"""
-		pass
+		return 100
 
 	def servo_rotate(self,position):
 		"""

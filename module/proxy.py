@@ -1,7 +1,7 @@
 import time
 import numpy as np
 
-class simulation_proxy:
+class Robot_Virtuel:
 
 	def __init__(self, robot, env):
 		"""constructeur de simualtion_proxy,simule les mouvements du robot dans l'environnement virtuel dans lequel il évolue. 
@@ -19,22 +19,18 @@ class simulation_proxy:
 		"""
 		self.robot.last_update=time.time()
 
-		
-
-	def avancer(self, vitesse):
+	def set_vitesse(self, dps):
 		"""fait avancer le robot à la vitesse donnée
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		
-		self.robot.set_vitesse(vitesse, vitesse)
+		self.robot.set_dps(dps, dps)
 		
 	def distance_parcourue(self) :
 		"""
 		renvoie la distance parcourue par le robot depuis sa dernière réinitialisation
 
 		"""
-		
 		return self.robot.distance_parcourue()
 
 	def get_distance(self):
@@ -49,12 +45,6 @@ class simulation_proxy:
 		renvoie la vitesse angulaire du robot
 		"""
 		self.robot.get_vitAng()
-
-	def stop(self):
-		"""
-		arrête le robot en mettant à O la vitesse dans ses deux roues
-		"""
-		self.robot.set_vitesse(0, 0)
 
 	def tourner(self, dps):
 		"""
@@ -72,24 +62,22 @@ class simulation_proxy:
 		self.robot.update()
 
 
-class realite_proxy:
+class Robot_Reel:
 
-	def __init__(self, RobotIRL):
-		self.robot_irl = Robot_IRL
-		self.rayon_roue = (self.robot_irl.WHEEL_DIAMETER * 10e-3) / 2.
-		self.rayon_robot = (self.robotrobot_irl.WHEEL_BASE_WIDTH * 10e-3) / 2.
+	def __init__(self, robot_reel):
+		self.robot_irl = robot_reel
 		self.last_vitAng = (0, 0)
 		self.last_update = 0
 
 	def reset_position(self):
-        	self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_LEFT,self.robot_irl.read_encoders()[0])
-        	self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_RIGHT,self.robot_irl.read_encoders()[1])
+		self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_LEFT,self.robot_irl.read_encoders()[0])
+		self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_RIGHT,self.robot_irl.read_encoders()[1]) # pourquoi 1? et pas 0
 
-	def avancer(self, dps):
+	def set_vitesse(self, dps):
 		self.robot_irl.set_motor_dps(self.robot_irl.MOTOR_LEFT+self.robot_irl.MOTOR_RIGHT, dps)
 		
 	def distance_parcourue(self) :
-		return self.robot_irl.get_motor_position()*WHEEL_DIAMETER*np.pi/360
+		return sum([i/360 * self.robot_irl.WHEEL_CIRCUMFERENCE for i in self.robot_irl.get_motor_position()])/2
 
 	def get_distance(self):
 		return self.robot_irl.get_distance()
@@ -97,12 +85,9 @@ class realite_proxy:
 	def get_vitAng(self):
 		vitAng = self.robot_irl.get_motor_position()
 		now = time.time()
-		delta = vitAng - self.last_vitAng
+		delta = np.subtract(vitAng, self.last_vitAng)
 		duree = now - self.last_update
-		return delta/duree
-
-	def stop(self):
-		self.robot_irl.stop()
+		return tuple(delta/duree)
 
 	def tourner(self, dps):
 		delta = (self.robot_irl.WHEEL_BASE_WIDTH * np.abs(np.radians(dps)))/(self.robot_irl.WHEEL_DIAMETER/2)
