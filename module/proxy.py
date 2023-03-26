@@ -6,6 +6,9 @@ class simulation_proxy:
 	def __init__(self, robot, env):
 		self.robot = robot
 		self.env = env
+		
+	def reset_position(self):
+        	self.robot.last_update = time.time()
 
 	def avancer(self, vitesse):
 		self.robot.set_vitesse(vitesse, vitesse)
@@ -35,11 +38,15 @@ class realite_proxy:
 		self.last_vitAng = (0, 0)
 		self.last_update = 0
 
+	def reset_position(self):
+        	self.robot.offset_motor_encode(self.robot.MOTOR_LEFT,self.robot.read_encoders()[0])
+        	self.robot.offset_motor_encode(self.robot.MOTOR_RIGHT,self.robot.read_encoders()[1])
+
 	def avancer(self, dps):
 		self.robot.set_motor_dps(self.robot.MOTOR_LEFT+self.robot.MOTOR_RIGHT, dps)
 		
 	def distance_parcourue(self) :
-		return self.robot.get_motor_position()
+		return self.robot.get_motor_position()*WHEEL_DIAMETER*np.pi/360
 
 	def get_distance(self):
 		return self.robot.get_distance()

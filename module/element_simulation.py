@@ -134,7 +134,7 @@ class Robot:
 		print("dist_parcourue : ",self.rayon_roue*(time.time()-self.last_update)*self.vitAngD)
 		print("tps :", time.time()-self.last_update)
 		
-		return self.rayon_roue*(time.time()-self.last_update)*self.vitAngD
+		return self.rayon_roue*(time.time()-self.last_update)*(self.vitAngD+self.vitAngG)/2
 
 	def update(self):
 		self.last_update = time.time()
