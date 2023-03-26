@@ -12,16 +12,17 @@ class simulation_proxy:
 		"""
 		self.robot = robot
 		self.env = env
-		
+	
 	def reset_position(self):
-		""" réinitialise la position du robot
-
+		""" 
+		réinitialise la position du robot
 		"""
-        self.robot.last_update = time.time()
+		self.robot.last_update=time.time()
+
+		
 
 	def avancer(self, vitesse):
 		"""fait avancer le robot à la vitesse donnée
-
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
@@ -70,43 +71,46 @@ class simulation_proxy:
 		"""
 		self.robot.update()
 
+
 class realite_proxy:
 
-	def __init__(self, robot):
-		self.robot = robot
+	def __init__(self, RobotIRL):
+		self.robot_irl = Robot_IRL
+		self.rayon_roue = (self.robot_irl.WHEEL_DIAMETER * 10e-3) / 2.
+		self.rayon_robot = (self.robotrobot_irl.WHEEL_BASE_WIDTH * 10e-3) / 2.
 		self.last_vitAng = (0, 0)
 		self.last_update = 0
 
 	def reset_position(self):
-        	self.robot.offset_motor_encode(self.robot.MOTOR_LEFT,self.robot.read_encoders()[0])
-        	self.robot.offset_motor_encode(self.robot.MOTOR_RIGHT,self.robot.read_encoders()[1])
+        	self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_LEFT,self.robot_irl.read_encoders()[0])
+        	self.robot_irl.offset_motor_encode(self.robot_irl.MOTOR_RIGHT,self.robot_irl.read_encoders()[1])
 
 	def avancer(self, dps):
-		self.robot.set_motor_dps(self.robot.MOTOR_LEFT+self.robot.MOTOR_RIGHT, dps)
+		self.robot_irl.set_motor_dps(self.robot_irl.MOTOR_LEFT+self.robot_irl.MOTOR_RIGHT, dps)
 		
 	def distance_parcourue(self) :
-		return self.robot.get_motor_position()*WHEEL_DIAMETER*np.pi/360
+		return self.robot_irl.get_motor_position()*WHEEL_DIAMETER*np.pi/360
 
 	def get_distance(self):
-		return self.robot.get_distance()
+		return self.robot_irl.get_distance()
 
 	def get_vitAng(self):
-		vitAng = self.robot.get_motor_position()
+		vitAng = self.robot_irl.get_motor_position()
 		now = time.time()
 		delta = vitAng - self.last_vitAng
 		duree = now - self.last_update
 		return delta/duree
 
 	def stop(self):
-		self.robot.stop()
+		self.robot_irl.stop()
 
 	def tourner(self, dps):
-		delta = (self.robot.WHEEL_BASE_WIDTH * np.abs(np.radians(dps)))/(self.robot.WHEEL_DIAMETER/2)
+		delta = (self.robot_irl.WHEEL_BASE_WIDTH * np.abs(np.radians(dps)))/(self.robot_irl.WHEEL_DIAMETER/2)
 		if dps > 0:
-			self.robot.set_motor_dps(self.robot.MOTOR_LEFT, self.get_vitAng()[0]+delta)
+			self.robot_irl.set_motor_dps(self.robot_irl.MOTOR_LEFT, self.get_vitAng()[0]+delta)
 		else:
-			self.robot.set_motor_dps(self.robot.MOTOR_RIGHT, self.get_vitAng()[1]+delta)
+			self.robot_irl.set_motor_dps(self.robot_irl.MOTOR_RIGHT, self.get_vitAng()[1]+delta)
 
 	def update(self):
-		self.last_vitAng = self.robot.get_motor_position()
+		self.last_vitAng = self.robot_irl.get_motor_position()
 		self.last_update = time.time()

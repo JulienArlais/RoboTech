@@ -25,7 +25,7 @@ class StrategieAvance():
 		if self.stop():
 			return
 		self.robot.set_vitesse(self.vitesse, self.vitesse)
-		self.parcouru += distance(self.robot.x - self.robot.getXstep(dt), self.robot.y - self.robot.getYstep(dt), self.robot.x, self.robot.y)
+		self.parcouru += self.robot.distance_parcourue()
 		x= self.robot.distance_parcourue() # A RETIRER PLUS TARD, UTILE POUR TESTER LA FCT
 			
 	def stop(self):
