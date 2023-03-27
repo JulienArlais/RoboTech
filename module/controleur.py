@@ -17,7 +17,6 @@ class StrategieAvance():
 		self.distance = distance
 		self.vitesse = vitesse
 		self.proxy = proxy
-		self.parcouru = 0
 		
 	def update(self):
 		"""itération de la stratégie
@@ -25,8 +24,7 @@ class StrategieAvance():
 		if self.stop():
 			return
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
-		self.parcouru = self.proxy.get_distanceParcourue()
-		print(self.parcouru)
+		self.proxy.dist_parcourue()
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -34,9 +32,9 @@ class StrategieAvance():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		if (self.parcouru >= self.distance):
+		if (self.proxy.distance_parcourue >= self.distance):
 			self.proxy.set_vitesse(0, 0)
-			self.parcouru = 0
+			self.proxy.reset_distance()
 			return True
 		return False
 
@@ -53,7 +51,6 @@ class StrategieAngle():
 		self.angle = angle
 		self.dps = dps
 		self.proxy = proxy
-		self.angleapplique = 0
 
 	def update(self):
 		"""itération de la stratégie
@@ -61,8 +58,7 @@ class StrategieAngle():
 		if self.stop():
 			return
 		self.proxy.tourner(self.dps * dt)
-		self.proxy.diff_angle()
-		self.angleapplique += self.proxy.delta_angle
+		self.proxy.ang_parcouru()
 
 	def stop(self):
 		"""condition d'arrêt
@@ -70,9 +66,9 @@ class StrategieAngle():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		if np.abs(self.angleapplique) >= np.abs(self.angle):
+		if np.abs(self.proxy.angle_parcouru) >= np.abs(self.angle):
 			self.proxy.set_vitesse(0, 0)
-			self.angleapplique = 0
+			self.proxy.reset_angle()
 			return True
 		else:
 			return False
