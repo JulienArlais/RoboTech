@@ -6,7 +6,7 @@ from .camera import detect, BaliseException
 
 
 class StrategieAvance():
-	def __init__(self, distance, vitesse, robot):
+	def __init__(self, distance, vitesse, proxy):
 		"""constructeur de la stratégie pour avancer d'une distance voulu
 
 		Args:
@@ -16,7 +16,7 @@ class StrategieAvance():
 		"""
 		self.distance = distance
 		self.vitesse = vitesse
-		self.robot = robot
+		self.proxy = proxy
 		self.parcouru = 0
 		
 	def update(self):
@@ -24,9 +24,9 @@ class StrategieAvance():
 		"""
 		if self.stop():
 			return
-		self.robot.set_vitesse(self.vitesse, self.vitesse)
-		self.parcouru += self.robot.distance_parcourue()
-		x= self.robot.distance_parcourue() # A RETIRER PLUS TARD, UTILE POUR TESTER LA FCT
+		self.proxy.set_vitesse(self.vitesse, self.vitesse)
+		self.parcouru = self.proxy.get_distanceParcourue()
+		print(self.parcouru)
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -35,24 +35,24 @@ class StrategieAvance():
 			boolean: arrêt ou non
 		"""
 		if (self.parcouru >= self.distance):
-			self.robot.set_vitesse(0, 0)
+			self.proxy.set_vitesse(0, 0)
 			self.parcouru = 0
 			return True
 		return False
 
 
 class StrategieAngle():
-	def __init__(self, angle, dps, robot):
+	def __init__(self, angle, dps, proxy):
 		"""constructeur de la stratégie pour tourner d'un angle voulu
 
 		Args:
 			angle (int): angle souhaité ( en degré )
 			dps (int): degré par seconde
-			robot (Robot): robot
+			proxy (Robot): proxy
 		"""
 		self.angle = angle
 		self.dps = dps
-		self.robot = robot
+		self.proxy = proxy
 		self.angleapplique = 0
 
 	def update(self):
@@ -60,9 +60,9 @@ class StrategieAngle():
 		"""
 		if self.stop():
 			return
-		self.robot.tourner(self.dps * dt)
-		delta_angle = (self.robot.vitAngD - self.robot.vitAngG) * self.robot.rayon/self.robot.dist_roue * dt * 180/np.pi
-		self.angleapplique += delta_angle
+		self.proxy.tourner(self.dps * dt)
+		self.proxy.diff_angle()
+		self.angleapplique += self.proxy.delta_angle
 
 	def stop(self):
 		"""condition d'arrêt
@@ -71,7 +71,7 @@ class StrategieAngle():
 			boolean: arrêt ou non
 		"""
 		if np.abs(self.angleapplique) >= np.abs(self.angle):
-			self.robot.set_vitesse(0, 0)
+			self.proxy.set_vitesse(0, 0)
 			self.angleapplique = 0
 			return True
 		else:
@@ -79,7 +79,7 @@ class StrategieAngle():
 
 
 class StrategieArretMur():
-	def __init__(self, robot, env, vitesse):
+	def __init__(self, proxy, env, vitesse):
 		"""constructeur de la stratégie pour s'arrêter à un mur
 
 		Args:
@@ -87,9 +87,9 @@ class StrategieArretMur():
 			env (Environnement): environnement
 			vitesse (int): vitesse des roues ( degré par seconde )
 		"""
-		self.robot = robot
+		self.proxy = proxy
 		self.env = env
-		self.stavance = StrategieAvance(self.env.width*2, vitesse, self.robot)
+		self.stavance = StrategieAvance(self.env.width*2, vitesse, self.proxy)
 	
 	def stop(self):
 		"""condition d'arrêt
@@ -97,7 +97,7 @@ class StrategieArretMur():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		return (self.robot.capteur(self.env, 10000) < 2*self.robot.rayon)
+		return (self.proxy.get_distance() < 2*self.proxy.rayon)
 
 	def update(self):
 		"""itération de la stratégie
@@ -135,11 +135,11 @@ class StrategieSeq():
 		return self.indlist >= len(self.liste)
 
 class StrategieSuivreBalise():
-	def __init__(self, data, robot):
+	def __init__(self, data, proxy):
 		self.data = data
-		self.robot = robot
-		self.stangle1 = StrategieAngle(45, 45, self.robot)
-		self.stangle2 = StrategieAngle(-45, -45, self.robot)
+		self.proxy = proxy
+		self.stangle1 = StrategieAngle(45, 45, self.proxy)
+		self.stangle2 = StrategieAngle(-45, -45, self.proxy)
 
 	def update(self):
 		if self.stop():
@@ -149,13 +149,13 @@ class StrategieSuivreBalise():
 			if detect(self.data) <= 0:
 				self.stangle1.update()
 				if self.stangle1.stop():
-					StrategieAvance(5, 45, self.robot).update()
+					StrategieAvance(5, 45, self.proxy).update()
 			else:
 				self.stangle2.update()		
 				if self.stangle2.stop():
-					StrategieAvance(5, 45, self.robot).update()	
+					StrategieAvance(5, 45, self.proxy).update()	
 		else:
-			StrategieAvance(15, 45, self.robot).update()
+			StrategieAvance(15, 45, self.proxy).update()
 
 	def stop(self):
 		try:
