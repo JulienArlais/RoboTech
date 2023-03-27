@@ -16,7 +16,7 @@ rob_r = 15 #rayon du robot
 rob_dist_roue = 30 #distance entre les roues
 rob_r_roue = 4 #rayon des roues
 
-nb_objet = 10 #nombre d'objets dans la simulation
+nb_objet = 5 #nombre d'objets dans la simulation
 
 stav_dist = 100 #distance à avancer dans StrategieAvance
 stav_vit = 720 #vitesse à laquelle avancer

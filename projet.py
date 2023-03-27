@@ -1,10 +1,7 @@
-import tkinter as tk
-from module.affichage_2D import GUI
-from threading import Thread
-from module.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from module.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise
+from module.element_simulation import Robot, Environnement, CollisionException, Simulation
 import module.constante as cs
 from module.proxy import Robot_Virtuel, Robot_Reel
+from module.core import run_projet
 
 if __name__ == "__main__":
 
@@ -14,18 +11,6 @@ if __name__ == "__main__":
 	environnement.generer_obstacles(robot, cs.nb_objet)
 	proxy_v = Robot_Virtuel(robot,environnement)
 
-	# Création d'une simulation, d'une interface graphique
+	# Création d'une simulation
 	s = Simulation(environnement, robot)
-	gui = GUI(environnement, robot)
-
-	# Stratégies
-	stavance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy_v)
-	stangle = StrategieAngle(cs.stan_an, cs.stan_dps, proxy_v) 
-	listeCarre = [stavance, stangle, stavance, stangle, stavance, stangle, stavance] # +1 stangle ?
-	stseq = StrategieSeq(listeCarre)
-	stsb = StrategieSuivreBalise(cs.data, proxy_v)
-	stArretMur = StrategieArretMur(proxy_v, environnement, cs.stmur_vit)
-
-	threadrun = Thread(target=run, args=(s, gui, stseq)) # remplacer gui par None si on veut pas d'interface graphique
-	threadrun.start()
-	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique
+	run_projet(robot,proxy_v,environnement,s)
