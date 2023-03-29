@@ -96,7 +96,7 @@ class Robot:
 		"""
 		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * dt
 
-	def get_distance(self, env, max_dist, min_dist):
+	def get_distance(self, env):
 		"""donne la distance par rapport au mur dans la direction du robot
 
 		Args:
@@ -110,11 +110,11 @@ class Robot:
 		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
 			x += self.vitAngD * self.rayon_roue * np.cos(self.theta) * 0.01
 			y += self.vitAngG * self.rayon_roue * np.sin(self.theta) * 0.01
-			if distance(self.x, self.y, x, y) > max_dist:
-				return max_dist
-			if distance(self.x, self.y, x, y) < min_dist: 
-				return min_dist
-			for _ in range(len(obj)):
+			if distance(self.x, self.y, x, y) > 800:
+				return 800
+			if distance(self.x, self.y, x, y) < 0.5: 
+				return 0.5
+			for _ in range(len(env.objets)):
 				if env.collision(x, y, self.rayon):
 					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
@@ -244,9 +244,9 @@ def run(simulation, gui, ia):
 	while True:
 		try:
 			t0 = time.time()
+			ia.update()
 			if ia.stop():
 				return
-			ia.update()
 			simulation.update()
 			if gui is not None:
 				gui.update()

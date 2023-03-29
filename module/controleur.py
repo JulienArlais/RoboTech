@@ -21,8 +21,6 @@ class StrategieAvance():
 	def update(self):
 		"""itération de la stratégie
 		"""
-		if self.stop():
-			return
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
 		self.proxy.dist_parcourue()
 			
@@ -55,8 +53,6 @@ class StrategieAngle():
 	def update(self):
 		"""itération de la stratégie
 		"""
-		if self.stop():
-			return
 		self.proxy.tourner(self.dps * dt)
 		self.proxy.ang_parcouru()
 
@@ -98,8 +94,6 @@ class StrategieArretMur():
 	def update(self):
 		"""itération de la stratégie
 		"""
-		if self.stop():
-			return
 		self.stavance.update()
 
 
@@ -116,12 +110,10 @@ class StrategieSeq():
 	def update(self):
 		"""itération de la stratégie
 		"""
+		self.liste[self.indlist].update()
 		if self.liste[self.indlist].stop():
 			self.indlist += 1
-			if self.stop():
-				return
-		self.liste[self.indlist].update()
-		
+			
 	def stop(self):
 		"""condition d'arrêt
 
