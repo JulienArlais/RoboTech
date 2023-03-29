@@ -7,7 +7,7 @@ import module.constante as cs
 
 
 def run_projet(robot,proxy_v,environnement,s):
-	environnement.generer_obstacles(robot, cs.nb_objet)
+	environnement.generer_obstacles(cs.nb_objet)
 	gui = GUI(environnement, robot)
 
 	# Stratégies
@@ -18,6 +18,6 @@ def run_projet(robot,proxy_v,environnement,s):
 	stsb = StrategieSuivreBalise(cs.data, proxy_v)
 	stArretMur = StrategieArretMur(proxy_v, environnement, cs.stmur_vit)
 
-	threadrun = Thread(target=run, args=(s, gui, stArretMur)) # remplacer gui par None si on veut pas d'interface graphique
+	threadrun = Thread(target=run, args=(s, None, stseq)) # remplacer gui par None si on veut pas d'interface graphique
 	threadrun.start()
 	gui.window.mainloop() # retirer cette ligne si on veut pas d'interface graphique

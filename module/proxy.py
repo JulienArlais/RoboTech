@@ -1,8 +1,6 @@
 import time
 import numpy as np
 
-dt = 0.01
-
 class Robot_Virtuel:
 
 	def __init__(self, robot, env):
@@ -27,7 +25,7 @@ class Robot_Virtuel:
 		self.update()
 		self.robot.set_vitesse(dps1, dps2)
 	
-	def dist_parcourue(self):
+	def update_dist_parcourue(self):
 		self.distance_parcourue += self.robot.distance_parcourue()
 	
 	def reset_distance(self) :
@@ -35,13 +33,15 @@ class Robot_Virtuel:
 		renvoie la distance parcourue par le robot depuis sa dernière réinitialisation
 
 		"""
+		self.update()
 		self.distance_parcourue = 0
 	
-	def ang_parcouru(self):
+	def update_ang_parcouru(self):
 		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
+		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (time.time() - self.last_update) * 180/np.pi
 		
 	def reset_angle(self):
+		self.update()
 		self.angle_parcouru = 0
 
 	def get_distance(self):
@@ -63,6 +63,7 @@ class Robot_Virtuel:
 		Args:
 			dps: degré par seconde
 		"""
+		self.update()
 		self.robot.tourner(dps)
 
 	def update(self):
@@ -71,6 +72,9 @@ class Robot_Virtuel:
 
 		"""
 		self.last_update = time.time()
+		self.robot.last_update = time.time()
+		self.update_dist_parcourue()
+		self.update_ang_parcouru()
 
 
 class Robot_Reel:
@@ -98,7 +102,7 @@ class Robot_Reel:
 
 	def ang_parcouru(self):
 		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
+		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (time.time() - self.last_update) * 180/np.pi
 		
 	def reset_angle(self):
 		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])

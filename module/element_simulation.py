@@ -1,7 +1,6 @@
 import numpy as np
 import time
 from .toolbox import format, distance, create_circle
-from module.controleur import dt
 
 
 class CollisionException(Exception):
@@ -74,27 +73,21 @@ class Robot:
 	def get_vitAng(self):
 		return (self.vitAngG, self.vitAngD)
 
-	def getXstep(self, dt):
-		"""donne le déplacement en x en un pas de temps dt
-
-		Args:
-			dt (float): pas de temps
+	def getXstep(self):
+		"""donne le déplacement en x en un pas de temps
 
 		Returns:
 			float: déplacement en x
 		"""
-		return self.vitAngD * self.rayon_roue * np.cos(self.theta) * dt
+		return self.vitAngD * self.rayon_roue * np.cos(self.theta) * (time.time() - self.last_update)
 
-	def getYstep(self, dt):
-		"""donne le déplacement en y en un pas de temps dt
-
-		Args:
-			dt (float): pas de temps
+	def getYstep(self):
+		"""donne le déplacement en y en un pas de temps
 
 		Returns:
 			float: déplacement en y
 		"""
-		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * dt
+		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * (time.time() - self.last_update)
 
 	def get_distance(self, env):
 		"""donne la distance par rapport au mur dans la direction du robot
@@ -152,12 +145,8 @@ class Environnement:
 		self.scale = scale
 		self.objets = []
 			
-	def generer_un_obstacle(self, robot):
-		"""génère un objet et le place aléatoirement dans l'environnement sans collision avec le robot
-
-		Args:
-			robot (Robot): robot
-		"""
+	def generer_un_obstacle(self):
+		"""génère un objet et le place aléatoirement dans l'environnement"""
 		rayon = np.random.uniform(1, 20)
 		while True:
 			x = np.random.uniform(rayon, self.width - rayon)
@@ -166,27 +155,25 @@ class Environnement:
 				self.objets.append(Objet(x, y, rayon))
 				break
 
-	def generer_obstacles(self, robot, nb):
-		"""génère nb objets et les place aléatoirement dans l'environnement sans collision avec le robot
+	def generer_obstacles(self, nb):
+		"""génère nb objets et les place aléatoirement dans l'environnement
 
 		Args:
-			robot (Robot): robot
 			nb (int): nombre d'objets à créer
 		"""
 		for _ in range(nb):
-			self.generer_un_obstacle(robot)
+			self.generer_un_obstacle()
 
-	def update(self, robot, dt):
+	def update(self, robot):
 		"""mise à jour de l'environnement
 
 		Args:
 			robot (Robot): robot à faire avancer
-			dt (int): durée en seconde
 		"""
 		print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
-		robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * dt
-		robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * dt
-		robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * dt
+		robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * (time.time() - robot.last_update)
+		robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * (time.time() - robot.last_update)
+		robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * (time.time() - robot.last_update)
 		print(format(robot.x),",",format(robot.y),")")
 
 	def collision(self, x, y, ray):
@@ -208,7 +195,7 @@ class Environnement:
 		
 
 class Simulation:
-	def __init__(self, env, robot):
+	def __init__(self, env, proxy):
 		"""constructeur de la simulation
 
 		Args:
@@ -216,7 +203,8 @@ class Simulation:
 			robot (Robot): robot de la simulation
 		"""
 		self.environnement = env
-		self.robot = robot
+		self.proxy = proxy
+		self.robot = proxy.robot
 
 	def update(self):
 		"""mise à jour de la simulation (mise à jour du robot, de l'environnement et règles de la simulation)
@@ -225,7 +213,7 @@ class Simulation:
 			CollisionException: collision
 		"""
 		self.robot.update() # mise à jour du robot
-		self.environnement.update(self.robot, dt) # mise à jour de l'environnement
+		self.environnement.update(self.robot) # mise à jour de l'environnement
 		if (self.robot.x+self.robot.rayon > self.environnement.width) or (self.robot.x-self.robot.rayon < 0) or (self.robot.y+self.robot.rayon > self.environnement.height) or (self.robot.y-self.robot.rayon < 0):
 			print("Collision avec les limites de l'environnement")
 			raise CollisionException("Collision avec les limites de l'environnement")		
@@ -243,15 +231,15 @@ def run(simulation, gui, ia):
 	"""
 	while True:
 		try:
-			t0 = time.time()
+			#t0 = time.time()
 			ia.update()
 			if ia.stop():
 				return
 			simulation.update()
 			if gui is not None:
 				gui.update()
-			t1 = time.time()
-			if (t1-t0) < dt:
-				time.sleep(dt-(t1-t0))
+			#t1 = time.time()
+			#if (t1-t0) < dt:
+				#time.sleep(dt-(t1-t0))
 		except CollisionException as e:
 			break

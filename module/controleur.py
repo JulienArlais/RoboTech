@@ -1,4 +1,3 @@
-from .constante import dt
 import numpy as np
 from .toolbox import distance
 import cv2
@@ -22,7 +21,7 @@ class StrategieAvance():
 		"""itération de la stratégie
 		"""
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
-		self.proxy.dist_parcourue()
+		self.proxy.update()
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -53,8 +52,8 @@ class StrategieAngle():
 	def update(self):
 		"""itération de la stratégie
 		"""
-		self.proxy.tourner(self.dps * dt)
-		self.proxy.ang_parcouru()
+		self.proxy.tourner(self.dps)
+		self.proxy.update()
 
 	def stop(self):
 		"""condition d'arrêt
