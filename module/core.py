@@ -7,7 +7,7 @@ import module.constante as cs
 
 
 def run_projet(robot,proxy_v,environnement,s):
-
+	environnement.generer_obstacles(robot, cs.nb_objet)
 	gui = GUI(environnement, robot)
 
 	# Stratégies
