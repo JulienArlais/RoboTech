@@ -1,5 +1,6 @@
 import tkinter as tk
 from .toolbox import format, distance, create_circle
+from .constante import dt
 from .constante import mult 
 
 

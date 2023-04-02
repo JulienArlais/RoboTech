@@ -1,6 +1,6 @@
 from module.element_simulation import Robot, Environnement, CollisionException, Simulation
 import module.constante as cs
-from module.proxy import Robot_Virtuel, Robot_Reel
+from module.proxy import Proxy_Virtuel, Proxy_Reel
 from module.core import run_projet
 
 if __name__ == "__main__":
@@ -8,8 +8,8 @@ if __name__ == "__main__":
 	# Création d'un environnement et d'un robot
 	environnement = Environnement(cs.env_width, cs.env_height, cs.scale)
 	robot = Robot(cs.rob_x, cs.rob_y, cs.rob_thet, cs.rob_r, cs.rob_dist_roue, cs.rob_r_roue) # robot immobile, pour montrer ce que fait le controleur
-	proxy = Robot_Virtuel(robot,environnement)
+	proxy_v = Proxy_Virtuel(robot,environnement)
 
 	# Création d'une simulation
-	s = Simulation(environnement, proxy)
-	run_projet(robot,proxy,environnement,s)
+	s = Simulation(environnement, robot)
+	run_projet(robot,proxy_v,environnement,s)

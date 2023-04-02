@@ -1,7 +1,7 @@
 import time
 import numpy as np
 
-class Robot_Virtuel:
+class Proxy_Virtuel:
 
 	def __init__(self, robot, env):
 		"""constructeur de simualtion_proxy,simule les mouvements du robot dans l'environnement virtuel dans lequel il évolue. 
@@ -16,32 +16,41 @@ class Robot_Virtuel:
 		self.rayon = self.robot.rayon
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
+		self.last_update = 0
 
 	def set_vitesse(self, dps1, dps2):
 		"""fait avancer le robot à la vitesse donnée
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		self.update()
 		self.robot.set_vitesse(dps1, dps2)
+		self.update()
 	
-	def update_dist_parcourue(self):
-		self.distance_parcourue += self.robot.distance_parcourue()
+	def dist_parcourue(self):
+		now = time.time()
+		if self.last_update == 0:
+			self.last_pdate = now
+		else:
+			ang_g, ang_d = self.get_vitAng()
+			delta = self.robot.rayon_roue*(now-self.last_update)*(ang_g + ang_d)/2
+			self.distance_parcourue += delta
 	
 	def reset_distance(self) :
 		"""
 		renvoie la distance parcourue par le robot depuis sa dernière réinitialisation
 
 		"""
-		self.update()
 		self.distance_parcourue = 0
 	
-	def update_ang_parcouru(self):
-		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (time.time() - self.last_update) * 180/np.pi
+	def ang_parcouru(self):
+		now = time.time()
+		if self.last_update == 0:
+			self.last_pdate = now
+		else:
+			ang_g, ang_d = self.get_vitAng()
+			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
 		
 	def reset_angle(self):
-		self.update()
 		self.angle_parcouru = 0
 
 	def get_distance(self):
@@ -63,21 +72,24 @@ class Robot_Virtuel:
 		Args:
 			dps: degré par seconde
 		"""
-		self.update()
 		self.robot.tourner(dps)
+		self.update()
+
+	def reset(self):
+		self.reset_angle()
+		self.reset_distance()
 
 	def update(self):
 		"""
 		met à jour le robot 
 
 		"""
-		self.last_update = time.time()
-		self.robot.last_update = time.time()
-		self.update_dist_parcourue()
-		self.update_ang_parcouru()
+		now = time.time()
+		self.dist_parcourue()
+		self.ang_parcouru()
+		self.last_update = now
 
-
-class Robot_Reel:
+class Proxy_Reel:
 
 	def __init__(self, robot_reel):
 		self.robot_reel = robot_reel
@@ -102,7 +114,7 @@ class Robot_Reel:
 
 	def ang_parcouru(self):
 		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (time.time() - self.last_update) * 180/np.pi
+		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
 		
 	def reset_angle(self):
 		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])

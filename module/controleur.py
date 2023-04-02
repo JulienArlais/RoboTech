@@ -1,6 +1,7 @@
 import numpy as np
 from .toolbox import distance
 import cv2
+import time
 from .camera import detect, BaliseException
 
 
@@ -21,7 +22,6 @@ class StrategieAvance():
 		"""itération de la stratégie
 		"""
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
-		self.proxy.update()
 			
 	def stop(self):
 		"""condition d'arrêt
@@ -31,7 +31,7 @@ class StrategieAvance():
 		"""
 		if (self.proxy.distance_parcourue >= self.distance):
 			self.proxy.set_vitesse(0, 0)
-			self.proxy.reset_distance()
+			self.proxy.reset()
 			return True
 		return False
 
@@ -52,8 +52,7 @@ class StrategieAngle():
 	def update(self):
 		"""itération de la stratégie
 		"""
-		self.proxy.tourner(self.dps)
-		self.proxy.update()
+		self.proxy.tourner(self.dps * (time.time()-self.proxy.last_update))
 
 	def stop(self):
 		"""condition d'arrêt
@@ -61,12 +60,12 @@ class StrategieAngle():
 		Returns:
 			boolean: arrêt ou non
 		"""
+		print("angle :", self.proxy.angle_parcouru)
 		if np.abs(self.proxy.angle_parcouru) >= np.abs(self.angle):
 			self.proxy.set_vitesse(0, 0)
-			self.proxy.reset_angle()
+			self.proxy.reset()
 			return True
-		else:
-			return False
+		return False
 
 
 class StrategieArretMur():
@@ -119,7 +118,10 @@ class StrategieSeq():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		return self.indlist >= len(self.liste)
+		if self.indlist >= len(self.liste):
+			self.indlist = 0
+			return True
+		return False
 
 class StrategieSuivreBalise():
 	def __init__(self, data, proxy):
