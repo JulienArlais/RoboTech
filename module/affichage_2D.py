@@ -17,7 +17,7 @@ class GUI():
 		self.environnement = env
 		scale = self.environnement.scale
 		self.robot = robot
-		self.dessine = False
+		self.dessine = True
 		self.window = tk.Tk()
 		self.window.title("Interface Graphique")
 		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult*scale, height=self.environnement.height*mult*scale)
