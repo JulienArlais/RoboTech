@@ -160,6 +160,14 @@ class Environnement:
 		"""
 		for _ in range(nb):
 			self.generer_un_obstacle(robot)
+			
+	def generer_obstacles_coins(self):
+		"""génère 4 objets dans les coins de l'environnement
+		"""
+		self.objets.append(Objet(self.width-20, self.height-20, 20))
+		self.objets.append(Objet(20, self.height-20, 20))
+		self.objets.append(Objet(self.width-20, 20, 20))
+		self.objets.append(Objet(20, 20, 20))
 
 	def update(self, robot):
 		"""mise à jour de l'environnement
