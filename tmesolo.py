@@ -12,11 +12,6 @@ class StrategieSeqDessine():
 		self.robot = robot
 		
 	def update(self):
-		print(self.indlist)
-		if self.indlist%2 == 0:
-			self.robot.dessine(True)
-		else:
-			self.robot.dessine(False)
 		self.liste[self.indlist].update()
 		if self.liste[self.indlist].stop():
 			self.indlist += 1
@@ -76,5 +71,22 @@ def q2_1():
 	threadrun.start()
 	gui.window.mainloop()
 
+def q2_2():
+	# Création d'un environnement et d'un robot
+	environnement = Environnement(cs.env_width, cs.env_height, cs.scale)
+	robot = Robot(cs.rob_x, cs.rob_y, cs.rob_thet, cs.rob_r, cs.rob_dist_roue, cs.rob_r_roue) # robot immobile, pour montrer ce que fait le controleur
+	gui = GUI(environnement, robot)
+	proxy_v = Proxy_Virtuel(robot,environnement)
+	# Création d'une simulation
+	s = Simulation(environnement, robot)
+	stavance1 = StrategieAvance(50, 720, proxy_v)
+	stavance2 = StrategieAvance(200, 720, proxy_v)
+	stangle = StrategieAngle(90, 45, proxy_v)
+	liste_strat = [stavance1, stangle, stavance2, stangle]*2
+	stseq = StrategieSeqDessine(liste_strat, proxy_v)
+	threadrun = Thread(target=run, args=(s, gui, stseq))
+	threadrun.start()
+	gui.window.mainloop()
+
 if __name__ == "__main__":
-	q2_1()
+	q2_2()
