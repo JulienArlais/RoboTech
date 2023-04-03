@@ -17,6 +17,7 @@ class GUI():
 		self.environnement = env
 		scale = self.environnement.scale
 		self.robot = robot
+		self.dessine = False
 		self.window = tk.Tk()
 		self.window.title("Interface Graphique")
 		self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult*scale, height=self.environnement.height*mult*scale)
@@ -34,3 +35,5 @@ class GUI():
 		self.canvas.delete(self.d)
 		self.d = self.canvas.create_line(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.x*mult*scale+self.robot.getXstep()*mult*scale, self.robot.y*mult*scale+self.robot.getYstep()*mult*scale, arrow=tk.LAST)
 		
+	def dessine(self, bool):
+		self.dessine = bool
