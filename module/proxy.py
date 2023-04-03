@@ -1,5 +1,6 @@
 import time
 import numpy as np
+dt = 0.01
 
 class Proxy_Virtuel:
 
@@ -32,7 +33,7 @@ class Proxy_Virtuel:
 			self.last_pdate = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
-			delta = self.robot.rayon_roue*(now-self.last_update)*(ang_g + ang_d)/2
+			delta = self.robot.rayon_roue*dt*(ang_g + ang_d)/2
 			self.distance_parcourue += delta
 	
 	def reset_distance(self) :
@@ -48,7 +49,7 @@ class Proxy_Virtuel:
 			self.last_pdate = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
-			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
+			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
 		
 	def reset_angle(self):
 		self.angle_parcouru = 0

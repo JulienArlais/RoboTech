@@ -3,7 +3,8 @@ from module.affichage_2D import GUI
 from threading import Thread
 import module.constante as cs
 from module.proxy import Proxy_Virtuel, Proxy_Reel
-from module.core import run_projet
+from module.controleur import StrategieAvance, StrategieAngle, StrategieSeq
+
 
 def q1_1():
 	# Création d'un environnement et d'un robot
@@ -24,7 +25,22 @@ def q1_1():
 	threadrun = Thread(target=run, args=(s, gui, None))
 	threadrun.start()
 	gui.window.mainloop()
-	run_projet(robot,proxy_v,environnement,s)
+
+def q1_4():
+	# Création d'un environnement et d'un robot
+	environnement = Environnement(cs.env_width, cs.env_height, cs.scale)
+	robot = Robot(cs.rob_x, cs.rob_y, cs.rob_thet, cs.rob_r, cs.rob_dist_roue, cs.rob_r_roue) # robot immobile, pour montrer ce que fait le controleur
+	gui = GUI(environnement, robot)
+	proxy_v = Proxy_Virtuel(robot,environnement)
+	# Création d'une simulation
+	s = Simulation(environnement, robot)
+	stavance = StrategieAvance(50, 720, proxy_v)
+	stangle = StrategieAngle(60, 45, proxy_v)
+	liste_strat = [stavance, stangle]*6
+	stseq = StrategieSeq(liste_strat)
+	threadrun = Thread(target=run, args=(s, gui, stseq))
+	threadrun.start()
+	gui.window.mainloop()
 
 if __name__ == "__main__":
-	q1_1()
+	q1_4()
