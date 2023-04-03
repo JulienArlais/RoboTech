@@ -2,7 +2,7 @@ import tkinter as tk
 from .affichage_2D import GUI
 from threading import Thread
 from .element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from .controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise, StrategieDessin, StrategieUn, StrategieZero, StrategieZeroUn, StrategieBinaire
+from .controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise, StrategieDessin, StrategieHexa, StrategieUn, StrategieZero, StrategieZeroUn, StrategieBinaire
 import module.constante as cs
 
 
@@ -21,14 +21,13 @@ def run_projet(robot,proxy_v,environnement,s):
 	stavancehex = StrategieAvance(50, 720, proxy_v)
 	stanglehex = StrategieAngle(-60, -45, proxy_v)
 	stdessin = StrategieDessin(gui)
-	listeHex = [stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin]
-	stseqhex = StrategieSeq(listeHex)
+	sthexa = StrategieHexa(stavancehex, stanglehex, stdessin)
 	
 	stun = StrategieUn(100, 720, proxy_v)
 	stzero = StrategieZero(100, 20, 720, proxy_v)
 	stzeroun = StrategieZeroUn(stzero, stun, proxy_v,gui)
 	stbinaire = StrategieBinaire(100, 20, 720, proxy_v, gui)
 
-	threadrun = Thread(target=run, args=(s, gui, stbinaire))
+	threadrun = Thread(target=run, args=(s, gui, sthexa))
 	threadrun.start()
 	gui.window.mainloop()

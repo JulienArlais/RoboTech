@@ -168,6 +168,19 @@ class StrategieDessin():
 	def stop(self):
 		return True
 
+class StrategieHexa():
+	def __init__(self,av,an,dess):
+		stavancehex = av
+		stanglehex = an
+		stdessin = dess
+		listeHex = [stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin, stavancehex, stanglehex, stdessin]
+		self.stseqhex = StrategieSeq(listeHex)
+	
+	def update(self):
+		self.stseqhex.update()
+	
+	def stop(self):
+		return self.stseqhex.update()
 	
 class StrategieUn():
 	def __init__(self,dist, vit, proxy):
