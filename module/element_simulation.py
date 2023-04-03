@@ -136,6 +136,9 @@ class Environnement:
 		self.height = height
 		self.scale = scale
 		self.objets = []
+
+	def placer_obstacle(self, objet):
+		self.objets.append(objet)
 			
 	def generer_un_obstacle(self, robot):
 		"""génère un objet et le place aléatoirement dans l'environnement sans collision avec le robot
@@ -233,9 +236,10 @@ def run(simulation, gui, ia):
 	while True:
 		try:
 			t0 = time.time()
-			ia.update()
-			if ia.stop():
-				return
+			if ia is not None:
+				ia.update()
+				if ia.stop():
+					return
 			simulation.update()
 			if gui is not None:
 				gui.update()

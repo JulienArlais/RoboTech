@@ -18,6 +18,6 @@ def run_projet(robot,proxy_v,environnement,s):
 	stsb = StrategieSuivreBalise(cs.data, proxy_v)
 	stArretMur = StrategieArretMur(proxy_v, environnement, cs.stmur_vit)
 
-	threadrun = Thread(target=run, args=(s, gui, stseq))
+	threadrun = Thread(target=run, args=(s, gui, None))
 	threadrun.start()
 	gui.window.mainloop()
