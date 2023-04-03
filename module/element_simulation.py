@@ -48,7 +48,7 @@ class Robot:
 		self.vitAngG = 0
 		self.rayon_roue = rayon_roue
 		self.last_update = 0
-		self.crayon = True
+		self.crayon = False
 
 	def tourner(self, dps):
 		"""fait tourner le robot d'un certain degré par seconde

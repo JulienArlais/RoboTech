@@ -90,6 +90,9 @@ class Proxy_Virtuel:
 		self.ang_parcouru()
 		self.last_update = now
 
+	def dessine(self, b):
+		self.robot.dessine(b)
+
 class Proxy_Reel:
 
 	def __init__(self, robot_reel):

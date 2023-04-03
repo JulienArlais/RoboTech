@@ -17,6 +17,7 @@ class StrategieAvance():
 		self.distance = distance
 		self.vitesse = vitesse
 		self.proxy = proxy
+		self.proxy.dessine(True)
 		
 	def update(self):
 		"""itération de la stratégie
