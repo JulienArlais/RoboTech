@@ -29,11 +29,12 @@ class GUI():
 
 	def update(self):
 		scale = self.environnement.scale
-		create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, 1, self.canvas, "orange")
+		if self.dessine:
+			create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, 1, self.canvas, "orange")
 		self.canvas.delete(self.r)
 		self.r = create_circle(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.rayon*mult*scale, self.canvas, "red")
 		self.canvas.delete(self.d)
 		self.d = self.canvas.create_line(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.x*mult*scale+self.robot.getXstep()*mult*scale, self.robot.y*mult*scale+self.robot.getYstep()*mult*scale, arrow=tk.LAST)
-		
+
 	def dessine(self, bool):
 		self.dessine = bool

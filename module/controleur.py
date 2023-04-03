@@ -162,7 +162,7 @@ class StrategieDessin():
 			self.gui.dessine = True
 			print("Dessine")
 		else:
-			self.gui.dessine = True
+			self.gui.dessine = False
 			print("Ne dessine plus")
 	
 	def stop(self):
