@@ -171,6 +171,8 @@ class StrategieDessin():
 	
 class StrategieUn():
 	def __init__(self,dist, vit, proxy):
+		self.dist = dist
+		self.vit = vit
 		self.proxy = proxy
 		self.stavance = StrategieAvance(dist, vit, self.proxy)
 	
@@ -193,4 +195,18 @@ class StrategieZero():
 	
 	def stop(self):
 		return self.stzero.stop()
+
+class StrategieZeroUn():
+	def __init__(self,zero,un,proxy,gui):
+		av = StrategieAvance(un.dist, un.vit, proxy)
+		an = StrategieAngle(-90, un.vit, proxy)
+		nega_an = StrategieAngle(90, -un.vit, proxy)
+		stdessin = StrategieDessin(gui)
+		listeZeroUn = [zero, stdessin, an, av, nega_an, stdessin, un]
+		self.stzeroun = StrategieSeq(listeZeroUn)
 	
+	def update(self):
+		self.stzeroun.update()
+	
+	def stop(self):
+		return self.stzeroun.stop()
