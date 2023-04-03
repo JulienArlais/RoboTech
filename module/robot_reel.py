@@ -95,3 +95,4 @@ class Robot_Mock_Up:
 		    :blue: composante bleu (0-255)
 		"""
 		pass
+

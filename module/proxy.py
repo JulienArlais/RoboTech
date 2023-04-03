@@ -1,11 +1,13 @@
 import time
 import numpy as np
+from .element_simulation import Led 
 
-class Proxy_Virtuel:
+dt = 0.01
+
+class Robot_Virtuel:
 
 	def __init__(self, robot, env):
 		"""constructeur de simualtion_proxy,simule les mouvements du robot dans l'environnement virtuel dans lequel il évolue. 
-
 		Args:
 			robot: Robot
 			env: Environnement
@@ -16,39 +18,30 @@ class Proxy_Virtuel:
 		self.rayon = self.robot.rayon
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
-		self.last_update = 0
+		self.led1=Led(1,"red")
+		self.led2=Led(2,"blue")
+		self.abaisser=self.robot.abaisser
 
 	def set_vitesse(self, dps1, dps2):
 		"""fait avancer le robot à la vitesse donnée
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		self.robot.set_vitesse(dps1, dps2)
 		self.update()
+		self.robot.set_vitesse(dps1, dps2)
 	
 	def dist_parcourue(self):
-		now = time.time()
-		if self.last_update == 0:
-			self.last_pdate = now
-		else:
-			ang_g, ang_d = self.get_vitAng()
-			delta = self.robot.rayon_roue*(now-self.last_update)*(ang_g + ang_d)/2
-			self.distance_parcourue += delta
+		self.distance_parcourue += self.robot.distance_parcourue()
 	
 	def reset_distance(self) :
 		"""
 		renvoie la distance parcourue par le robot depuis sa dernière réinitialisation
-
 		"""
 		self.distance_parcourue = 0
 	
 	def ang_parcouru(self):
-		now = time.time()
-		if self.last_update == 0:
-			self.last_pdate = now
-		else:
-			ang_g, ang_d = self.get_vitAng()
-			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
+		ang_g, ang_d = self.get_vitAng()
+		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
 		
 	def reset_angle(self):
 		self.angle_parcouru = 0
@@ -73,23 +66,26 @@ class Proxy_Virtuel:
 			dps: degré par seconde
 		"""
 		self.robot.tourner(dps)
-		self.update()
-
-	def reset(self):
-		self.reset_angle()
-		self.reset_distance()
 
 	def update(self):
 		"""
 		met à jour le robot 
-
 		"""
-		now = time.time()
-		self.dist_parcourue()
-		self.ang_parcouru()
-		self.last_update = now
+		self.last_update = time.time()
 
-class Proxy_Reel:
+	def set_led(self, ID_LED, statut):
+		self.robot.set_led(ID_LED,statut)
+
+	def dessine(self,Bool):
+		return self.robot.dessine(Bool)
+
+	def getSignal(self,env):
+		return self.robot.getSignal(env)
+
+
+
+
+class Robot_Reel:
 
 	def __init__(self, robot_reel):
 		self.robot_reel = robot_reel
