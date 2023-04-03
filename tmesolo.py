@@ -120,7 +120,7 @@ def q2_3():
 	#Pour le 0
 	stavance2 = StrategieAvance(50, 720, proxy_v)
 	stangle = StrategieAngle(90, 45, proxy_v)
-	liste_strat1 = [stavance2, stangle, stavance1, stangle, stavance2, stangle, stavance1, stangle, stavance2, stangle, stavance1]
+	liste_strat1 = [stavance2, stangle, stavance1, stangle]*2
 	zero = StrategieSeqDessine(liste_strat1, proxy_v)
 
 	#Pour l'espace
@@ -134,7 +134,37 @@ def q2_3():
 	stseq = StrategieSeqDessine(liste_strat, proxy_v)
 
 	strat_boucle = StrategieBoucle(stseq)
-	threadrun = Thread(target=run, args=(s, gui, strat_boucle))
+	threadrun = Thread(target=run, args=(s, gui, stseq))
+	threadrun.start()
+	gui.window.mainloop()
+
+def q2_4():
+	# Création d'un environnement et d'un robot
+	environnement = Environnement(cs.env_width, cs.env_height, cs.scale)
+	robot = Robot(700, 700, -90, cs.rob_r, cs.rob_dist_roue, cs.rob_r_roue) # robot immobile, pour montrer ce que fait le controleur
+	gui = GUI(environnement, robot)
+	proxy_v = Proxy_Virtuel(robot,environnement)
+	# Création d'une simulation
+	s = Simulation(environnement, robot)
+
+	#pour le 1
+	stavance1 = StrategieAvance(200, 1080, proxy_v)
+
+	#Pour le 0
+	stavance2 = StrategieAvance(50, 720, proxy_v)
+	stangle = StrategieAngle(90, 45, proxy_v)
+	liste_strat1 = [stavance2, stangle, stavance1, stangle, stavance2, stangle, stavance1, stangle, stavance2, stangle, stavance1]
+	zero = StrategieSeqDessine(liste_strat1, proxy_v)
+
+	#Pour l'espace
+	liste_strat2 = [stangle, stavance1]
+	espace1 = StrategieSeqDessine(liste_strat2, proxy_v)
+	stangle2 = stangle = StrategieAngle(-90, -45, proxy_v)
+
+	liste_strat = [stavance1, espace1, zero]
+	stseq = StrategieSeqDessine(liste_strat, proxy_v)
+
+	threadrun = Thread(target=run, args=(s, gui, stseq))
 	threadrun.start()
 	gui.window.mainloop()
 
