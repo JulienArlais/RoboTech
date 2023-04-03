@@ -2,7 +2,7 @@ import tkinter as tk
 from .affichage_2D import GUI
 from threading import Thread
 from .element_simulation import Objet, Robot, Environnement, CollisionException, Simulation, run
-from .controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise, StrategieDessin, StrategieUn, StrategieZero, StrategieZeroUn
+from .controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise, StrategieDessin, StrategieUn, StrategieZero, StrategieZeroUn, StrategieBinaire
 import module.constante as cs
 
 
@@ -27,7 +27,8 @@ def run_projet(robot,proxy_v,environnement,s):
 	stun = StrategieUn(100, 720, proxy_v)
 	stzero = StrategieZero(100, 20, 720, proxy_v)
 	stzeroun = StrategieZeroUn(stzero, stun, proxy_v,gui)
+	stbinaire = StrategieBinaire(100, 20, 720, proxy_v, gui)
 
-	threadrun = Thread(target=run, args=(s, gui, stzeroun))
+	threadrun = Thread(target=run, args=(s, gui, stbinaire))
 	threadrun.start()
 	gui.window.mainloop()

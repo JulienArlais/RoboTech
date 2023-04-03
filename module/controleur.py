@@ -210,3 +210,27 @@ class StrategieZeroUn():
 	
 	def stop(self):
 		return self.stzeroun.stop()
+
+class StrategieBinaire():
+	def __init__(self, long, larg, vit, proxy,gui):
+		stun = StrategieUn(long, vit, proxy)
+		stzero = StrategieZero(long, larg, vit, proxy)
+		stzeroun = StrategieZeroUn(stzero, stun, proxy, gui)
+		
+		av = StrategieAvance(long, vit, proxy)
+		an = StrategieAngle(-90, long, proxy)
+		uturn = StrategieAngle(180, long, proxy)
+		nega_an = StrategieAngle(90, -long, proxy)
+		stdessin = StrategieDessin(gui)
+		
+		listeBinaire = [stzeroun, stdessin, uturn, av, nega_an, av, nega_an, stdessin]
+		self.stbinaire = StrategieSeq(listeBinaire)
+		self.back = StrategieSeq(listeBinaire)
+	
+	def update(self):
+		self.stbinaire.update()
+		if self.stbinaire.stop():
+			self.stbinaire = self.back
+	
+	def stop(self):
+		return False
