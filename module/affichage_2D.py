@@ -23,7 +23,7 @@ class GUI():
 		self.r = create_circle(self.robot.x*mult**scale, self.robot.y*mult**scale, self.robot.rayon*mult*env.scale, self.canvas, "red")
 		self.d = self.canvas.create_line(self.robot.x*mult*scale, self.robot.y*mult*scale, self.robot.x*mult*scale+self.robot.getXstep()*mult*scale, self.robot.y*mult*scale+self.robot.getYstep()*mult*scale, arrow=tk.LAST)
 		for objet in self.environnement.objets:
-			create_circle(objet.x*mult*scale, objet.y*mult*scale, objet.rayon*mult*scale, self.canvas, "black")
+			create_circle(objet.x*mult*scale, objet.y*mult*scale, objet.rayon*mult*scale, self.canvas, "#FFA500")
 		self.canvas.pack()
 
 	def update(self):

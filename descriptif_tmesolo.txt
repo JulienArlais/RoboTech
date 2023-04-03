@@ -1,0 +1,3 @@
+Q1.1 modification de module/core.py, module/element_simulation.py pour enlever les stratégies et ajout de tmesolo.py
+
+Q1.2 modification de module/affichage_2D.py pour changer la couleur des obstacles en orange
