@@ -5,3 +5,11 @@ Q1.2 modification de module/affichage_2D.py pour changer la couleur des obstacle
 Q1.3. modification de module/affichage_2D.py et module/element_simulation.py pour ajouter le crayon
 
 Q1.4. modification de module/element_simulation.py, module/proxy.py (pour passage en temps constant car ca fonctionnait mal) et tmesolo pour faire un hexagone
+
+Q2.1. modification de tmesolo.py
+
+Q2.2. modification de tmesolo.py
+
+Q2.3. modification de tmesolo.py
+
+Q2.4. modification de tmesolo.py
