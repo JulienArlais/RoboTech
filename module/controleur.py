@@ -152,3 +152,19 @@ class StrategieSuivreBalise():
 		except BaliseException as e:
 			return True
 		return False
+
+class StrategieDessin():
+	def __init__(self,gui):
+		self.gui = gui
+	
+	def update(self):
+		if self.gui.dessine == False:
+			self.gui.dessine = True
+			print("Dessine")
+		else:
+			self.gui.dessine = True
+			print("Ne dessine plus")
+	
+	def stop(self):
+		return True
+	
