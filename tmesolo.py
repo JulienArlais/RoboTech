@@ -130,7 +130,7 @@ def q2_3():
 	liste_strat3 = [stangle2, stavance1, stangle2]
 	espace2 = StrategieSeqDessine(liste_strat3, proxy_v)
 
-	liste_strat = [stavance1, espace1, zero, espace2]
+	liste_strat = [stavance1, espace1, zero]
 	stseq = StrategieSeqDessine(liste_strat, proxy_v)
 
 	strat_boucle = StrategieBoucle(stseq)
