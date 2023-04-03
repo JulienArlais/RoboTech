@@ -48,6 +48,10 @@ class Robot:
 		self.vitAngG = 0
 		self.rayon_roue = rayon_roue
 		self.last_update = 0
+		self.trace_bool = True
+		
+	def dessine (self,b):
+		self.trace_bool = b
 
 	def tourner(self, dps):
 		"""fait tourner le robot d'un certain degré par seconde
@@ -137,7 +141,7 @@ class Environnement:
 		self.scale = scale
 		self.objets = []
 			
-	def generer_un_obstacle(self, robot):
+	def generer_un_obstacle(self, robot,x,y):
 		"""génère un objet et le place aléatoirement dans l'environnement sans collision avec le robot
 
 		Args:
@@ -145,8 +149,6 @@ class Environnement:
 		"""
 		rayon = np.random.uniform(1, 20)
 		while True:
-			x = np.random.uniform(rayon, self.width - rayon)
-			y = np.random.uniform(rayon, self.height - rayon)
 			if all(not self.collision(x, y, rayon) for obj in self.objets):
 				self.objets.append(Objet(x, y, rayon))
 				break

@@ -17,6 +17,7 @@ class Proxy_Virtuel:
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
 		self.last_update = 0
+		self.trace_bool = self.robot.trace_bool
 
 	def set_vitesse(self, dps1, dps2):
 		"""fait avancer le robot à la vitesse donnée
@@ -78,6 +79,9 @@ class Proxy_Virtuel:
 	def reset(self):
 		self.reset_angle()
 		self.reset_distance()
+		
+	def dessine (self,b):
+		self.trace_bool = b
 
 	def update(self):
 		"""
