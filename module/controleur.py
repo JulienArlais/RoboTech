@@ -60,7 +60,6 @@ class StrategieAngle():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		print("angle :", self.proxy.angle_parcouru)
 		if np.abs(self.proxy.angle_parcouru) >= np.abs(self.angle):
 			self.proxy.set_vitesse(0, 0)
 			self.proxy.reset()
@@ -122,6 +121,7 @@ class StrategieSeq():
 			self.indlist = 0
 			return True
 		return False
+
 
 class StrategieSuivreBalise():
 	def __init__(self, data, proxy):

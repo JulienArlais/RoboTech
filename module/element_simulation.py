@@ -223,24 +223,3 @@ class Simulation:
 				print("Collision entre robot et un objet")
 				raise CollisionException("Collision entre robot et un objet")
 				
-def run(simulation, gui, ia):
-	"""exécution de la simulation
-
-	Args:
-		simulation (Simulation): simulation à exécuter
-		gui (GUI): interface graphique à afficher
-	"""
-	while True:
-		try:
-			t0 = time.time()
-			ia.update()
-			if ia.stop():
-				return
-			simulation.update()
-			if gui is not None:
-				gui.update()
-			t1 = time.time()
-			if (t1-t0) < dt:
-				time.sleep(dt-(t1-t0))
-		except CollisionException as e:
-			break
