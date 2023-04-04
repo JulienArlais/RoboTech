@@ -26,7 +26,7 @@ class Proxy_Virtuel:
 		self.robot.set_vitesse(dps1, dps2)
 		self.update()
 	
-	def dist_parcourue(self):
+	def update_distance(self):
 		now = time.time()
 		if self.last_update == 0:
 			self.last_pdate = now
@@ -42,7 +42,7 @@ class Proxy_Virtuel:
 		"""
 		self.distance_parcourue = 0
 	
-	def ang_parcouru(self):
+	def update_angle(self):
 		now = time.time()
 		if self.last_update == 0:
 			self.last_pdate = now
@@ -104,7 +104,7 @@ class Proxy_Reel:
 		self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_LEFT, dps1)
 		self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_RIGHT, dps2)
 		
-	def dist_parcourue(self) :
+	def update_distance(self) :
 		self.distance_parcourue += sum([i/360 * self.rayon for i in self.robot_reel.get_motor_position()])/2
 
 	def reset_distance(self):
@@ -112,9 +112,10 @@ class Proxy_Reel:
 		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_RIGHT,self.robot_reel.read_encoders()[1])
 		self.distance_parcourue = 0
 
-	def ang_parcouru(self):
+	def update_angle(self):
+		now = time.time()
 		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * dt * 180/np.pi
+		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
 		
 	def reset_angle(self):
 		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])
@@ -138,11 +139,13 @@ class Proxy_Reel:
 		else:
 			self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_RIGHT, self.get_vitAng()[1]+delta)
 			
-	def reset_angle(self):
-		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])
-		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_RIGHT,self.robot_reel.read_encoders()[1])
-		self.angle_parcouru = 0
+	def reset(self):
+		self.reset_angle()
+		self.reset_distance()
 
 	def update(self):
+		now = time.time()
+		self.dist_parcourue()
+		self.ang_parcouru()
+		self.last_update = now
 		self.last_vitAng = self.robot_reel.get_motor_position()
-		self.last_update = time.time()
