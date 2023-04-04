@@ -137,6 +137,11 @@ class Proxy_Reel:
 			self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_LEFT, self.get_vitAng()[0]+delta)
 		else:
 			self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_RIGHT, self.get_vitAng()[1]+delta)
+			
+	def reset_angle(self):
+		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])
+		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_RIGHT,self.robot_reel.read_encoders()[1])
+		self.angle_parcouru = 0
 
 	def update(self):
 		self.last_vitAng = self.robot_reel.get_motor_position()
