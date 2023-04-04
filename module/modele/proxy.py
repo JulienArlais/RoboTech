@@ -79,14 +79,20 @@ class Proxy_Virtuel:
 		self.reset_angle()
 		self.reset_distance()
 
+	def blinker_on(self,id):
+		return self.robot.blinker_on(id)
+		
+	def blinker_off(self,id):
+		return self.robot.blinker_off(id)
+
 	def update(self):
 		"""
 		met à jour le robot 
 
 		"""
 		now = time.time()
-		self.dist_parcourue()
-		self.ang_parcouru()
+		self.update_distance()
+		self.update_angle()
 		self.last_update = now
 
 class Proxy_Reel:
