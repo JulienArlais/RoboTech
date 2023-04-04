@@ -24,6 +24,16 @@ class Objet:
 		self.x = x
 		self.y = y
 		self.rayon = rayon
+		
+class Led:
+    def __init__(self, id_led, color):
+        self.id_led = id_led
+        self.color = color
+        self.status = False
+        
+    def set_status(self, status):
+        if isinstance(status, bool):
+            self.status = status
 
 
 class Robot:
@@ -46,6 +56,8 @@ class Robot:
 		self.vitAngG = 0
 		self.rayon_roue = rayon_roue
 		self.last_update = 0
+		self.led1=Led(0,"red")
+		self.led2=Led(1,"blue")
 
 	def tourner(self, dps):
 		"""fait tourner le robot d'un certain degré par seconde
@@ -116,6 +128,38 @@ class Robot:
 				if env.collision(x, y, self.rayon):
 					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
+
+
+	def set_led(self,ID_LED,statut):
+		"""
+		Fixe l'état des LEDS du robot
+		:param int|Bool: int pour l'id de la LED et Bool pour statut à donner True/False
+		"""
+		if ID_LED==1:
+			self.led1.set_status(statut)
+		else:
+			self.led2.set_status(statut)
+
+
+	def blinker_on(self, id):
+		"""
+		Allume une des deux leds que le robot possède en fonction de l'id 
+		:param int|str id: **0** / **1** pour la droite/gauche
+		"""
+		if id == 0:
+			self.set_led(0, True)
+		if id == 1:
+			self.set_led(1, True)
+
+	def blinker_off(self, id):
+		"""
+		Eteint une des deux led que le robot possede en fonction de l'id
+		:param int|str id: **0** / **1** pour la droite/gauche 
+		"""
+		if id == 0:
+			self.set_led(0, False)
+		if id == 1:
+			self.set_led(1, False)
 
 	def update(self):
 		self.last_update = time.time()
@@ -192,6 +236,7 @@ class Environnement:
 			if distance(x, y, objet.x, objet.y) <= ray + objet.rayon:
 				return True
 		return False
+		
 		
 
 class Simulation:
