@@ -9,7 +9,7 @@ class StrategieAvance():
 
 		Args:
 			distance (float): distance
-			vitesse (int): vitesse des roues ( degré par seconde )
+			vitesse (int): vitesse des roues ( radiant par seconde )
 			robot (Robot): robot
 		"""
 		self.distance = distance
@@ -35,22 +35,22 @@ class StrategieAvance():
 
 
 class StrategieAngle():
-	def __init__(self, angle, dps, proxy):
+	def __init__(self, angle, rps, proxy):
 		"""constructeur de la stratégie pour tourner d'un angle voulu
 
 		Args:
 			angle (int): angle souhaité ( en degré )
-			dps (int): degré par seconde
+			rps (int): radian par seconde
 			proxy (Robot): proxy
 		"""
 		self.angle = angle
-		self.dps = dps
+		self.rps = rps
 		self.proxy = proxy
 
 	def update(self):
 		"""itération de la stratégie
 		"""
-		self.proxy.tourner(self.dps * (time.time()-self.proxy.last_update))
+		self.proxy.tourner(self.rps * (time.time()-self.proxy.last_update))
 
 	def stop(self):
 		"""condition d'arrêt

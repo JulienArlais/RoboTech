@@ -17,13 +17,14 @@ class Proxy_Virtuel:
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
 		self.last_update = 0
+		self.angle_depart = self.robot.theta
 
-	def set_vitesse(self, dps1, dps2):
+	def set_vitesse(self, rps1, rps2):
 		"""fait avancer le robot à la vitesse donnée
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		self.robot.set_vitesse(dps1, dps2)
+		self.robot.set_vitesse(rps1, rps2)
 		self.update()
 	
 	def update_distance(self):
@@ -48,10 +49,11 @@ class Proxy_Virtuel:
 			self.last_pdate = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
-			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
+			self.angle_parcouru = self.robot.theta-self.angle_depart#(ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update)
 		
 	def reset_angle(self):
 		self.angle_parcouru = 0
+		self.angle_depart = self.robot.theta
 
 	def get_distance(self):
 		"""

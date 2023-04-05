@@ -28,8 +28,8 @@ def run_simulation(simulation, gui):
 			if gui is not None:
 				gui.update()
 			t1 = time.time()
-			if (t1-t0) < cs.dt:
-				time.sleep(cs.dt-(t1-t0))
+			#if (t1-t0) < cs.dt:
+			#	time.sleep(cs.dt-(t1-t0))
 			#lock.release()
 		except CollisionException as e:
 			break
@@ -45,8 +45,8 @@ def run(env,rob,prox):
 	gui = GUI(environnement, robot)
 
 	# Stratégies
-	strat_avance = StrategieAvance(146, 720, proxy_v)
-	strat_angle = StrategieAngle(-90, -45, proxy_v)
+	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy_v)
+	strat_angle = StrategieAngle(cs.stan_an, cs.stan_dps, proxy_v)
 	liste_strat = [strat_avance, strat_angle]*4
 	strat_carre = StrategieSeq(liste_strat)
 

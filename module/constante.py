@@ -1,3 +1,5 @@
+import numpy as np
+
 # unité de longueur : centimètre
 # unité de vitesse : degré par seconde
 # unité de temps : seconde
@@ -19,11 +21,11 @@ rob_r_roue = 4 #rayon des roues
 nb_objet = 5 #nombre d'objets dans la simulation
 
 stav_dist = 200 #distance à avancer dans StrategieAvance
-stav_vit = 720 #vitesse à laquelle avancer
+stav_vit = 4*np.pi #vitesse à laquelle avancer
 
-stan_an = -90 #angle à tourner dans StrategieAngle
-stan_dps = -45 #angle tourné par seconde
+stan_an = -np.pi/2 #angle à tourner dans StrategieAngle
+stan_dps = np.pi*4 #angle tourné par seconde
 
-stmur_vit = 720 #vitesse de déplacement de la StratégieMur 
+stmur_vit = 4*np.pi #vitesse de déplacement de la StratégieMur 
 
 data = 'camera_test/test3.jpg'

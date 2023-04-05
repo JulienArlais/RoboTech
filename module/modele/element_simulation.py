@@ -59,27 +59,27 @@ class Robot:
 		self.led1=Led(0,"red")
 		self.led2=Led(1,"blue")
 
-	def tourner(self, dps):
+	def tourner(self, rps):
 		"""fait tourner le robot d'un certain degré par seconde
 
 		Args:
 			dps (int): degré par seconde
 		"""
-		delta = (self.dist_roue * np.abs(np.radians(dps)))/self.rayon_roue
-		if dps > 0:
-			self.set_vitesse(np.degrees(self.vitAngG+delta), np.degrees(self.vitAngD))
+		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue
+		if rps > 0:
+			self.set_vitesse(delta, 0)
 		else:
-			self.set_vitesse(np.degrees(self.vitAngG), np.degrees(self.vitAngD+delta))
+			self.set_vitesse(0, delta)
 
-	def set_vitesse(self, dps1, dps2):
+	def set_vitesse(self, rps1, rps2):
 		"""setter de vitesse pour les roues
 
 		Args:
 			rps1 (float): vitesse angulaire roue droite en radian par seconde
 			rps2 (float): vitesse angulaire roue gauche en radian par seconde
 		"""
-		self.vitAngG = np.radians(dps1)
-		self.vitAngD = np.radians(dps2)
+		self.vitAngG = rps1
+		self.vitAngD = rps2
 	
 	def get_vitAng(self):
 		return (self.vitAngG, self.vitAngD)
