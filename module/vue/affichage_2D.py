@@ -14,6 +14,7 @@ class GUI():
         self.environnement = env
         scale = self.environnement.scale
         self.robot = robot
+
         self.window = tk.Tk()
         self.window.title("Interface Graphique")
         self.canvas = tk.Canvas(self.window, width=self.environnement.width*mult*scale, height=self.environnement.height*mult*scale)
@@ -36,8 +37,7 @@ class GUI():
         self.d = self.canvas.create_line(x, y, x+self.robot.getXstep()*mult*scale, y+self.robot.getYstep()*mult*scale, arrow=tk.LAST)
         self.canvas.delete(self.r_led1)
         
-        self.r_led1 = create_circle(x + np.cos(self.robot.theta + np.pi/2)*self.robot.rayon*mult*scale, y + np.sin(self.robot.theta + np.pi/2)*self.robot.rayon*mult*scale, self.robot.rayon*mult*scale/4, self.canvas, "red" if self.robot.led1 else "black")
+        self.r_led1 = create_circle(x + np.cos(self.robot.theta + np.pi/2)*self.robot.rayon*mult*scale, y + np.sin(self.robot.theta + np.pi/2)*self.robot.rayon*mult*scale, self.robot.rayon*mult*scale/4, self.canvas, "red" if self.robot.led1.status else "black")
         
         self.canvas.delete(self.r_led2)
-        self.r_led2 = create_circle(x + np.cos(self.robot.theta - np.pi/2)*self.robot.rayon*mult*scale, y + np.sin(self.robot.theta - np.pi/2)*self.robot.rayon*mult*scale, self.robot.rayon*mult*scale/4, self.canvas, "blue" if self.robot.led2 else "black")
-
+        self.r_led2 = create_circle(x + np.cos(self.robot.theta - np.pi/2)*self.robot.rayon*mult*scale, y + np.sin(self.robot.theta - np.pi/2)*self.robot.rayon*mult*scale, self.robot.rayon*mult*scale/4, self.canvas, "blue" if self.robot.led2.status else "black")

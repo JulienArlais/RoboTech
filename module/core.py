@@ -40,6 +40,11 @@ def run(env,rob,prox):
 	robot = rob
 	proxy_v = prox
 
+	#Activation ou Désactivation des LEDS du robot 
+	rob.blinker_off(1)
+	rob.blinker_on(0)
+	
+
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
 	gui = GUI(environnement, robot)
