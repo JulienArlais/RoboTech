@@ -19,8 +19,13 @@ class Robot_Mock_Up:
 		    Initialise le robot
 		    :resolution: resolution de la camera
 		"""
+		
 		self.MOTOR_LEFT = 0
 		self.MOTOR_RIGHT = 1
+		print("INITIALISATION")
+		#self._gpg= EasyGoPiGo3()
+		#self.MOTOR_LEFT= self._gpg.MOTOR_LEFT
+		#self.MOTOR_RIGHT = self._gpg.MOTOR_RIGHT
 
 
 	def stop(self):
@@ -39,6 +44,7 @@ class Robot_Mock_Up:
 		:port: une constante moteur,  MOTOR_LEFT ou MOTOR_RIGHT (ou les deux MOTOR_LEFT+MOTOR_RIGHT).
 		:dps: la vitesse cible en nombre de degres par seconde
 		"""
+		print("set_motor_position")
 		pass
 
 	def get_motor_position(self):

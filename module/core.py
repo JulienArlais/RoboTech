@@ -6,6 +6,11 @@ from .modele.proxy import Proxy_Virtuel, Proxy_Reel
 import module.constante as cs
 import time
 
+try :
+	from Robot2I013 import Robot2I013
+except :
+	from .modele.robot_mock_up import Robot_Mock_Up as Robot2I013
+
 stop = False
 lock = Lock()
 
