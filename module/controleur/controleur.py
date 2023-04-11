@@ -59,7 +59,6 @@ class StrategieAngle():
 			boolean: arrêt ou non
 		"""
 		if np.abs(self.proxy.angle_parcouru) >= np.abs(self.angle):
-			self.proxy.set_vitesse(0, 0)
 			self.proxy.reset()
 			return True
 		return False

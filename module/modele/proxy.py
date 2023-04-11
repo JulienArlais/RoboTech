@@ -14,6 +14,7 @@ class Proxy_Virtuel:
 		self.env = env
 		self.dist_roue = self.robot.dist_roue
 		self.rayon = self.robot.rayon
+		self.rayon_roue = self.robot.rayon_roue
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
 		self.last_update = 0
@@ -24,13 +25,14 @@ class Proxy_Virtuel:
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		self.robot.set_vitesse(rps1, rps2)
+		self.robot.vitAngG = rps1
+		self.robot.vitAngD = rps2
 		self.update()
 	
 	def update_distance(self):
 		now = time.time()
 		if self.last_update == 0:
-			self.last_pdate = now
+			self.last_update = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
 			delta = self.robot.rayon_roue*(now-self.last_update)*(ang_g + ang_d)/2
@@ -46,7 +48,7 @@ class Proxy_Virtuel:
 	def update_angle(self):
 		now = time.time()
 		if self.last_update == 0:
-			self.last_pdate = now
+			self.last_update = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
 			self.angle_parcouru = self.robot.theta-self.angle_depart#(ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update)
@@ -68,13 +70,17 @@ class Proxy_Virtuel:
 		"""
 		return self.robot.get_vitAng()
 
-	def tourner(self, dps):
+	def tourner(self, rps):
 		"""
 		tourne le robot à un certain degré par seconde
 		Args:
 			dps: degré par seconde
 		"""
-		self.robot.tourner(dps)
+		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue
+		if rps > 0:
+			self.set_vitesse(delta, 0)
+		else:
+			self.set_vitesse(0, delta)
 		self.update()
 
 	def reset(self):
@@ -103,10 +109,10 @@ class Proxy_Reel:
 		self.robot_reel = robot_reel
 		self.dist_roue = self.robot_reel.WHEEL_BASE_WIDTH
 		self.rayon = self.robot_reel.WHEEL_BASE_WIDTH/2 # techniquement la distance entre les deux roues c'est aussi le diamètre du robot non ?
+		self.rayon_roue = self.robot_reel.WHEEL_DIAMETER/2
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
-		self.last_vitAng = (0, 0)
-		self.last_update = 0
+		self.last_Ang = (0, 0)
 
 	def set_vitesse(self, dps1, dps2):
 		self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_LEFT, dps1)
@@ -121,9 +127,8 @@ class Proxy_Reel:
 		self.distance_parcourue = 0
 
 	def update_angle(self):
-		now = time.time()
 		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) * 180/np.pi
+		self.angle_parcouru += np.subtract([i/360 * self.rayon for i in self.robot_reel.get_motor_position()])/self.dist_roue* 180/np.pi
 		
 	def reset_angle(self):
 		self.robot_reel.offset_motor_encode(self.robot_reel.MOTOR_LEFT,self.robot_reel.read_encoders()[0])
@@ -134,18 +139,16 @@ class Proxy_Reel:
 		return self.robot_reel.get_distance()
 
 	def get_vitAng(self):
-		vitAng = self.robot_reel.get_motor_position()
-		now = time.time()
-		delta = np.subtract(vitAng, self.last_vitAng)
-		duree = now - self.last_update
-		return tuple(delta/duree)
+		Ang = self.robot_reel.get_motor_position()
+		delta = np.subtract(Ang, self.last_Ang)
+		return delta
 
-	def tourner(self, dps):
-		delta = (self.robot_reel.WHEEL_BASE_WIDTH * np.abs(np.radians(dps)))/(self.robot_reel.WHEEL_DIAMETER/2)
-		if dps > 0:
-			self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_LEFT, self.get_vitAng()[0]+delta)
+	def tourner(self, rps):
+		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue
+		if rps > 0:
+			self.set_vitesse(delta, 0)
 		else:
-			self.robot_reel.set_motor_dps(self.robot_reel.MOTOR_RIGHT, self.get_vitAng()[1]+delta)
+			self.set_vitesse(0, delta)
 			
 	def reset(self):
 		self.reset_angle()
@@ -155,5 +158,4 @@ class Proxy_Reel:
 		now = time.time()
 		self.dist_parcourue()
 		self.ang_parcouru()
-		self.last_update = now
-		self.last_vitAng = self.robot_reel.get_motor_position()
+		self.last_Ang = self.robot_reel.get_motor_position()
