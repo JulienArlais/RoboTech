@@ -192,11 +192,11 @@ class Environnement:
 		if robot.last_update == 0:
 			robot.last_update = now
 		else:
-			print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
+			#print("Le robot en (", format(robot.x), ",", format(robot.y), ") a avancé et s'est déplacé en (",end='')
 			robot.theta += (robot.vitAngD - robot.vitAngG) * robot.rayon/robot.dist_roue * (now - robot.last_update)
 			robot.x += robot.vitAngD * robot.rayon_roue * np.cos(robot.theta) * (now - robot.last_update)			
 			robot.y += robot.vitAngD * robot.rayon_roue * np.sin(robot.theta) * (now - robot.last_update)
-			print(format(robot.x),",",format(robot.y),")")
+			#print(format(robot.x),",",format(robot.y),")")
 
 	def collision(self, x, y, ray):
 		"""Teste s'il y aura collision aux coordonnées (x, y)

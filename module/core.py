@@ -18,6 +18,7 @@ def run_strategie(strategie):
 	while not strategie.stop():
 		#lock.acquire()
 		strategie.update()
+		strategie.proxy.update()
 		#lock.release()
 		time.sleep(cs.dt) # faudrait le changer nan ?
 	global stop
@@ -52,16 +53,16 @@ def run(env,rob,prox):
 
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
-	gui = GUI(environnement, robot)
+	#gui = GUI(environnement, robot)
 
 	# Stratégies
 	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy_v)
 	strat_angle = StrategieAngle(cs.stan_an, cs.stan_dps, proxy_v)
 	liste_strat = [strat_avance, strat_angle]*4
-	strat_carre = StrategieSeq(liste_strat)
+	strat_carre = StrategieSeq(liste_strat, proxy_v)
 
-	t1 = Thread(target=run_simulation, args=(s, gui))
-	t2 = Thread(target=run_strategie, args=(strat_carre,))
+	t1 = Thread(target=run_simulation, args=(s, None))
+	t2 = Thread(target=run_strategie, args=(strat_avance,))
 	t1.start()
 	t2.start()
-	gui.window.mainloop()
+	#gui.window.mainloop()

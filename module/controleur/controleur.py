@@ -27,8 +27,8 @@ class StrategieAvance():
 		Returns:
 			boolean: arrêt ou non
 		"""
+		print(self.proxy.distance_parcourue, self.distance)
 		if (self.proxy.distance_parcourue >= self.distance):
-			self.proxy.set_vitesse(0, 0)
 			self.proxy.reset()
 			return True
 		return False
@@ -92,7 +92,7 @@ class StrategieArretMur():
 
 
 class StrategieSeq():
-	def __init__(self, liste):
+	def __init__(self, liste, proxy):
 		"""constructeur de la stratégie séquentielle
 
 		Args:
@@ -100,6 +100,7 @@ class StrategieSeq():
 		"""
 		self.liste = liste
 		self.indlist = 0
+		self.proxy = proxy
 		
 	def update(self):
 		"""itération de la stratégie

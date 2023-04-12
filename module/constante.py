@@ -20,8 +20,8 @@ rob_r_roue = 4 #rayon des roues
 
 nb_objet = 5 #nombre d'objets dans la simulation
 
-stav_dist = 200 #distance à avancer dans StrategieAvance
-stav_vit = 4*np.pi #vitesse à laquelle avancer
+stav_dist = 1 #distance à avancer dans StrategieAvance
+stav_vit = 180#4*np.pi #vitesse à laquelle avancer
 
 stan_an = -np.pi/2 #angle à tourner dans StrategieAngle
 stan_dps = np.pi*4 #angle tourné par seconde
