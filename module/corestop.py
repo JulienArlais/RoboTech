@@ -23,11 +23,6 @@ def run_strategie(strategie):
 	global stop
 	stop = True # on arrete le thread de run_simulation lorsque run_strategie se termine
 	strategie.proxy.set_vitesse(0, 0)
-	
-#def run_capteur_dist(proxy):
-#	while not stop:
-#		proxy.capteur = proxy.get_distance()
-#		print("capteur", proxy.capteur)
 
 def run_simulation(simulation, gui):
 
@@ -49,27 +44,20 @@ def run(env,rob,prox):
 	# Robot + Environnement
 	environnement = env
 	robot = rob
-	proxy = prox
+	proxy_v = prox
 
-	#Activation ou D�sactivation des LEDS du robot 
+	#Activation ou D├ęsactivation des LEDS du robot 
 	rob.blinker_off(1)
 	rob.blinker_on(0)
 	
 
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
-	#gui = GUI(environnement, robot)
 
-	# Stratégies
-	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy)
-	strat_angle = StrategieAngle(cs.stan_an, cs.stan_dps, proxy)
-	liste_strat = [strat_avance, strat_angle]*4
-	strat_carre = StrategieSeq(liste_strat, proxy)
-	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
-	stop = StrategieAvance(1, cs.stav_vit, proxy)
+	# Strat├ęgies
+	stop = StrategieAvance(1, cs.stav_vit, proxy_v)
 
 	t1 = Thread(target=run_simulation, args=(s, None))
-	t2 = Thread(target=run_strategie, args=(strat_mur,))
+	t2 = Thread(target=run_strategie, args=(stop,))
 	t1.start()
 	t2.start()
-	#gui.window.mainloop()

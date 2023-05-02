@@ -76,11 +76,11 @@ class Proxy_Virtuel:
 		Args:
 			dps: degré par seconde
 		"""
-		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue
+		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue/2
 		if rps > 0:
-			self.set_vitesse(delta, 0)
+			self.set_vitesse(delta, -delta)
 		else:
-			self.set_vitesse(0, delta)
+			self.set_vitesse(-delta, delta)
 		self.update()
 
 	def reset(self):
@@ -111,6 +111,7 @@ class Proxy_Reel:
 		self.dist_roue = self.robot.WHEEL_BASE_WIDTH
 		self.rayon = self.robot.WHEEL_BASE_WIDTH/2 # techniquement la distance entre les deux roues c'est aussi le diamètre du robot non ?
 		self.rayon_roue = self.robot.WHEEL_DIAMETER/2
+		self.circonf_roue = self.robot.WHEEL_CIRCUMFERENCE
 		self.distance_parcourue = 0
 		self.angle_parcouru = 0
 		self.last_update = 0
@@ -125,8 +126,7 @@ class Proxy_Reel:
 		self.robot.set_motor_dps(self.robot._gpg.MOTOR_RIGHT, dps2)
 		
 	def update_distance(self) :
-		print("update_distance")
-		self.distance_parcourue += sum([i/360 * self.rayon for i in self.robot.get_motor_position()])/2
+		self.distance_parcourue = sum([i/360 * self.circonf_roue for i in self.robot.get_motor_position()])/2
 		
 		#now = time.time()
 		#if self.last_update == 0:
@@ -137,47 +137,44 @@ class Proxy_Reel:
 		#	self.distance_parcourue += delta
 
 	def reset_distance(self):
-		print("reset_distance")
-		self.robot.offset_motor_encoder(self.robot._gpg.MOTOR_LEFT,self.robot.read_encoders()[0])
-		self.robot.offset_motor_encoder(self.robot._gpg.MOTOR_RIGHT,self.robot.read_encoders()[1])
 		self.distance_parcourue = 0
 
 	def update_angle(self):
-		print("update_angle")
-		ang_g, ang_d = self.get_vitAng()
-		self.angle_parcouru += np.subtract([i/360 * self.rayon for i in self.robot.get_motor_position()])/self.dist_roue* 180/np.pi
+		ang1, ang2 = self.get_vitAng()
+		now = time.time()
+		self.angle_parcouru += (now-self.last_update)*(ang1-ang2)*self.rayon/self.dist_roue* 180/np.pi
 		
 	def reset_angle(self):
-		print("reset_angle")
 		self.robot.offset_motor_encoder(self.robot._gpg.MOTOR_LEFT,self.robot.read_encoders()[0])
 		self.robot.offset_motor_encoder(self.robot._gpg.MOTOR_RIGHT,self.robot.read_encoders()[1])
+		ang = self.robot.get_motor_position()
+		print("reset_angle", ang[0], ang[1])
 		self.angle_parcouru = 0
 
 	def get_distance(self):
-		print("get_distance")
 		return self.robot.get_distance()
 
 	def get_vitAng(self):
-		print("get_vitang")
+		now = time.time()
 		Ang = self.robot.get_motor_position()
-		delta = np.subtract(Ang, self.last_Ang)
-		return delta
+		a1, a2 = np.subtract(Ang, self.last_Ang)
+		a1 = a1*(now-self.last_update)
+		a2 = a2*(now-self.last_update)
+		return (a1,a2)
 
 	def tourner(self, rps):
 		print("tourner ",rps)
-		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue
+		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue/2
 		if rps > 0:
-			self.set_vitesse(delta, 0)
+			self.set_vitesse(delta, -delta)
 		else:
-			self.set_vitesse(0, delta)
+			self.set_vitesse(-delta, delta)
 			
 	def reset(self):
-		print("reset")
 		self.reset_angle()
 		self.reset_distance()
 
 	def update(self):
-		print("update")
 		now = time.time()
 		self.update_distance()
 		self.update_angle()

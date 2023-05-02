@@ -3,6 +3,31 @@ import cv2
 import time
 from ..camera import detect, BaliseException
 
+class StrategieStop():
+	def __init__(self, proxy):
+		"""constructeur de la stratégie pour avancer d'une distance voulu
+
+		Args:
+			distance (float): distance
+			vitesse (int): vitesse des roues ( radiant par seconde )
+			robot (Robot): robot
+		"""
+		self.proxy = proxy
+		self.proxy.set_vitesse(0, 0)
+	
+	def update(self):
+		"""itération de la stratégie
+		"""
+		self.proxy.set_vitesse(0, 0)
+			
+	def stop(self):
+		"""condition d'arrêt
+
+		Returns:
+			boolean: arrêt ou non
+		"""
+		return True
+
 class StrategieAvance():
 	def __init__(self, distance, vitesse, proxy):
 		"""constructeur de la stratégie pour avancer d'une distance voulu
@@ -15,6 +40,8 @@ class StrategieAvance():
 		self.distance = distance
 		self.vitesse = vitesse
 		self.proxy = proxy
+		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_LEFT,self.proxy.robot.read_encoders()[0])
+		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_RIGHT,self.proxy.robot.read_encoders()[1])
 		
 	def update(self):
 		"""itération de la stratégie
@@ -27,30 +54,33 @@ class StrategieAvance():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		print(self.proxy.distance_parcourue, self.distance)
+		print("StrategieAvance",self.proxy.distance_parcourue, self.distance)
 		if (self.proxy.distance_parcourue >= self.distance):
+			self.proxy.set_vitesse(0, 0)
 			self.proxy.reset()
 			return True
 		return False
 
 
 class StrategieAngle():
-	def __init__(self, angle, rps, proxy):
+	def __init__(self, angle, dps, proxy):
 		"""constructeur de la stratégie pour tourner d'un angle voulu
 
 		Args:
 			angle (int): angle souhaité ( en degré )
-			rps (int): radian par seconde
+			dps (int): degré par seconde
 			proxy (Robot): proxy
 		"""
 		self.angle = angle
-		self.rps = rps
+		self.dps = dps
 		self.proxy = proxy
+		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_LEFT,self.proxy.robot.read_encoders()[0])
+		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_RIGHT,self.proxy.robot.read_encoders()[1])
 
 	def update(self):
 		"""itération de la stratégie
 		"""
-		self.proxy.tourner(self.rps * (time.time()-self.proxy.last_update))
+		self.proxy.tourner(self.dps)
 
 	def stop(self):
 		"""condition d'arrêt
@@ -58,14 +88,16 @@ class StrategieAngle():
 		Returns:
 			boolean: arrêt ou non
 		"""
+		print("StrategieAngle ",self.proxy.angle_parcouru,self.angle)
 		if np.abs(self.proxy.angle_parcouru) >= np.abs(self.angle):
+			self.proxy.set_vitesse(0, 0)
 			self.proxy.reset()
 			return True
 		return False
 
 
 class StrategieArretMur():
-	def __init__(self, proxy, env, vitesse):
+	def __init__(self, dist, vitesse, proxy):
 		"""constructeur de la stratégie pour s'arrêter à un mur
 
 		Args:
@@ -74,8 +106,14 @@ class StrategieArretMur():
 			vitesse (int): vitesse des roues ( degré par seconde )
 		"""
 		self.proxy = proxy
-		self.env = env
-		self.stavance = StrategieAvance(self.env.width*2, vitesse, self.proxy)
+		self.dist = dist
+		self.vitesse = vitesse
+		self.capteur = 10000
+	
+	def update(self):
+		"""itération de la stratégie
+		"""
+		self.proxy.set_vitesse(self.vitesse, self.vitesse)
 	
 	def stop(self):
 		"""condition d'arrêt
@@ -83,12 +121,13 @@ class StrategieArretMur():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		return (self.proxy.get_distance() < 2*self.proxy.rayon)
-
-	def update(self):
-		"""itération de la stratégie
-		"""
-		self.stavance.update()
+		self.capteur = self.proxy.get_distance()
+		print("StrategieArretMur", self.proxy.capteur, 4*self.proxy.rayon, self.proxy.distance_parcourue, self.dist)
+		if (self.proxy.distance_parcourue >= self.dist) or (self.proxy.capteur < 4*self.proxy.rayon):
+			self.proxy.reset()
+			self.proxy.set_vitesse(0, 0)
+			return True
+		return False
 
 
 class StrategieSeq():
