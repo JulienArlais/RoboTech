@@ -51,13 +51,13 @@ class Proxy_Virtuel:
 			self.last_update = now
 		else:
 			ang_g, ang_d = self.get_vitAng()
-			self.angle_parcouru = self.robot.theta-self.angle_depart#(ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update)
+			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) #self.robot.theta-self.angle_depart
 		
 	def reset_angle(self):
 		self.angle_parcouru = 0
 		self.angle_depart = self.robot.theta
 
-	def get_distance(self):
+	def get_capteur_distance(self):
 		"""
 		renvoyer la distance entre le robot et un objet de l'environnement virtuel
 		
@@ -151,7 +151,7 @@ class Proxy_Reel:
 		print("reset_angle", ang[0], ang[1])
 		self.angle_parcouru = 0
 
-	def get_distance(self):
+	def get_capteur_distance(self):
 		return self.robot.get_distance()
 
 	def get_vitAng(self):

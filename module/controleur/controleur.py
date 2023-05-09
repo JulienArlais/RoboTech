@@ -40,8 +40,7 @@ class StrategieAvance():
 		self.distance = distance
 		self.vitesse = vitesse
 		self.proxy = proxy
-		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_LEFT,self.proxy.robot.read_encoders()[0])
-		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_RIGHT,self.proxy.robot.read_encoders()[1])
+		self.proxy.reset_angle()
 		
 	def update(self):
 		"""itération de la stratégie
@@ -74,8 +73,7 @@ class StrategieAngle():
 		self.angle = angle
 		self.dps = dps
 		self.proxy = proxy
-		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_LEFT,self.proxy.robot.read_encoders()[0])
-		self.proxy.robot.offset_motor_encoder(self.proxy.robot._gpg.MOTOR_RIGHT,self.proxy.robot.read_encoders()[1])
+		self.proxy.reset_angle()
 
 	def update(self):
 		"""itération de la stratégie
@@ -121,9 +119,9 @@ class StrategieArretMur():
 		Returns:
 			boolean: arrêt ou non
 		"""
-		self.capteur = self.proxy.get_distance()
-		print("StrategieArretMur", self.proxy.capteur, 4*self.proxy.rayon, self.proxy.distance_parcourue, self.dist)
-		if (self.proxy.distance_parcourue >= self.dist) or (self.proxy.capteur < 4*self.proxy.rayon):
+		self.capteur = self.proxy.get_capteur_distance()
+		print("StrategieArretMur", self.capteur, 4*self.proxy.rayon, self.proxy.distance_parcourue, self.dist)
+		if (self.proxy.distance_parcourue >= self.dist) or (self.capteur < 4*self.proxy.rayon):
 			self.proxy.reset()
 			self.proxy.set_vitesse(0, 0)
 			return True
