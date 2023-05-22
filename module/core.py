@@ -15,33 +15,22 @@ stop = False
 
 def run_strategie(strategie):
 	while not strategie.stop():
-		#lock.acquire()
 		strategie.update()
 		strategie.proxy.update()
-		#lock.release()
-		time.sleep(cs.dt) # faudrait le changer nan ?
+		time.sleep(cs.dt)
 	global stop
 	stop = True # on arrete le thread de run_simulation lorsque run_strategie se termine
 	strategie.proxy.set_vitesse(0, 0)
-	
-#def run_capteur_dist(proxy):
-#	while not stop:
-#		proxy.capteur = proxy.get_distance()
-#		print("capteur", proxy.capteur)
 
 def run_simulation(simulation, gui):
 
 	while not stop:
 		try:
-			#lock.acquire()
 			t0 = time.time()
 			simulation.update()
 			if gui is not None:
 				gui.update()
 			t1 = time.time()
-			#if (t1-t0) < cs.dt:
-			#	time.sleep(cs.dt-(t1-t0))
-			#lock.release()
 		except CollisionException as e:
 			break
 			
@@ -58,7 +47,7 @@ def run(env,rob,prox):
 
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
-	#gui = GUI(environnement, robot)
+	gui = GUI(environnement, robot) ### à commenter pour utiliser le robot réel
 
 	# StratÃ©gies
 	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy)
@@ -68,8 +57,8 @@ def run(env,rob,prox):
 	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
 	stop = StrategieAvance(1, cs.stav_vit, proxy)
 
-	t1 = Thread(target=run_simulation, args=(s, None))
-	t2 = Thread(target=run_strategie, args=(strat_mur,))
+	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot réel
+	t2 = Thread(target=run_strategie, args=(strat_carre,))
 	t1.start()
 	t2.start()
-	#gui.window.mainloop()
+	gui.window.mainloop() ### à commenter pour utiliser le robot réel

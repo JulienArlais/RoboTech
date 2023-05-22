@@ -25,8 +25,8 @@ class Proxy_Virtuel:
 		Args:
 			vitesse (radian par seconde): vitesse angulaire 
 		"""
-		self.robot.vitAngG = rps1
-		self.robot.vitAngD = rps2
+		self.robot.vitAngG = rps1/20
+		self.robot.vitAngD = rps2/20
 		self.update()
 	
 	def update_distance(self):
@@ -50,8 +50,10 @@ class Proxy_Virtuel:
 		if self.last_update == 0:
 			self.last_update = now
 		else:
-			ang_g, ang_d = self.get_vitAng()
-			self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) #self.robot.theta-self.angle_depart
+		#	ang_g, ang_d = self.get_vitAng()
+		#	self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) #self.robot.theta-self.angle_depart
+			ang1, ang2 = self.get_vitAng()
+			self.angle_parcouru += (now-self.last_update)*(ang1-ang2)*self.rayon/self.dist_roue* 180/np.pi
 		
 	def reset_angle(self):
 		self.angle_parcouru = 0
@@ -109,7 +111,7 @@ class Proxy_Reel:
 		print("init")
 		self.robot = robot
 		self.dist_roue = self.robot.WHEEL_BASE_WIDTH
-		self.rayon = self.robot.WHEEL_BASE_WIDTH/2 # techniquement la distance entre les deux roues c'est aussi le diamètre du robot non ?
+		self.rayon = self.robot.WHEEL_BASE_WIDTH/2
 		self.rayon_roue = self.robot.WHEEL_DIAMETER/2
 		self.circonf_roue = self.robot.WHEEL_CIRCUMFERENCE
 		self.distance_parcourue = 0
@@ -127,14 +129,6 @@ class Proxy_Reel:
 		
 	def update_distance(self) :
 		self.distance_parcourue = sum([i/360 * self.circonf_roue for i in self.robot.get_motor_position()])/2
-		
-		#now = time.time()
-		#if self.last_update == 0:
-		#	self.last_update = now
-		#else:
-		#	vita = self.get_vitAng()
-		#	delta = self.robot.rayon_roue*(now-self.last_update)*(vita * 2)/2
-		#	self.distance_parcourue += delta
 
 	def reset_distance(self):
 		self.distance_parcourue = 0
