@@ -1,62 +1,89 @@
 import unittest
 import numpy as np
-from module.element_simulation import Objet, Robot, Environnement, Simulation
+import random
+from module.modele.element_simulation import Objet, Robot, Environnement, Simulation
 
 
 class TestObjet(unittest.TestCase):
 
 	def setUp(self):
-		self.o1 = Objet(0, 0, 0, 0, 2)
-		self.o2 = Objet(2, 2, 0, 0, 1)
+		self.random_x = random.randint(0, 10)
+		self.random_y = random.randint(0, 10)
+		self.random_rayon = random.randint(0, 5)
+		self.o = Objet(self.random_x, self.random_y, self.random_rayon)
+
+	def test_objet(self):
+		self.assertEqual(self.o.x, self.random_x)
+		self.assertEqual(self.o.y, self.random_y)
+		self.assertEqual(self.o.rayon, self.random_rayon)
 
 class TestRobot(unittest.TestCase):
 
 	def setUp(self):
-		self.rob = Robot(5, 6, 0, 3, 5, 90, 90, 1)
-		self.env = Environnement(20, 20, 1)
+		self.random_x = random.randint(0, 10)
+		self.random_y = random.randint(0, 10)
+		self.random_theta = random.randint(0, 360)
+		self.random_rayon = random.randint(0, 5)
+		self.random_dist_roue = random.randint(0, 5)
+		self.random_rayon_roue = random.randint(0, 5)
+		self.r = Robot(self.random_x, self.random_y, self.random_theta, self.random_rayon, self.random_dist_roue, self.random_rayon_roue)
+
+	def test_robot(self):
+		self.assertEqual(self.r.x, self.random_x)
+		self.assertEqual(self.r.y, self.random_y)
+		self.assertEqual(self.r.theta, self.random_theta)
+		self.assertEqual(self.r.rayon, self.random_rayon)
+		self.assertEqual(self.r.dist_roue, self.random_dist_roue)
+		self.assertEqual(self.r.rayon_roue, self.random_rayon_roue)
 	
-	def test_set_vitesse(self):
-		self.rob.set_vitesse(78,79)
-		self.assertEqual(self.rob.vitAngD, 78)
-		self.assertEqual(self.rob.vitAngG, 79)
+	def test_get_vitAng(self):
+		self.assertEqual(self.r.vitAngD, 0)
+		self.assertEqual(self.r.vitAngG, 0)
 
 	def test_getXstep(self):
-		self.assertAlmostEqual(self.rob.getXstep(1), np.radians(90))
+		self.assertAlmostEqual(self.r.getXstep(), 0)
 
 	def test_getYstep(self):
-		self.assertAlmostEqual(self.rob.getYstep(1), 0)
+		self.assertAlmostEqual(self.r.getYstep(), 0)
 
-	def test_capteur(self):
-		self.assertAlmostEqual(self.rob.capteur(self.env,20,[]), 12.0008839)
+	#def test_get_distance(self):
 
 class TestEnvironnement(unittest.TestCase):
 		
 	def setUp(self):
-		self.env = Environnement(20, 20, 1)
-		self.rob = Robot(0, 0, 0, 3, 5, 90, 90, 1)
-		self.obj = Objet(4, 2, 0, 0, 2)
-	
-	def test_generer_obstacles(self):
-		self.lo = self.env.generer_obstacles(self.rob,3)
-		self.assertEqual(len(self.lo), 3)
-		for i in range(0, len(self.lo)):
-			self.assertIsInstance(self.lo[i], Objet)
+		self.r = Robot(2, 2, 0, 3, 2, 1)
+		self.random_width = random.randint(50, 100)
+		self.random_height = random.randint(50, 100)
+		self.e = Environnement(self.random_width, self.random_height, 1)
 
-	def test_avancer_robot(self):
-		self.env.avancer_robot(self.rob, 1)
-		self.assertAlmostEqual(self.rob.x, np.radians(90))
-		self.assertAlmostEqual(self.rob.y, 0)
+	def test_environnement(self):
+		self.assertEqual(self.e.width, self.random_width)
+		self.assertEqual(self.e.height, self.random_height)
+		self.assertEqual(len(self.e.objets), 0)
+	
+	def test_generer_un_obstacle(self):
+		self.e.generer_un_obstacle(self.r)
+		self.assertIsInstance(self.e.objets[0], Objet)
+
+	def test_generer_obstacles(self):
+		self.e.generer_obstacles(self.r, 2)
+		self.assertEqual(len(self.e.objets), 2)
+		for i in range(0, len(self.e.objets)):
+			self.assertIsInstance(self.e.objets[i], Objet)
 
 	def test_collision(self):
-		self.assertTrue(self.env.collision(0, 0, 3, self.obj))
+		self.assertFalse(self.e.collision(2, 2, 3))
 		
 class TestSimulation(unittest.TestCase):
-    
-    def setUp(self):
-        self.env = Environnement(80, 80, 1)
-        self.robot = Robot(40, 55.7, 0, 1.6, 3, 720, 720, 1)
-        self.objets = self.env.generer_obstacles(self.robot, 5)
-        self.simulation = Simulation(self.env, self.robot, self.objets)
+	
+	def setUp(self):
+		self.e = Environnement(80, 80, 1)
+		self.r = Robot(5, 6, 0, 3, 2, 1)
+		self.s = Simulation(self.e, self.r)
+
+	def test_simulation(self):
+		self.assertIsInstance(self.s.environnement, Environnement)
+		self.assertIsInstance(self.s.robot, Robot)
 
 if __name__ == '__main__':
 	unittest.main()

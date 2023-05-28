@@ -38,16 +38,11 @@ def run(env,rob,prox):
 	# Robot + Environnement
 	environnement = env
 	robot = rob
-	proxy = prox
-
-	#Activation ou D‚sactivation des LEDS du robot 
-	rob.blinker_off(1)
-	rob.blinker_on(0)
-	
+	proxy = prox	
 
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
-	gui = GUI(environnement, robot) ### à commenter pour utiliser le robot réel
+	gui = GUI(environnement, robot) ### ï¿½ commenter pour utiliser le robot rï¿½el
 
 	# StratÃ©gies
 	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy)
@@ -57,8 +52,8 @@ def run(env,rob,prox):
 	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
 	stop = StrategieAvance(1, cs.stav_vit, proxy)
 
-	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot réel
+	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot rï¿½el
 	t2 = Thread(target=run_strategie, args=(strat_carre,))
 	t1.start()
 	t2.start()
-	gui.window.mainloop() ### à commenter pour utiliser le robot réel
+	gui.window.mainloop() ### ï¿½ commenter pour utiliser le robot rï¿½el

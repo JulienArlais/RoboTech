@@ -24,16 +24,6 @@ class Objet:
 		self.x = x
 		self.y = y
 		self.rayon = rayon
-		
-class Led:
-    def __init__(self, id_led, color):
-        self.id_led = id_led
-        self.color = color
-        self.status = False
-        
-    def set_status(self, status):
-        if isinstance(status, bool):
-            self.status = status
 
 
 class Robot:
@@ -41,32 +31,33 @@ class Robot:
 		"""constructeur de robot
 
 		Args:
-			x (float): coordonnée x réel
-			y (float): coordonnée y réel
+			x (float): coordonnée x réel du robot
+			y (float): coordonnée y réel du robot
 			theta (int): angle
-			rayon (float): rayon
+			rayon (float): rayon du robot
+			dist_roue (float): distance entre les roues
 			rayon_roue: rayon des roues
 		"""
 		self.x = x
 		self.y = y
-		self.theta = np.radians(theta)
+		self.theta = theta%360
 		self.rayon = rayon
 		self.dist_roue = dist_roue
 		self.vitAngD = 0
 		self.vitAngG = 0
 		self.rayon_roue = rayon_roue
 		self.last_update = 0
-		self.led1=Led(0,"red")
-		self.led2=Led(1,"blue")
 	
 	def get_vitAng(self):
+		"""donne les vitesses angulaire dans un couple
+
+		Returns:
+			tupe[int, int]: couple représentant les vitesses angulaire
+		"""
 		return (self.vitAngG, self.vitAngD)
 
 	def getXstep(self):
-		"""donne le déplacement en x en un pas de temps dt
-
-		Args:
-			dt (float): pas de temps
+		"""donne le déplacement en x depuis la dernière mise à jour
 
 		Returns:
 			float: déplacement en x
@@ -74,10 +65,7 @@ class Robot:
 		return self.vitAngD * self.rayon_roue * np.cos(self.theta) * (time.time()-self.last_update)
 
 	def getYstep(self):
-		"""donne le déplacement en y en un pas de temps dt
-
-		Args:
-			dt (float): pas de temps
+		"""donne le déplacement en y depuis la dernière mise à jour
 
 		Returns:
 			float: déplacement en y
@@ -85,11 +73,11 @@ class Robot:
 		return self.vitAngD * self.rayon_roue * np.sin(self.theta) * (time.time()-self.last_update)
 
 	def get_distance(self, env):
-		"""donne la distance par rapport au mur dans la direction du robot
+		"""donne la distance par rapport au premier obstacle dans la direction du robot
 
 		Args:
 			env (Environnement): environnement
-			distmax : la distance max à laquelle le capteur peut détecter des objets
+
 		Returns:
 			float: distance
 		"""
@@ -107,39 +95,9 @@ class Robot:
 					return distance(self.x, self.y, x, y)
 		return distance(self.x, self.y, x, y)
 
-
-	def set_led(self,ID_LED,statut):
-		"""
-		Fixe l'état des LEDS du robot
-		:param int|Bool: int pour l'id de la LED et Bool pour statut à donner True/False
-		"""
-		if ID_LED==1:
-			self.led1.set_status(statut)
-		else:
-			self.led2.set_status(statut)
-
-
-	def blinker_on(self, id):
-		"""
-		Allume une des deux leds que le robot possède en fonction de l'id 
-		:param int|str id: **0** / **1** pour la droite/gauche
-		"""
-		if id == 0:
-			self.set_led(0, True)
-		if id == 1:
-			self.set_led(1, True)
-
-	def blinker_off(self, id):
-		"""
-		Eteint une des deux led que le robot possede en fonction de l'id
-		:param int|str id: **0** / **1** pour la droite/gauche 
-		"""
-		if id == 0:
-			self.set_led(0, False)
-		if id == 1:
-			self.set_led(1, False)
-
 	def update(self):
+		"""mise à jour du robot
+		"""
 		self.last_update = time.time()
 
 
@@ -185,8 +143,7 @@ class Environnement:
 		"""mise à jour de l'environnement
 
 		Args:
-			robot (Robot): robot à faire avancer
-			dt (int): durée en seconde
+			robot (Robot): robot
 		"""
 		now = time.time()
 		if robot.last_update == 0:
@@ -205,16 +162,14 @@ class Environnement:
 			x (float): coordonnées x réelle
 			y (float): coordonnées y réelle
 			ray (float): rayon
-			obj (Objet): objet à tester
 
 		Returns:
-			boolean: collision ou non avec obj aux coordonnées (x, y)
+			boolean: collision ou non aux coordonnées (x, y)
 		"""
 		for objet in self.objets:
 			if distance(x, y, objet.x, objet.y) <= ray + objet.rayon:
 				return True
 		return False
-		
 		
 
 class Simulation:

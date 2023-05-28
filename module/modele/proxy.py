@@ -4,11 +4,11 @@ import numpy as np
 class Proxy_Virtuel:
 
 	def __init__(self, robot, env):
-		"""constructeur de simualtion_proxy,simule les mouvements du robot dans l'environnement virtuel dans lequel il évolue. 
+		"""constructeur du robot virtuel 
 
 		Args:
-			robot: Robot
-			env: Environnement
+			robot (Robot): robot
+			env (Environnement): environnement
 		"""
 		self.robot = robot
 		self.env = env
@@ -20,16 +20,20 @@ class Proxy_Virtuel:
 		self.last_update = 0
 		self.angle_depart = self.robot.theta
 
-	def set_vitesse(self, rps1, rps2):
+	def set_vitesse(self, dps1, dps2):
 		"""fait avancer le robot à la vitesse donnée
+
 		Args:
-			vitesse (radian par seconde): vitesse angulaire 
+			dps1 (int): degré par seconde voulu
+			dps2 (int): degré par seconde voulu
 		"""
-		self.robot.vitAngG = rps1/20
-		self.robot.vitAngD = rps2/20
+		self.robot.vitAngG = dps1/20
+		self.robot.vitAngD = dps2/20
 		self.update()
 	
 	def update_distance(self):
+		"""mise à jour de la distance parcourue
+		"""
 		now = time.time()
 		if self.last_update == 0:
 			self.last_update = now
@@ -39,13 +43,13 @@ class Proxy_Virtuel:
 			self.distance_parcourue += delta
 	
 	def reset_distance(self) :
-		"""
-		renvoie la distance parcourue par le robot depuis sa dernière réinitialisation
-
+		"""réinitialise la distance parcourue
 		"""
 		self.distance_parcourue = 0
 	
 	def update_angle(self):
+		"""mise à jour de l'angle parcouru
+		"""
 		now = time.time()
 		if self.last_update == 0:
 			self.last_update = now
@@ -56,49 +60,48 @@ class Proxy_Virtuel:
 			self.angle_parcouru += (now-self.last_update)*(ang1-ang2)*self.rayon/self.dist_roue* 180/np.pi
 		
 	def reset_angle(self):
+		"""réinitialise l'angle parcouru
+		"""
 		self.angle_parcouru = 0
 		self.angle_depart = self.robot.theta
 
 	def get_capteur_distance(self):
-		"""
-		renvoyer la distance entre le robot et un objet de l'environnement virtuel
-		
+		"""donne la distance par rapport au premier obstacle devant le robot
+
+		Returns:
+			float: distance par rapport au premier obstacle
 		"""
 		return self.robot.get_distance(self.env)
 
 	def get_vitAng(self):
-		"""
-		renvoie la vitesse angulaire du robot
+		"""donne les vitesses angulaire dans un couple
+
+		Returns:
+			tupe[int, int]: couple représentant les vitesses angulaire
 		"""
 		return self.robot.get_vitAng()
 
-	def tourner(self, rps):
-		"""
-		tourne le robot à un certain degré par seconde
+	def tourner(self, dps):
+		"""tourne le robot à un certain degré par seconde
+
 		Args:
-			dps: degré par seconde
+			dps (int): degré par seconde
 		"""
-		delta = (self.dist_roue * np.abs(rps))/self.rayon_roue/2
-		if rps > 0:
+		delta = (self.dist_roue * np.abs(dps))/self.rayon_roue/2
+		if dps > 0:
 			self.set_vitesse(delta, -delta)
 		else:
 			self.set_vitesse(-delta, delta)
 		self.update()
 
 	def reset(self):
+		"""réinitialise l'angle et la distance parcourue
+		"""
 		self.reset_angle()
 		self.reset_distance()
 
-	def blinker_on(self,id):
-		return self.robot.blinker_on(id)
-		
-	def blinker_off(self,id):
-		return self.robot.blinker_off(id)
-
 	def update(self):
-		"""
-		met à jour le robot 
-
+		"""mise à jour du robot
 		"""
 		now = time.time()
 		self.update_distance()
