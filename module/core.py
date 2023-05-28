@@ -50,7 +50,6 @@ def run(env,rob,prox):
 	liste_strat = [strat_avance, strat_angle]*4
 	strat_carre = StrategieSeq(liste_strat, proxy)
 	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
-	stop = StrategieAvance(1, cs.stav_vit, proxy)
 
 	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot r�el
 	t2 = Thread(target=run_strategie, args=(strat_carre,))
