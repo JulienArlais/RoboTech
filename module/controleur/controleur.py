@@ -3,31 +3,6 @@ import cv2
 import time
 from ..camera import detect, BaliseException
 
-class StrategieStop():
-	def __init__(self, proxy):
-		"""constructeur de la stratégie pour avancer d'une distance voulu
-
-		Args:
-			distance (float): distance
-			vitesse (int): vitesse des roues ( radiant par seconde )
-			robot (Robot): robot
-		"""
-		self.proxy = proxy
-		self.proxy.set_vitesse(0, 0)
-	
-	def update(self):
-		"""itération de la stratégie
-		"""
-		self.proxy.set_vitesse(0, 0)
-			
-	def stop(self):
-		"""condition d'arrêt
-
-		Returns:
-			boolean: arrêt ou non
-		"""
-		return True
-
 class StrategieAvance():
 	def __init__(self, distance, vitesse, proxy):
 		"""constructeur de la stratégie pour avancer d'une distance voulu

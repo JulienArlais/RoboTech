@@ -26,11 +26,9 @@ def run_simulation(simulation, gui):
 
 	while not stop:
 		try:
-			t0 = time.time()
 			simulation.update()
 			if gui is not None:
 				gui.update()
-			t1 = time.time()
 		except CollisionException as e:
 			break
 			
