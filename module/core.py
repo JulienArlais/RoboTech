@@ -1,7 +1,7 @@
 from .vue.affichage_2D import GUI
 from threading import Thread, Lock
 from .modele.element_simulation import Objet, Robot, Environnement, CollisionException, Simulation
-from .controleur.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise, StrategieStop
+from .controleur.controleur import StrategieAvance, StrategieAngle, StrategieArretMur, StrategieSeq, StrategieSuivreBalise
 from .modele.proxy import Proxy_Virtuel, Proxy_Reel
 import module.constante as cs
 import time
@@ -40,7 +40,7 @@ def run(env,rob,prox):
 
 	# Simulation + Interface graphique
 	s = Simulation(environnement, robot)
-	gui = GUI(environnement, robot) ### ï¿½ commenter pour utiliser le robot rï¿½el
+	gui = GUI(environnement, robot) ### à commenter pour utiliser le robot réel
 
 	# StratÃ©gies
 	strat_avance = StrategieAvance(cs.stav_dist, cs.stav_vit, proxy)
@@ -49,8 +49,8 @@ def run(env,rob,prox):
 	strat_carre = StrategieSeq(liste_strat, proxy)
 	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
 
-	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot rï¿½el
+	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot réel
 	t2 = Thread(target=run_strategie, args=(strat_carre,))
 	t1.start()
 	t2.start()
-	gui.window.mainloop() ### ï¿½ commenter pour utiliser le robot rï¿½el
+	gui.window.mainloop() ### à commenter pour utiliser le robot réel

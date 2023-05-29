@@ -5,11 +5,11 @@ from ..camera import detect, BaliseException
 
 class StrategieAvance():
 	def __init__(self, distance, vitesse, proxy):
-		"""constructeur de la stratégie pour avancer d'une distance voulu
+		"""constructeur de la stratégie pour avancer d'une distance voulue
 
 		Args:
 			distance (float): distance
-			vitesse (int): vitesse des roues ( radiant par seconde )
+			vitesse (int): vitesse des roues ( radian par seconde )
 			robot (Robot): robot
 		"""
 		self.distance = distance
@@ -74,14 +74,15 @@ class StrategieArretMur():
 		"""constructeur de la stratégie pour s'arrêter à un mur
 
 		Args:
-			robot (Robot): robot
-			env (Environnement): environnement
+			dist (int): distance maximale à parcourir
 			vitesse (int): vitesse des roues ( degré par seconde )
+			proxy (Robot): proxy
 		"""
 		self.proxy = proxy
 		self.dist = dist
 		self.vitesse = vitesse
-		self.capteur = 10000
+		self.capteur = 10000  # portée maximale du capteur
+		self.dist_arret = 4*self.proxy.rayon  # distance robot/obstacle à laquelle le robot doit s'arrêter
 	
 	def update(self):
 		"""itération de la stratégie
@@ -96,7 +97,7 @@ class StrategieArretMur():
 		"""
 		self.capteur = self.proxy.get_capteur_distance()
 		print("StrategieArretMur", self.capteur, 4*self.proxy.rayon, self.proxy.distance_parcourue, self.dist)
-		if (self.proxy.distance_parcourue >= self.dist) or (self.capteur < 4*self.proxy.rayon):
+		if (self.proxy.distance_parcourue >= self.dist) or (self.capteur < self.dist_arret):
 			self.proxy.reset()
 			self.proxy.set_vitesse(0, 0)
 			return True

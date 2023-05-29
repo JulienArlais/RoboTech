@@ -159,8 +159,8 @@ class Environnement:
 		"""Teste s'il y aura collision aux coordonnées (x, y)
 
 		Args:
-			x (float): coordonnées x réelle
-			y (float): coordonnées y réelle
+			x (float): coordonnée x réelle
+			y (float): coordonnée y réelle
 			ray (float): rayon
 
 		Returns:
