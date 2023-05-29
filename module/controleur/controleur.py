@@ -9,8 +9,8 @@ class StrategieAvance():
 
 		Args:
 			distance (float): distance
-			vitesse (int): vitesse des roues ( radian par seconde )
-			robot (Robot): robot
+			vitesse (int): vitesse des roues ( degré par seconde )
+			proxy (Robot): proxy
 		"""
 		self.distance = distance
 		self.vitesse = vitesse
@@ -18,7 +18,7 @@ class StrategieAvance():
 		self.proxy.reset_angle()
 		
 	def update(self):
-		"""itération de la stratégie
+		"""mise à jour de la stratégie
 		"""
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
 			
@@ -51,7 +51,7 @@ class StrategieAngle():
 		self.proxy.reset_angle()
 
 	def update(self):
-		"""itération de la stratégie
+		"""mise à jour de la stratégie
 		"""
 		self.proxy.tourner(self.dps)
 
@@ -83,9 +83,10 @@ class StrategieArretMur():
 		self.vitesse = vitesse
 		self.capteur = 10000  # portée maximale du capteur
 		self.dist_arret = 4*self.proxy.rayon  # distance robot/obstacle à laquelle le robot doit s'arrêter
+		self.proxy.set_vitesse(self.vitesse, self.vitesse)
 	
 	def update(self):
-		"""itération de la stratégie
+		"""mise à jour de la stratégie
 		"""
 		self.proxy.set_vitesse(self.vitesse, self.vitesse)
 	
@@ -116,7 +117,7 @@ class StrategieSeq():
 		self.proxy = proxy
 		
 	def update(self):
-		"""itération de la stratégie
+		"""mise à jour de la stratégie
 		"""
 		self.liste[self.indlist].update()
 		if self.liste[self.indlist].stop():

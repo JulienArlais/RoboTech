@@ -86,14 +86,20 @@ class Robot:
 		while not(((x+self.rayon) > env.width) or (x-self.rayon < 0) or ((y+self.rayon) > env.height) or (y-self.rayon < 0)):
 			x += self.vitAngD * self.rayon_roue * np.cos(self.theta) * 0.01
 			y += self.vitAngG * self.rayon_roue * np.sin(self.theta) * 0.01
-			if distance(self.x, self.y, x, y) > 800:
-				return 800
-			if distance(self.x, self.y, x, y) < 0.5: 
-				return 0.5
 			for _ in range(len(env.objets)):
 				if env.collision(x, y, self.rayon):
-					return distance(self.x, self.y, x, y)
-		return distance(self.x, self.y, x, y)
+					dist = distance(self.x, self.y, x, y)
+					if dist > 800:
+						return 800
+					if dist < 0.5: 
+						return 0.5
+					return dist
+		dist = distance(self.x, self.y, x, y)
+		if dist > 800:
+			return 800
+		if dist < 0.5: 
+			return 0.5
+		return dist
 
 	def update(self):
 		"""mise à jour du robot

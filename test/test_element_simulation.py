@@ -46,7 +46,12 @@ class TestRobot(unittest.TestCase):
 	def test_getYstep(self):
 		self.assertAlmostEqual(self.r.getYstep(), 0)
 
-	#def test_get_distance(self):
+	def test_get_distance(self):
+		env = Environnement(80, 80, 1)
+		self.r.vitAngD = 100
+		self.r.vitAngG = 100
+		self.assertGreaterEqual(self.r.get_distance(env), 0.5)
+		self.assertLessEqual(self.r.get_distance(env), 800)
 
 class TestEnvironnement(unittest.TestCase):
 		
