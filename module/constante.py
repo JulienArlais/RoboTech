@@ -23,8 +23,8 @@ nb_objet = 5 # nombre d'objets dans la simulation
 stav_dist = 200 # distance à avancer dans StrategieAvance
 stav_vit = 200 #vitesse à laquelle avancer
 
-stan_an = 90 # angle à tourner dans StrategieAngle
-stan_dps = 50 # angle tourné par seconde
+stan_an = -95 # angle à tourner dans StrategieAngle
+stan_dps = -60 # angle tourné par seconde
 
 stmur_dist = 5000
 stmur_vit = 200 # vitesse de déplacement de la StratégieMur 

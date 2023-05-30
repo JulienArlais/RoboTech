@@ -54,8 +54,6 @@ class Proxy_Virtuel:
 		if self.last_update == 0:
 			self.last_update = now
 		else:
-		#	ang_g, ang_d = self.get_vitAng()
-		#	self.angle_parcouru += (ang_d - ang_g) * self.rayon/self.dist_roue * (now-self.last_update) #self.robot.theta-self.angle_depart
 			ang1, ang2 = self.get_vitAng()
 			self.angle_parcouru += (now-self.last_update)*(ang1-ang2)*self.rayon/self.dist_roue* 180/np.pi
 		

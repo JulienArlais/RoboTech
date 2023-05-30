@@ -50,7 +50,7 @@ def run(env,rob,prox):
 	strat_mur = StrategieArretMur(cs.stmur_dist, cs.stmur_vit, proxy)
 
 	t1 = Thread(target=run_simulation, args=(s, gui)) ### remplacer gui par None pour utiliser le robot r�el
-	t2 = Thread(target=run_strategie, args=(strat_mur,))
+	t2 = Thread(target=run_strategie, args=(strat_carre,))
 	t1.start()
 	t2.start()
 	gui.window.mainloop() ### � commenter pour utiliser le robot r�el
